@@ -1,0 +1,61 @@
+{
+  "name": "generator-rancher2-helm-chart",
+  "version": "0.0.1",
+  "description": "yeoman generator rancher 2 helm charts",
+  "keywords": [
+    "yeoman-generator",
+    "generator",
+    "yo",
+    "yeoman"
+  ],
+  "main": "generators/app/index.js",
+  "files": [
+    "generators"
+  ],
+  "scripts": {
+    "build": "babel src -d generators/app",
+    "clean": "rimraf demo generators/*/*.js",
+    "link": "npm link && npm link generator-rancher2-helm-chart",
+    "lint": "npm run format && eslint ./",
+    "lint:fix": "npm run format && eslint --fix ./",
+    "format": "prettier --write ./src/**/*.js",
+    "prepublish": "npm run clean && npm run build",
+    "start": "rimraf demo && npm run lint && npm run build && yo --destination=demo rancher2-helm-chart",
+    "unlink": "npm unlink generator-rancher2-helm-chart"
+  },
+  "dependencies": {
+    "generator-github-project": "^0.2.8",
+    "idempotent-babel-polyfill": "^6.26.0",
+    "lodash": "^4.17.10",
+    "prettier": "^1.14.2",
+    "yeoman-generator": "^3.1.1",
+    "yo-base-prompts": "^0.1.6",
+    "yo-option-or-prompt": "^0.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^9.0.0",
+    "babel-preset-everything": "^0.1.2",
+    "eslint": "^5.5.0",
+    "eslint-config-jam": "^0.1.2",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "rimraf": "^2.6.2",
+    "yo": "^2.0.5"
+  },
+  "author": {
+    "name": "Jam Risser",
+    "email": "jam@codejam.ninja",
+    "url": "https://codejam.ninja"
+  },
+  "homepage": "https://github.com/codejamninja/generator-rancher2-helm-chart",
+  "license": "MIT",
+  "repository": "https://github.com/codejamninja/generator-rancher2-helm-chart",
+  "eslintIgnore": [
+    "generators",
+    "demo"
+  ]
+}

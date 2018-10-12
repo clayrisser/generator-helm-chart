@@ -1,0 +1,72 @@
+images:<% for (var i = 0; i < deployments.length; i++) { deployment = deployments[i]; %>
+  <%= deployment.name %>:
+    repository: <%= deployment.image.substr(0, deployment.image.indexOf(':')) %>
+    tag: <%= deployment.image.substr(deployment.image.indexOf(':') + 1) %>
+    pullPolicy: IfNotPresent<% } %>
+
+config:
+  base_url: ''
+  mongo:
+    host: ''
+    database: rocketchat
+    password: ''
+    port: 27017
+    url: ''
+    username: ''
+  email:
+    smtp:
+      host: ''
+      port: 25
+      username: ''
+      password: ''
+    from: ''
+  jitsi:
+    enabled: false
+    domain: meet.jit.si
+    url_room_prefix: RocketChat
+    open_new_window: false
+    enable_channels: false
+    chrome_extension: ''
+  webrtc:
+    enable_channel: false
+    enable_private: false
+    enable_direct: false
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  nodePorts:<% for (var i = 0; i < deployments.length; i++) { deployment = deployments[i]; %>
+    <%= deployment.name %>:
+      http: ''<% } %>
+
+ingress:
+  enabled: false
+  ssl: false
+  hosts:<% for (var i = 0; i < deployments.length; i++) { deployment = deployments[i]; %>
+    <%= deployment.name %>:
+      - name: ''
+        path: /<% } %>
+
+issuer:
+  name: letsencrypt-staging
+  kind: ClusterIssuer
+
+persistence:
+  enabled: false
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  existingClaim: ''
+
+probes:
+  liveness:
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1

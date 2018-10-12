@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "rocketchat.fullname" . }}
+  labels:
+    app: {{ template "rocketchat.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- $mongo := .Values.config.mongo }}
+  {{- if (not (or $mongo.url $mongo.username $mongo.password)) }}
+  {{- if $mongo.host }}
+  mongo_url: mongodb://{{ $mongo.host }}:{{ $mongo.port }}/{{ $mongo.database }}
+  {{- else }}
+  mongo_url: mongodb://{{ template "rocketchat.name" . }}:27017/rocketchat
+  {{- end }}
+  {{- end }}
+  {{- if .Values.config.base_url }}
+  base_url: {{ .Values.config.base_url }}
+  {{- else }}
+  {{- if .Values.ingress.enabled }}
+  {{- $host := (index .Values.ingress.hosts 0) }}
+  {{- $protocol := "http" }}
+  {{- if .Values.ingress.ssl }}
+  {{- $protocol := (cat $protocol "s") }}
+  {{- end }}
+  base_url: {{ $protocol }}://{{ $host.name }}{{ $host.path }}
+  {{- else }}
+  base_url: http://{{ template "rocketchat.name" . }}
+  {{- end }}
+  {{- end }}
+  email_smtp_host: {{ .Values.config.email.smtp.host }}
+  email_smtp_port: {{ .Values.config.email.smtp.port | quote }}
+  email_smtp_username: {{ .Values.config.email.smtp.username }}
+  email_from: {{ .Values.config.email.from }}
+  jitsi_enabled: {{ .Values.config.jitsi.enabled | quote }}
+  jitsi_domain: {{ .Values.config.jitsi.domain }}
+  jitsi_url_room_prefix: {{ .Values.config.jitsi.url_room_prefix }}
+  jitsi_open_new_window: {{ .Values.config.jitsi.open_new_window | quote }}
+  jitsi_enable_channels: {{ .Values.config.jitsi.enable_channels | quote }}
+  jitsi_chrome_extension: {{ .Values.config.jitsi.chrome_extension }}
+  webrtc_enable_channel: {{ .Values.config.webrtc.enable_channel | quote }}
+  webrtc_enable_private: {{ .Values.config.webrtc.enable_private | quote }}
+  webrtc_enable_direct: {{ .Values.config.webrtc.enable_direct | quote }}

@@ -1,0 +1,100 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.base_url
+    default: ''
+    description: 'base url'
+    type: string
+    required: false
+    label: 'base url'
+    group: 'Database Config'
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: 'enable persistent volume'
+    type: boolean
+    required: true
+    label: 'persistent volume enabled'
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 10Gi
+        description: 'persistent volume size'
+        type: string
+        required: false
+        label: 'volume size'
+      - variable: persistence.storageClass
+        default: ''
+        description: 'if undefined or null, uses the default storageclass. default to null'
+        type: storageclass
+        required: false
+        label: 'default storageclass'
+      - variable: persistence.existingClaim
+        default: ''
+        description: 'If not empty, uses the specified existing PVC instead of creating new one'
+        type: string
+        required: false
+        label: 'Existing Persistent Volume Claim for MariaDB'
+
+# Services and Load Balancing
+  - variable: ingress.enabled
+    default: true
+    description: 'expose app using Layer 7 load balancer - ingress'
+    type: boolean
+    label: 'load balancer enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.ssl
+        default: false
+        description: 'generate letsencrypt ssl certificate'
+        type: boolean
+        required: true
+        label: ssl
+      - variable: issuer.name
+        default: letsencrypt-staging
+        description: 'letsencrypt issuer environment'
+        type: enum
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: issuer
+      - variable: ingress.hosts[0].name
+        default: xip.io
+        description: 'hostname to your rocketchat installation'
+        type: hostname
+        required: true
+        label: 'rocketchat hostname'
+      - variable: ingress.hosts[0].path
+        default: /
+        description: 'pathname to your rocketchat installation'
+        type: string
+        required: true
+        label: 'rocketchat path'
+  - variable: service.type
+    default: NodePort
+    description: 'service type'
+    type: enum
+    show_if: ingress.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.nodePorts.http
+        default: ''
+        description: 'NodePort rocketchat http port (to set explicitly, choose port between 30000-32767)'
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false&&service.type=NodePort
+        label: 'rocketchat http port'

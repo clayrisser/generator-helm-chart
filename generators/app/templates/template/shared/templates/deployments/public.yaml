@@ -1,0 +1,23 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%= name %>.fullname" . }}-<%= deployment.name %>
+  labels:
+    app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%= name %>.fullname" . }}-<%= deployment.name %>
+          image: {{ .Values.images.<%= deployment.name %>.repository }}:{{ .Values.images.<%= deployment.name %>.tag }}
+          imagePullPolicy: {{ .Values.images.<%= deployment.name %>.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: <%= deployment.port %>
