@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default async function writing(yo) {
   yo.fs.copyTpl(
     yo.templatePath('template/shared/Chart.yaml'),
@@ -29,6 +31,35 @@ export default async function writing(yo) {
     yo.destinationPath('values.yaml'),
     yo.context
   );
+  if (!!_.find(yo.context.deployments, deployment => deployment.public)) {
+    yo.fs.copyTpl(
+      yo.templatePath('template/shared/template/certificate.yaml'),
+      yo.destinationPath('template/certificate.yaml'),
+      yo.context
+    );
+  }
+  const configMaps = _.map(yo.config, { secret: false });
+  if (configMaps.length) {
+    yo.fs.copyTpl(
+      yo.templatePath('template/shared/template/configmap.yaml'),
+      yo.destinationPath('template/configmap.yaml'),
+      {
+        ...yo.context,
+        configMaps
+      }
+    );
+  }
+  const configSecrets = _.map(yo.config, { secret: true });
+  if (configSecrets.length) {
+    yo.fs.copyTpl(
+      yo.templatePath('template/shared/template/secret.yaml'),
+      yo.destinationPath('template/secret.yaml'),
+      {
+        ...yo.context,
+        configSecrets
+      }
+    );
+  }
   yo.context.deployments.forEach(deployment => {
     const context = {
       ...yo.context,

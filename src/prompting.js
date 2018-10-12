@@ -51,42 +51,73 @@ export default async function prompting(yo) {
     const deployment = await yo.prompt([
       {
         default: name,
-        message: 'Keyword:',
+        message: 'Deployment Name:',
         name: 'name',
         type: 'input'
       }
     ]);
-    if (deployment.name === '') break;
+    if (!deployment.name.length) break;
     deployment = {
       ...deployment,
       ...(await yo.prompt([
         {
-          default: true,
-          message: 'Public:',
-          name: 'public',
-          type: 'confirm'
+          default: 'alpine:latest',
+          message: 'Deployment Image:',
+          name: 'image',
+          type: 'input'
         },
         {
           default: '3000',
-          message: 'Port:',
+          message: 'Deployment Port:',
           name: 'port',
           type: 'input'
         },
         {
-          default: 'alpine:latest',
-          message: 'Image:',
-          name: 'image',
-          type: 'input'
+          default: true,
+          message: 'Deployment Public:',
+          name: 'public',
+          type: 'confirm'
         }
       ]))
     };
     deployments.push(deployment);
+  }
+  const config = [];
+  for (;;) {
+    const configItem = await yo.prompt([
+      {
+        default: name,
+        message: 'Config Key:',
+        name: 'key',
+        type: 'input'
+      }
+    ]);
+    if (!configItem.key.length) break;
+    configItem = {
+      ...configItem,
+      ...(await yo.prompt([
+        {
+          default: true,
+          message: 'Config Default Value:',
+          name: 'defaultValue',
+          type: 'input'
+        },
+        {
+          default: false,
+          message: 'Config Secret:',
+          name: 'secret',
+          type: 'confirm'
+        }
+      ]))
+    };
+    config.push(configItem);
   }
   yo.answers = {
     authorEmail,
     authorName,
     authorUrl,
     bin,
+    config,
     deployments,
     description,
     destination,
