@@ -1,20 +1,3 @@
 {
-  "extends": ["airbnb/base", "prettier"],
-  "parser": "babel-eslint",
-  "rules": {
-    "arrow-body-style": "off",
-    "class-methods-use-this": "off",
-    "global-require": "off",
-    "import/prefer-default-export": "off",
-    "jsx-a11y/href-no-hash": "off",
-    "no-param-reassign": "off",
-    "no-useless-escape": "off",
-    "yoda": "off",
-    "no-await-in-loop": "off",
-    "comma-dangle": ["error", "never"],
-    "no-unused-vars": ["error", { "vars": "all", "args": "none" }]
-  },
-  "env": {
-    "node": true
-  }
+  "extends": ["jam/base"]
 }
