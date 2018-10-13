@@ -1,9 +1,9 @@
 name: <%= name %>
 home: <%= homepage %>
 icon: <%= icon %>
-version: <%= version =>
+version: <%= version %>
 appVersion: latest
-description: '<%= description =>'
+description: '<%= description %>'
 keywords:<% for (var i = 0; i < keywords.length; i++) { %>
   - <%= keywords[i] %><% } %>
 sources:

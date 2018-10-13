@@ -1,16 +1,16 @@
 categories:
   - Server
 questions:
-
-# Config
-  - variable: config.base_url
-    default: ''
-    description: 'base url'
-    type: string
-    required: false
-    label: 'base url'
-    group: 'Database Config'
-
+<% if (config.length) { %>
+# Config<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
+  - variable: config.<%= configItem.key %>
+    default: '<%= configItem.defaultValue %>'
+    description: '<%= configItem.description %>'
+    type: <%= configItem.type %>
+    required: <%= configItem.required %>
+    label: '<%= configItem.description %>'
+    group: Config<% } %>
+<% } %>
 # Persistence
   - variable: persistence.enabled
     default: false

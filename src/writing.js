@@ -33,15 +33,15 @@ export default async function writing(yo) {
   );
   if (_.find(yo.context.deployments, deployment => deployment.public)) {
     yo.fs.copyTpl(
-      yo.templatePath('template/shared/template/certificate.yaml'),
+      yo.templatePath('template/shared/templates/certificate.yaml'),
       yo.destinationPath('template/certificate.yaml'),
       yo.context
     );
   }
-  const configMaps = _.map(yo.config, { secret: false });
+  const configMaps = _.filter(yo.context.config, { secret: false });
   if (configMaps.length) {
     yo.fs.copyTpl(
-      yo.templatePath('template/shared/template/configmap.yaml'),
+      yo.templatePath('template/shared/templates/configmap.yaml'),
       yo.destinationPath('template/configmap.yaml'),
       {
         ...yo.context,
@@ -49,10 +49,10 @@ export default async function writing(yo) {
       }
     );
   }
-  const configSecrets = _.map(yo.config, { secret: true });
+  const configSecrets = _.filter(yo.context.config, { secret: true });
   if (configSecrets.length) {
     yo.fs.copyTpl(
-      yo.templatePath('template/shared/template/secret.yaml'),
+      yo.templatePath('template/shared/templates/secret.yaml'),
       yo.destinationPath('template/secret.yaml'),
       {
         ...yo.context,
@@ -60,38 +60,38 @@ export default async function writing(yo) {
       }
     );
   }
-  yo.context.deployments.forEach(deployment => {
-    const context = {
-      ...yo.context,
-      deployment
-    };
-    if (deployment.public) {
-      yo.fs.copyTpl(
-        yo.templatePath('template/shared/template/deployments/public.yaml'),
-        yo.destinationPath(`template/deployments/${deployment.name}.yaml`),
-        context
-      );
-      yo.fs.copyTpl(
-        yo.templatePath('template/shared/template/services/public.yaml'),
-        yo.destinationPath(`template/services/${deployment.name}.yaml`),
-        context
-      );
-      yo.fs.copyTpl(
-        yo.templatePath('template/shared/template/ingress.yaml'),
-        yo.destinationPath(`template/ingresses/${deployment.name}.yaml`),
-        context
-      );
-    } else {
-      yo.fs.copyTpl(
-        yo.templatePath('template/shared/template/deployments/private.yaml'),
-        yo.destinationPath(`template/deployments/${deployment.name}.yaml`),
-        yo.context
-      );
-      yo.fs.copyTpl(
-        yo.templatePath('template/shared/template/services/private.yaml'),
-        yo.destinationPath(`template/services/${deployment.name}.yaml`),
-        context
-      );
-    }
-  });
+  // yo.context.deployments.forEach(deployment => {
+  //   const context = {
+  //     ...yo.context,
+  //     deployment
+  //   };
+  //   if (deployment.public) {
+  //     yo.fs.copyTpl(
+  //       yo.templatePath('template/shared/template/deployments/public.yaml'),
+  //       yo.destinationPath(`template/deployments/${deployment.name}.yaml`),
+  //       context
+  //     );
+  //     yo.fs.copyTpl(
+  //       yo.templatePath('template/shared/template/services/public.yaml'),
+  //       yo.destinationPath(`template/services/${deployment.name}.yaml`),
+  //       context
+  //     );
+  //     yo.fs.copyTpl(
+  //       yo.templatePath('template/shared/template/ingress.yaml'),
+  //       yo.destinationPath(`template/ingresses/${deployment.name}.yaml`),
+  //       context
+  //     );
+  //   } else {
+  //     yo.fs.copyTpl(
+  //       yo.templatePath('template/shared/template/deployments/private.yaml'),
+  //       yo.destinationPath(`template/deployments/${deployment.name}.yaml`),
+  //       yo.context
+  //     );
+  //     yo.fs.copyTpl(
+  //       yo.templatePath('template/shared/template/services/private.yaml'),
+  //       yo.destinationPath(`template/services/${deployment.name}.yaml`),
+  //       context
+  //     );
+  //   }
+  // });
 }
