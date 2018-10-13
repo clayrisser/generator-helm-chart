@@ -48,7 +48,7 @@ export default async function prompting(yo) {
   ]);
   const deployments = [];
   for (;;) {
-    const deployment = await yo.prompt([
+    let deployment = await yo.prompt([
       {
         default: name,
         message: 'Deployment Name:',
@@ -84,7 +84,7 @@ export default async function prompting(yo) {
   }
   const config = [];
   for (;;) {
-    const configItem = await yo.prompt([
+    let configItem = await yo.prompt([
       {
         default: name,
         message: 'Config Key:',
@@ -116,7 +116,6 @@ export default async function prompting(yo) {
     authorEmail,
     authorName,
     authorUrl,
-    bin,
     config,
     deployments,
     description,
@@ -124,10 +123,8 @@ export default async function prompting(yo) {
     githubUsername,
     homepage,
     icon,
-    install,
     keywords,
     license,
-    lock,
     name,
     repository,
     version

@@ -1,0 +1,36 @@
+{
+  "name": "<%= name %>",
+  "version": "<%= version %>",
+  "description": "<%= description %>",<% if (keywords && keywords.length) { %>
+  "keywords": [<% for (keyword in keywords) { %>
+    "<%= keyword %>"<% } %>
+  ],<% } %>
+  "homepage": "<%= homepage %>",
+  "bugs": {
+    "url": "<%= repository %>/issues",
+    "email": "<%= authorEmail %>"
+  },
+  "license": "<%= license %>",
+  "author": {
+    "name": "<%= authorName %>",
+    "email": "<%= authorEmail %>",
+    "url": "<%= authorUrl %>"
+  },<% if (files && files.length) { %>
+  "files": [<% for (file in files) { %>
+    "<%= file %>"<% } %>
+  ],<% } %>
+  "main": "<%= main %>",<% if (bin && bin.length) { %>
+  "bin": {
+    "<%= name %>": "<%= bin %>"
+  },<% } %>
+  "repository": {
+    "type" : "git",
+    "url" : "<%= repository %>"
+  },
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {},
+  "engines" : {
+    "node" : ">=4.0.0"
+  }
+}

@@ -31,7 +31,7 @@ export default async function writing(yo) {
     yo.destinationPath('values.yaml'),
     yo.context
   );
-  if (!!_.find(yo.context.deployments, deployment => deployment.public)) {
+  if (_.find(yo.context.deployments, deployment => deployment.public)) {
     yo.fs.copyTpl(
       yo.templatePath('template/shared/template/certificate.yaml'),
       yo.destinationPath('template/certificate.yaml'),
