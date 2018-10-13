@@ -50,7 +50,6 @@ export default async function prompting(yo) {
   for (;;) {
     let deployment = await yo.prompt([
       {
-        default: name,
         message: 'Deployment Name:',
         name: 'name',
         type: 'input'
@@ -86,7 +85,6 @@ export default async function prompting(yo) {
   for (;;) {
     let configItem = await yo.prompt([
       {
-        default: name,
         message: 'Config Key:',
         name: 'key',
         type: 'input'
