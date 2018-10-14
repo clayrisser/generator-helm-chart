@@ -13,7 +13,7 @@
     "generators"
   ],
   "scripts": {
-    "build": "npm run test && babel src -d generators/app",
+    "build": "npm run test && babel src -d generators",
     "clean": "rimraf demo generators/*/*.js",
     "format": "prettier --write ./src/**/*.js",
     "link": "npm link && npm link generator-rancher2-helm-chart",
@@ -22,6 +22,7 @@
     "lint:fix": "npm run format && npm run ejslint && eslint --fix ./",
     "prepublish": "npm run clean && npm run build",
     "start": "npm run clean && npm run build && yo --destination=demo rancher2-helm-chart",
+    "start:deployment": "npm run clean && npm run build && yo --destination=demo rancher2-helm-chart:deployment",
     "test": "npm run lint",
     "unlink": "npm unlink generator-rancher2-helm-chart"
   },
@@ -29,6 +30,7 @@
     "generator-github-project": "^0.2.8",
     "idempotent-babel-polyfill": "^7.0.0",
     "lodash": "^4.17.11",
+    "pkg-dir": "^3.0.0",
     "yeoman-generator": "^1.0.0",
     "yo-base-prompts": "^0.1.6",
     "yo-option-or-prompt": "^0.2.0"

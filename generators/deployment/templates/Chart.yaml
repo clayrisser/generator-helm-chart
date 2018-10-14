@@ -1,0 +1,13 @@
+name: <%= name %>
+home: <%= homepage %>
+icon: <%= icon %>
+version: <%= version %>
+appVersion: latest
+description: '<%= description %>'
+keywords:<% for (var i = 0; i < keywords.length; i++) { %>
+  - <%= keywords[i] %><% } %>
+sources:
+  - <%= repository %>
+maintainers:
+  - name: '<%= authorName %>'
+    email: <%= authorEmail %>

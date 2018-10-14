@@ -1,0 +1,4 @@
+approvers:
+  - <%= githubUsername %>
+reviewers:
+  - <%= githubUsername %>
