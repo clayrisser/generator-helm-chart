@@ -22,7 +22,7 @@
     "lint:fix": "npm run format && npm run ejslint && eslint --fix ./",
     "prepublish": "npm run clean && npm run build",
     "start": "npm run clean && npm run build && yo --destination=demo rancher2-helm-chart",
-    "start:deployment": "npm run clean && npm run build && yo --destination=demo rancher2-helm-chart:deployment",
+    "start:deployment": "npm run build && yo --destination=demo rancher2-helm-chart:deployment",
     "test": "npm run lint",
     "unlink": "npm unlink generator-rancher2-helm-chart"
   },

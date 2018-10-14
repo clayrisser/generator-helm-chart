@@ -9,9 +9,9 @@ spec:
   issuerRef:
     name: {{ .Values.issuer.name }}
     kind: {{ .Values.issuer.kind }}
-  commonName: '{{ (index .Values.ingress.hosts.<%= publicDeployments[0].name %> 0).name }}'
+  commonName: '{{ (index .Values.ingress.hosts.<%= publicDeployments[0].name %> 0).name }}'<% if (publicDeployments.length > 1) { %>
   dnsNames:<% for (var i = 1; i < publicDeployments.length; i++) { deployment = deployments[i]; %>
-    - '{{ (index .Values.ingress.hosts.<%= deployment.name %> 0).name }}'<% } %>
+    - '{{ (index .Values.ingress.hosts.<%= deployment.name %> 0).name }}'<% } %><% } %>
   acme:
     config:
     - http01:
