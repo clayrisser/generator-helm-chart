@@ -97,5 +97,4 @@ questions:
         min: 30000
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
-        label: '<%= deployment.name %> http port'<% } %>
-<% } %>
+        label: '<%= deployment.name %> http port'<% } %><% } %>
