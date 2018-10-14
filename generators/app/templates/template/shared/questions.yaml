@@ -39,7 +39,7 @@ questions:
         type: string
         required: false
         label: 'Existing Persistent Volume Claim for MariaDB'
-
+<% if (publicDeployments.length) { %>
 # Services and Load Balancing
   - variable: ingress.enabled
     default: true
@@ -49,12 +49,12 @@ questions:
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.ssl
+      - variable: ingress.tls
         default: false
         description: 'generate letsencrypt ssl certificate'
         type: boolean
         required: true
-        label: ssl
+        label: tls
       - variable: issuer.name
         default: letsencrypt-staging
         description: 'letsencrypt issuer environment'
@@ -63,19 +63,19 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: issuer
-      - variable: ingress.hosts[0].name
+        label: issuer<% for (var i = 0; i < publicDeployments.length; i++) { deployment = deployments[i]; %>
+      - variable: ingress.hosts.<%= deployment.name %>[0].name
         default: xip.io
-        description: 'hostname to your rocketchat installation'
+        description: 'hostname to your <%= deployment.name %> installation'
         type: hostname
         required: true
-        label: 'rocketchat hostname'
-      - variable: ingress.hosts[0].path
+        label: '<%= deployment.name %> hostname'
+      - variable: ingress.hosts.<%= deployment.name %>[0].path
         default: /
-        description: 'pathname to your rocketchat installation'
+        description: 'pathname to your <%= deployment.name %> installation'
         type: string
         required: true
-        label: 'rocketchat path'
+        label: '<%= deployment.name %> path'<% } %>
   - variable: service.type
     default: NodePort
     description: 'service type'
@@ -89,12 +89,13 @@ questions:
     label: 'service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: service.nodePorts.http
+    subquestions:<% for (var i = 0; i < publicDeployments.length; i++) { deployment = deployments[i]; %>
+      - variable: service.nodePorts.<%= deployment.name %>.http
         default: ''
-        description: 'NodePort rocketchat http port (to set explicitly, choose port between 30000-32767)'
+        description: 'NodePort <%= deployment.name %> http port (to set explicitly, choose port between 30000-32767)'
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
-        label: 'rocketchat http port'
+        label: '<%= deployment.name %> http port'<% } %>
+<% } %>

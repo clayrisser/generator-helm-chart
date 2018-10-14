@@ -1,6 +1,9 @@
 import _ from 'lodash';
 
 export default async function writing(yo) {
+  const configMaps = _.filter(yo.context.config, { secret: false });
+  const configSecrets = _.filter(yo.context.config, { secret: true });
+  const publicDeployments = _.filter(yo.context.deployments, { public: true });
   yo.fs.copyTpl(
     yo.templatePath('template/shared/Chart.yaml'),
     yo.destinationPath('Chart.yaml'),
@@ -24,7 +27,10 @@ export default async function writing(yo) {
   yo.fs.copyTpl(
     yo.templatePath('template/shared/questions.yaml'),
     yo.destinationPath('questions.yaml'),
-    yo.context
+    {
+      ...yo.context,
+      publicDeployments
+    }
   );
   yo.fs.copyTpl(
     yo.templatePath('template/shared/values.yaml'),
@@ -51,14 +57,16 @@ export default async function writing(yo) {
     yo.destinationPath('templates/pvc.yaml'),
     yo.context
   );
-  if (_.find(yo.context.deployments, deployment => deployment.public)) {
+  if (publicDeployments.length) {
     yo.fs.copyTpl(
       yo.templatePath('template/shared/templates/certificate.yaml'),
       yo.destinationPath('templates/certificate.yaml'),
-      yo.context
+      {
+        ...yo.context,
+        publicDeployments
+      }
     );
   }
-  const configMaps = _.filter(yo.context.config, { secret: false });
   if (configMaps.length) {
     yo.fs.copyTpl(
       yo.templatePath('template/shared/templates/configmap.yaml'),
@@ -69,7 +77,6 @@ export default async function writing(yo) {
       }
     );
   }
-  const configSecrets = _.filter(yo.context.config, { secret: true });
   if (configSecrets.length) {
     yo.fs.copyTpl(
       yo.templatePath('template/shared/templates/secret.yaml'),

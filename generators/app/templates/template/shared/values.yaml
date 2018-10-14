@@ -16,7 +16,7 @@ service:
 
 ingress:
   enabled: false
-  ssl: false
+  tls: false
   hosts:<% for (var i = 0; i < deployments.length; i++) { deployment = deployments[i]; %>
     <%= deployment.name %>:
       - name: ''

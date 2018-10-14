@@ -9,11 +9,13 @@ spec:
   issuerRef:
     name: {{ .Values.issuer.name }}
     kind: {{ .Values.issuer.kind }}
-  commonName: '{{ (index .Values.ingress.hosts 0).name }}'
+  commonName: '{{ (index .Values.ingress.hosts.<%= publicDeployments[0].name %> 0).name }}'
+  dnsNames:<% for (var i = 1; i < publicDeployments.length; i++) { deployment = deployments[i]; %>
+    - '{{ (index .Values.ingress.hosts.<%= deployment.name %> 0).name }}'<% } %>
   acme:
     config:
     - http01:
         ingressClass: nginx
-      domains:
-        - '{{ (index .Values.ingress.hosts 0).name }}'
+      domains:<% for (var i = 0; i < publicDeployments.length; i++) { deployment = deployments[i]; %>
+        - '{{ (index .Values.ingress.hosts.<%= deployment.name %> 0).name }}'<% } %>
 {{- end }}
