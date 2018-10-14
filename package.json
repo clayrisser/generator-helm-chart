@@ -27,10 +27,11 @@
     "unlink": "npm unlink generator-rancher2-helm-chart"
   },
   "dependencies": {
+    "fs-extra": "^7.0.0",
     "generator-github-project": "^0.2.8",
     "idempotent-babel-polyfill": "^7.0.0",
+    "js-yaml": "^3.12.0",
     "lodash": "^4.17.11",
-    "pkg-dir": "^3.0.0",
     "yeoman-generator": "^1.0.0",
     "yo-base-prompts": "^0.1.6",
     "yo-option-or-prompt": "^0.2.0"
