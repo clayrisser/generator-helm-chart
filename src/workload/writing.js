@@ -12,25 +12,23 @@ export default async function writing(yo) {
     yo.destinationPath('values.yaml'),
     { process: content => processValues(content, yo.context) }
   );
-  if (yo.context.deployment.public) {
+  if (yo.context.workload.public) {
     yo.fs.copyTpl(
       yo.templatePath('templates/deployments/public.yaml'),
       yo.destinationPath(
-        `templates/deployments/${yo.context.deployment.name}.yaml`
+        `templates/deployments/${yo.context.workload.name}.yaml`
       ),
       yo.context
     );
     yo.fs.copyTpl(
       yo.templatePath('templates/services/public.yaml'),
-      yo.destinationPath(
-        `templates/services/${yo.context.deployment.name}.yaml`
-      ),
+      yo.destinationPath(`templates/services/${yo.context.workload.name}.yaml`),
       yo.context
     );
     yo.fs.copyTpl(
       yo.templatePath('templates/ingress.yaml'),
       yo.destinationPath(
-        `templates/ingresses/${yo.context.deployment.name}.yaml`
+        `templates/ingresses/${yo.context.workload.name}.yaml`
       ),
       yo.context
     );
@@ -38,15 +36,13 @@ export default async function writing(yo) {
     yo.fs.copyTpl(
       yo.templatePath('templates/deployments/private.yaml'),
       yo.destinationPath(
-        `templates/deployments/${yo.context.deployment.name}.yaml`
+        `templates/deployments/${yo.context.workload.name}.yaml`
       ),
       yo.context
     );
     yo.fs.copyTpl(
       yo.templatePath('templates/services/private.yaml'),
-      yo.destinationPath(
-        `templates/services/${yo.context.deployment.name}.yaml`
-      ),
+      yo.destinationPath(`templates/services/${yo.context.workload.name}.yaml`),
       yo.context
     );
   }
@@ -54,7 +50,7 @@ export default async function writing(yo) {
 
 function processQuestions(content, context) {
   content = content.toString();
-  if (context.deployment.public) {
+  if (context.workload.public) {
     const INGRESS_ENABLED = / {2}- variable: ingress\.enabled((\n {4}[^\n]+)+)?/;
     const SERVICE_TYPE = / {2}- variable: service\.type((\n {4}[^\n]+)+)?/;
     const SUBQUESTIONS = / {4}subquestions:((\n {6}[^\n]+)+)?/;
@@ -62,28 +58,28 @@ function processQuestions(content, context) {
       content,
       [INGRESS_ENABLED, SUBQUESTIONS],
       `\n      - variable: ingress.hosts.${
-        context.deployment.name
+        context.workload.name
       }[0].name\n        default: xip.io\n        description: 'hostname to your ${
-        context.deployment.name
+        context.workload.name
       } installation'\n        type: hostname\n        required: true\n        label: '${
-        context.deployment.name
+        context.workload.name
       } hostname'\n      - variable: ingress.hosts.${
-        context.deployment.name
+        context.workload.name
       }[0].path\n        default: /\n        description: 'pathname to your ${
-        context.deployment.name
+        context.workload.name
       } installation'\n        type: string\n        required: true\n        label: '${
-        context.deployment.name
+        context.workload.name
       } path'`
     );
     content = modInline.append(
       content,
       [SERVICE_TYPE, SUBQUESTIONS],
       `\n      - variable: service.nodePorts.${
-        context.deployment.name
+        context.workload.name
       }.http\n        default: ''\n        description: 'NodePort ${
-        context.deployment.name
+        context.workload.name
       } http port (to set explicitly, choose port between 30000-32767)'\n        type: int\n        min: 30000\n        max: 32767\n        show_if: ingress.enabled=false&&service.type=NodePort\n        label: '${
-        context.deployment.name
+        context.workload.name
       } http port'`
     );
   }
@@ -93,18 +89,18 @@ function processQuestions(content, context) {
 function processValues(content, context) {
   content = content.toString();
   const IMAGES = /images:((\n {2}[^\n]+)+)?/;
-  const { image } = context.deployment;
+  const { image } = context.workload;
   content = modInline.append(
     content,
     IMAGES,
-    `\n  ${context.deployment.name}:\n    repository: ${image.substr(
+    `\n  ${context.workload.name}:\n    repository: ${image.substr(
       0,
       image.indexOf(':')
     )}\n    tag: ${image.substr(
       image.indexOf(':') + 1
     )}\n    pullPolicy: IfNotPresent`
   );
-  if (context.deployment.public) {
+  if (context.workload.public) {
     const HOSTS = / {2}hosts:((\n {4}[^\n]+)+)?/;
     const INGRESS = /ingress:((\n {2}[^\n]+)+)/;
     const NODE_PORTS = / {2}nodePorts:((\n {4}[^\n]+)+)?/;
@@ -112,12 +108,12 @@ function processValues(content, context) {
     content = modInline.append(
       content,
       [SERVICE, NODE_PORTS],
-      `\n    ${context.deployment.name}:\n      http: ''`
+      `\n    ${context.workload.name}:\n      http: ''`
     );
     content = modInline.append(
       content,
       [INGRESS, HOSTS],
-      `\n    ${context.deployment.name}:\n      - name: ''\n        path: /`
+      `\n    ${context.workload.name}:\n      - name: ''\n        path: /`
     );
   }
   return content;

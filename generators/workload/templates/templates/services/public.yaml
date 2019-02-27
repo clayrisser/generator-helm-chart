@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}-<%= deployment.name %>
+  name: {{ template "<%= name %>.fullname" . }}-<%= workload.name %>
   labels:
-    app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+    app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,9 +20,9 @@ spec:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.<%= deployment.name %>.http))) }}
-      nodePort: {{ .Values.service.nodePorts.<%= deployment.name %>.http }}
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.<%= workload.name %>.http))) }}
+      nodePort: {{ .Values.service.nodePorts.<%= workload.name %>.http }}
       {{- end }}
   selector:
-    app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+    app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
     release: {{ .Release.Name }}

@@ -39,7 +39,7 @@ questions:
         type: string
         required: false
         label: 'Existing Persistent Volume Claim for MariaDB'
-<% if (publicDeployments.length) { %>
+<% if (publicWorkloads.length) { %>
 # Services and Load Balancing
   - variable: ingress.enabled
     default: true
@@ -63,19 +63,19 @@ questions:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: issuer<% for (var i = 0; i < publicDeployments.length; i++) { deployment = deployments[i]; %>
-      - variable: ingress.hosts.<%= deployment.name %>[0].name
+        label: issuer<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
+      - variable: ingress.hosts.<%= workload.name %>[0].name
         default: xip.io
-        description: 'hostname to your <%= deployment.name %> installation'
+        description: 'hostname to your <%= workload.name %> installation'
         type: hostname
         required: true
-        label: '<%= deployment.name %> hostname'
-      - variable: ingress.hosts.<%= deployment.name %>[0].path
+        label: '<%= workload.name %> hostname'
+      - variable: ingress.hosts.<%= workload.name %>[0].path
         default: /
-        description: 'pathname to your <%= deployment.name %> installation'
+        description: 'pathname to your <%= workload.name %> installation'
         type: string
         required: true
-        label: '<%= deployment.name %> path'<% } %>
+        label: '<%= workload.name %> path'<% } %>
   - variable: service.type
     default: NodePort
     description: 'service type'
@@ -89,12 +89,12 @@ questions:
     label: 'service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
-    subquestions:<% for (var i = 0; i < publicDeployments.length; i++) { deployment = deployments[i]; %>
-      - variable: service.nodePorts.<%= deployment.name %>.http
+    subquestions:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
+      - variable: service.nodePorts.<%= workload.name %>.http
         default: ''
-        description: 'NodePort <%= deployment.name %> http port (to set explicitly, choose port between 30000-32767)'
+        description: 'NodePort <%= workload.name %> http port (to set explicitly, choose port between 30000-32767)'
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false&&service.type=NodePort
-        label: '<%= deployment.name %> http port'<% } %><% } %>
+        label: '<%= workload.name %> http port'<% } %><% } %>

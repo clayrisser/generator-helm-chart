@@ -46,40 +46,40 @@ export default async function prompting(yo) {
       type: 'input'
     }
   ]);
-  const deployments = [];
+  const workloads = [];
   for (;;) {
-    let deployment = await yo.prompt([
+    let workload = await yo.prompt([
       {
-        message: 'Deployment Name:',
+        message: 'Workload Name:',
         name: 'name',
         type: 'input'
       }
     ]);
-    if (!deployment.name.length) break;
-    deployment = {
-      ...deployment,
+    if (!workload.name.length) break;
+    workload = {
+      ...workload,
       ...(await yo.prompt([
         {
           default: 'alpine:latest',
-          message: 'Deployment Image:',
+          message: 'Workload Image:',
           name: 'image',
           type: 'input'
         },
         {
           default: '3000',
-          message: 'Deployment Port:',
+          message: 'Workload Port:',
           name: 'port',
           type: 'input'
         },
         {
           default: true,
-          message: 'Deployment Public:',
+          message: 'Workload Public:',
           name: 'public',
           type: 'confirm'
         }
       ]))
     };
-    deployments.push(deployment);
+    workloads.push(workload);
   }
   const config = [];
   for (;;) {
@@ -167,7 +167,6 @@ export default async function prompting(yo) {
     authorName,
     authorUrl,
     config,
-    deployments,
     description,
     destination,
     githubUsername,
@@ -177,7 +176,8 @@ export default async function prompting(yo) {
     license,
     name,
     repository,
-    version
+    version,
+    workloads
   };
   yo.context = { ...yo.context, ...yo.answers };
 }

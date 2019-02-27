@@ -1,6 +1,6 @@
 {
   "name": "generator-rancher2-helm-chart",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "yeoman generator rancher 2 helm charts",
   "keywords": [
     "yeoman-generator",
@@ -15,14 +15,14 @@
   "scripts": {
     "build": "npm run test && babel src -d generators",
     "clean": "git clean -fXd -e \\!node_modules -e \\!node_modules/**/*",
+    "ejslint": "ejslint $(find generators -type f)",
     "format": "prettier --write ./src/**/*.js",
     "link": "npm link && npm link generator-rancher2-helm-chart",
-    "ejslint": "ejslint $(find generators -type f)",
     "lint": "npm run format && npm run ejslint && eslint ./",
     "lint:fix": "npm run format && npm run ejslint && eslint --fix ./",
     "prepublish": "npm run clean && npm run build",
     "start": "npm run clean && npm run build && yo --destination=demo rancher2-helm-chart",
-    "start:deployment": "npm run build && yo --destination=demo rancher2-helm-chart:deployment",
+    "start:workload": "npm run build && yo --destination=demo rancher2-helm-chart:workload",
     "test": "npm run lint",
     "unlink": "npm unlink generator-rancher2-helm-chart"
   },
