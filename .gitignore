@@ -70,3 +70,4 @@ typings/
 demo/
 generators/*/*.js
 package-lock.json*
+yarn.lock

@@ -13,11 +13,6 @@ export default async function writing(yo) {
     { process: content => processValues(content, yo.context) }
   );
   if (yo.context.deployment.public) {
-    yo.fs.copy(
-      path.resolve(yo.context.destination, 'templates/certificate.yaml'),
-      yo.destinationPath('templates/certificate.yaml'),
-      { process: content => processCertificate(content, yo.context) }
-    );
     yo.fs.copyTpl(
       yo.templatePath('templates/deployments/public.yaml'),
       yo.destinationPath(
@@ -55,38 +50,6 @@ export default async function writing(yo) {
       yo.context
     );
   }
-}
-
-function processCertificate(content, context) {
-  content = content.toString();
-  const DOMAINS = / {6}domains:(\n {8}- [^\n]+)+/;
-  const COMMON_NAME = / {2}commonName:[^\n]+/;
-  const DNS_NAMES = / {2}dnsNames:(\n {4}- [^\n]+)+/;
-  if (DNS_NAMES.test(content)) {
-    content = modInline.append(
-      content,
-      DNS_NAMES,
-      `\n    - '{{ (index .Values.ingress.hosts.${
-        context.deployment.name
-      } 0).name }}'`
-    );
-  } else {
-    content = modInline.append(
-      content,
-      COMMON_NAME,
-      `\n  dnsNames:\n    - '{{ (index .Values.ingress.hosts.${
-        context.deployment.name
-      } 0).name }}'`
-    );
-  }
-  content = modInline.append(
-    content,
-    DOMAINS,
-    `\n        - '{{ (index .Values.ingress.hosts.${
-      context.deployment.name
-    } 0).name }}'`
-  );
-  return content;
 }
 
 function processQuestions(content, context) {

@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "build": "npm run test && babel src -d generators",
-    "clean": "rimraf demo generators/*/*.js",
+    "clean": "git clean -fXd -e \\!node_modules -e \\!node_modules/**/*",
     "format": "prettier --write ./src/**/*.js",
     "link": "npm link && npm link generator-rancher2-helm-chart",
     "ejslint": "ejslint $(find generators -type f)",
@@ -46,7 +46,6 @@
     "eslint": "^5.6.1",
     "eslint-config-jam": "^0.1.6",
     "prettier": "^1.14.3",
-    "rimraf": "^2.6.2",
     "yo": "^2.0.5"
   },
   "author": {

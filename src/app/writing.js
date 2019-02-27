@@ -52,16 +52,6 @@ export default async function writing(yo) {
     yo.destinationPath('templates/pvc.yaml'),
     yo.context
   );
-  if (publicDeployments.length) {
-    yo.fs.copyTpl(
-      yo.templatePath('templates/certificate.yaml'),
-      yo.destinationPath('templates/certificate.yaml'),
-      {
-        ...yo.context,
-        publicDeployments
-      }
-    );
-  }
   if (configMaps.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/configmap.yaml'),
