@@ -4,6 +4,11 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "<%= name %>.fullname" $ }}-<%= deployment.name %>
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  annotations:
+    certmanager.k8s.io/cluster-issuer: {{ $.Values.issuer.name }}
+    kubernetes.io/tls-acme: "true"
+  {{- end }}
   labels:
     app: {{ template "<%= name %>.name" $ }}-<%= deployment.name %>
     chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
