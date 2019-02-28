@@ -117,22 +117,6 @@ export default class Prompt {
           type: 'input'
         },
         {
-          default: 'persistentVolumeClaim',
-          message: 'Volume Type:',
-          name: 'type',
-          type: 'list',
-          choices: [
-            {
-              name: 'persistentVolumeClaim',
-              value: 'persistentVolumeClaim'
-            },
-            {
-              name: 'configMap',
-              value: 'configMap'
-            }
-          ]
-        },
-        {
           default: false,
           message: 'Volume Read Only:',
           name: 'readOnly',

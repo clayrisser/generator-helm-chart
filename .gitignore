@@ -69,5 +69,6 @@ typings/
 # Application
 demo/
 generators/*/*.js
+generators/shared
 package-lock.json*
 yarn.lock

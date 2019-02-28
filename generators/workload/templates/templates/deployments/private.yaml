@@ -23,8 +23,8 @@ spec:
               containerPort: <%= workload.port %><% if (workload.volumes.length) { %>
           volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
             - name: <%= volume.name %>
-              mountPath: '<%= volume.mountPath %>'
-              subPath: <%= volume.subPath %><% } if (volume.readOnly) { %>
+              mountPath: '<%= volume.mountPath %>'<% } if (volume.subPath) { %>
+              subPath: <% } %><%= volume.subPath %><% } if (volume.readOnly) { %>
               readOnly: true<% }} %>
           env: []<% if (workload.volumes.length) { %>
       volumes:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
