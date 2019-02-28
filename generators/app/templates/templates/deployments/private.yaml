@@ -24,8 +24,8 @@ spec:
           volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
             - name: <%= volume.name %>
               mountPath: '<%= volume.mountPath %>'
-              subPath: <%= volume.subPath %><% }} if (volume.readOnly) { %>
-              readOnly: true<% } %>
+              subPath: <%= volume.subPath %><% } if (volume.readOnly) { %>
+              readOnly: true<% }} %>
           env: []<% if (workload.volumes.length) { %>
       volumes:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
         - name: <%= volume.name %>
