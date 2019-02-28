@@ -20,4 +20,17 @@ spec:
           imagePullPolicy: {{ .Values.images.<%= deployment.name %>.pullPolicy }}
           ports:
             - name: container
-              containerPort: <%= deployment.port %>
+              containerPort: <%= deployment.port %><% if (deployment.persistence) { %>
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+              subPath: mongo<% } %>
+          env: []<% if (deployment.persistence) { %>
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "rocketchat.fullname" . ) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}<% } %>

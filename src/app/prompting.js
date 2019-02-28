@@ -79,6 +79,29 @@ export default async function prompting(yo) {
         }
       ]))
     };
+    const volumes = [];
+    for (;;) {
+      const volume = await yo.prompt([
+        {
+          default: 'persistentVolumeClaim',
+          message: 'Volume Type:',
+          name: 'type',
+          type: 'list',
+          choices: [
+            {
+              name: 'persistentVolumeClaim',
+              value: 'persistentVolumeClaim'
+            },
+            {
+              name: 'configMap',
+              value: 'configMap'
+            }
+          ]
+        }
+      ]);
+      volumes.push(volume);
+    }
+    deployment.volumes = volumes;
     deployments.push(deployment);
   }
   const config = [];
