@@ -25,7 +25,7 @@ spec:
               servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
-    - secretName: {{ .Values.issuer.name }}
+    - secretName: letsencrypt-staging
       hosts:
         - {{ .name }}
   {{- end }}
