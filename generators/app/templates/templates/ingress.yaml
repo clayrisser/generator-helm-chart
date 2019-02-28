@@ -23,7 +23,7 @@ spec:
             backend:
               serviceName: {{ template "<%= name %>.fullname" $ }}-<%= workload.name %>
               servicePort: http
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.ssl) }}
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:
     - secretName: {{ .Values.issuer.name }}
       hosts:
