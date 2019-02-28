@@ -1,7 +1,7 @@
-images:<% for (var i = 0; i < deployments.length; i++) { deployment = deployments[i]; %>
-  <%= deployment.name %>:
-    repository: <%= deployment.image.substr(0, deployment.image.indexOf(':')) %>
-    tag: <%= deployment.image.substr(deployment.image.indexOf(':') + 1) %>
+images:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+  <%= workload.name %>:
+    repository: <%= workload.image.substr(0, workload.image.indexOf(':')) %>
+    tag: <%= workload.image.substr(workload.image.indexOf(':') + 1) %>
     pullPolicy: IfNotPresent<% } %>
 
 config:<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
@@ -10,15 +10,15 @@ config:<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
 service:
   type: NodePort
   externalTrafficPolicy: Cluster
-  nodePorts:<% for (var i = 0; i < deployments.length; i++) { deployment = deployments[i]; %>
-    <%= deployment.name %>:
+  nodePorts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+    <%= workload.name %>:
       http: ''<% } %>
 
 ingress:
   enabled: false
   tls: false
-  hosts:<% for (var i = 0; i < deployments.length; i++) { deployment = deployments[i]; %>
-    <%= deployment.name %>:
+  hosts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+    <%= workload.name %>:
       - name: ''
         path: /<% } %>
 

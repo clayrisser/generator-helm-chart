@@ -1,6 +1,6 @@
 {
   "name": "generator-rancher2-helm-chart",
-  "version": "0.0.3",
+  "version": "0.1.1",
   "description": "yeoman generator rancher 2 helm charts",
   "keywords": [
     "yeoman-generator",
@@ -14,15 +14,15 @@
   ],
   "scripts": {
     "build": "npm run test && babel src -d generators",
-    "clean": "rimraf demo generators/*/*.js",
+    "clean": "git clean -fXd -e \\!node_modules -e \\!node_modules/**/*",
+    "ejslint": "ejslint $(find generators -type f)",
     "format": "prettier --write ./src/**/*.js",
     "link": "npm link && npm link generator-rancher2-helm-chart",
-    "ejslint": "ejslint $(find generators -type f)",
     "lint": "npm run format && npm run ejslint && eslint ./",
     "lint:fix": "npm run format && npm run ejslint && eslint --fix ./",
     "prepublish": "npm run clean && npm run build",
     "start": "npm run clean && npm run build && yo --destination=demo rancher2-helm-chart",
-    "start:deployment": "npm run build && yo --destination=demo rancher2-helm-chart:deployment",
+    "start:workload": "npm run build && yo --destination=demo rancher2-helm-chart:workload",
     "test": "npm run lint",
     "unlink": "npm unlink generator-rancher2-helm-chart"
   },
@@ -46,7 +46,6 @@
     "eslint": "^5.6.1",
     "eslint-config-jam": "^0.1.6",
     "prettier": "^1.14.3",
-    "rimraf": "^2.6.2",
     "yo": "^2.0.5"
   },
   "author": {

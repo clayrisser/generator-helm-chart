@@ -28,7 +28,69 @@ npm install -g generator-rancher2-helm-chart
 
 ## Usage
 
-[Contribute](https://github.com/codejamninja/generator-rancher2-helm-chart/blob/master/CONTRIBUTING.md) usage docs
+### Create a New Helm Chart
+
+```sh
+yo rancher2-helm-chart
+```
+
+Below is an example of what you might enter to build an nginx rancher2 helm chart.
+
+```sh
+? Project Name: generator-rancher2-helm-chart
+? Project Description: yeoman generator rancher 2 helm charts
+? Version: 0.1.0
+? License: MIT
+? Author Name: Jam Risser
+? Author Email: jam@codejam.ninja
+? GitHub Username: codejamninja
+? Author URL: https://codejamninja.com
+? Repository: https://github.com/codejamninja/generator-rancher2-helm-chart
+? Homepage: https://github.com/codejamninja/generator-rancher2-helm-chart
+? Keyword: nginx
+? Keyword: server
+? Keyword: 
+? Icon: https://nginx.org/nginx.png
+? Workload Name: nginx
+? Workload Image: nginx:latest
+? Workload Port: 80
+? Workload Public: Yes
+? Workload Name: 
+? Config Key: hello
+? Config Secret: No
+? Config Type: string
+? Config Default Value: world
+? Config Description: hello
+? Config Required: No
+? Config Key: shhhh
+? Config Secret: Yes
+? Config Type: password
+? Config Default Value: i-am-a-secret
+? Config Description: shhhh
+? Config Required: Yes
+? Config Key: 
+   create Chart.yaml
+   create OWNERS
+   create README.md
+   create app-readme.md
+   create questions.yaml
+   create values.yaml
+   create templates/NOTES.txt
+   create templates/_helpers.tpl
+   create templates/pvc.yaml
+   create templates/configmap.yaml
+   create templates/secret.yaml
+   create templates/deployments/nginx.yaml
+   create templates/services/nginx.yaml
+   create templates/ingresses/nginx.yaml
+Done in 179.02s.
+```
+
+### Add Workload to Existing Helm Chart
+
+```sh
+yo rancher2-helm-chart:workload
+```
 
 
 ## Support

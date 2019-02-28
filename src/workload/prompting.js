@@ -16,19 +16,19 @@ export default async function prompting(yo) {
   const { name } = yaml.safeLoad(
     fs.readFileSync(path.resolve(destination, 'Chart.yaml'), 'utf8')
   );
-  let deployment = await yo.prompt([
+  let workload = await yo.prompt([
     {
-      message: 'Deployment Name:',
+      message: 'Workload Name:',
       name: 'name',
       type: 'input'
     }
   ]);
-  deployment = {
-    ...deployment,
+  workload = {
+    ...workload,
     ...(await yo.prompt([
       {
         default: 'alpine:latest',
-        message: 'Deployment Image:',
+        message: 'Workload Image:',
         name: 'image',
         type: 'input'
       },
@@ -40,13 +40,13 @@ export default async function prompting(yo) {
       },
       {
         default: '3000',
-        message: 'Deployment Port:',
+        message: 'Workload Port:',
         name: 'port',
         type: 'input'
       },
       {
         default: true,
-        message: 'Deployment Public:',
+        message: 'Workload Public:',
         name: 'public',
         type: 'confirm'
       }
@@ -76,9 +76,9 @@ export default async function prompting(yo) {
   }
   deployment.volumes = volumes;
   yo.answers = {
-    deployment,
     destination,
-    name
+    name,
+    workload
   };
   yo.context = { ...yo.context, ...yo.answers };
 }

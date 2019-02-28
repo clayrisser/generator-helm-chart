@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}-<%= deployment.name %>
+  name: {{ template "<%= name %>.fullname" . }}-<%= workload.name %>
   labels:
-    app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+    app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,16 +11,17 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+        app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%= name %>.fullname" . }}-<%= deployment.name %>
-          image: {{ .Values.images.<%= deployment.name %>.repository }}:{{ .Values.images.<%= deployment.name %>.tag }}
-          imagePullPolicy: {{ .Values.images.<%= deployment.name %>.pullPolicy }}
+        - name: {{ template "<%= name %>.fullname" . }}-<%= workload.name %>
+          image: {{ .Values.images.<%= workload.name %>.repository }}:{{ .Values.images.<%= workload.name %>.tag }}
+          imagePullPolicy: {{ .Values.images.<%= workload.name %>.pullPolicy }}
           ports:
             - name: container
               containerPort: <%= deployment.port %><% if (deployment.persistence) { %>
+
           volumeMounts:
             - name: data
               mountPath: /data/db

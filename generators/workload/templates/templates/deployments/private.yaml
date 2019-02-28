@@ -21,13 +21,3 @@ spec:
           ports:
             - name: container
               containerPort: <%= workload.port %>
-          livenessProbe:
-            httpGet:
-              path: /
-              port: container
-{{ toYaml .Values.probes.liveness | indent 12 }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}-<%= deployment.name %>
+  name: {{ template "<%= name %>.fullname" . }}-<%= workload.name %>
   labels:
-    app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+    app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -14,5 +14,5 @@ spec:
       port: 80
       targetPort: container
   selector:
-    app: {{ template "<%= name %>.name" . }}-<%= deployment.name %>
+    app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
     release: {{ .Release.Name }}
