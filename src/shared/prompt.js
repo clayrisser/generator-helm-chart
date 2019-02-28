@@ -137,77 +137,91 @@ export default class Prompt {
         }
       ]);
       if (!configItem.key.length) break;
-      configItem = {
-        ...configItem,
-        ...(await this.yo.prompt([
-          {
-            default: false,
-            message: 'Config Secret:',
-            name: 'secret',
-            type: 'confirm'
-          }
-        ]))
-      };
-      configItem = {
-        ...configItem,
-        ...(await this.yo.prompt([
-          {
-            default: configItem.secret ? 'password' : 'string',
-            message: 'Config Type:',
-            name: 'type',
-            type: 'list',
-            choices: [
-              {
-                name: 'string',
-                value: 'string'
-              },
-              {
-                name: 'boolean',
-                value: 'boolean'
-              },
-              {
-                name: 'int',
-                value: 'int'
-              },
-              {
-                name: 'enum',
-                value: 'enum'
-              },
-              {
-                name: 'password',
-                value: 'password'
-              },
-              {
-                name: 'storageclass',
-                value: 'storageclass'
-              },
-              {
-                name: 'hostname',
-                value: 'hostname'
-              }
-            ]
-          },
-          {
-            message: 'Config Default Value:',
-            name: 'defaultValue',
-            type: 'input'
-          },
-          {
-            default: configItem.key,
-            message: 'Config Description:',
-            name: 'description',
-            type: 'input'
-          },
-          {
-            default: false,
-            message: 'Config Required:',
-            name: 'required',
-            type: 'confirm'
-          }
-        ]))
-      };
+      configItem = await this.getConfigItem(configItem);
       config.push(configItem);
     }
     return config;
+  }
+
+  async getConfigItem(configItem) {
+    if (!configItem) {
+      configItem = await this.yo.prompt([
+        {
+          default: 'key',
+          message: 'Config Key:',
+          name: 'key',
+          type: 'input'
+        }
+      ]);
+    }
+    configItem = {
+      ...configItem,
+      ...(await this.yo.prompt([
+        {
+          default: false,
+          message: 'Config Secret:',
+          name: 'secret',
+          type: 'confirm'
+        }
+      ]))
+    };
+    return {
+      ...configItem,
+      ...(await this.yo.prompt([
+        {
+          default: configItem.secret ? 'password' : 'string',
+          message: 'Config Type:',
+          name: 'type',
+          type: 'list',
+          choices: [
+            {
+              name: 'string',
+              value: 'string'
+            },
+            {
+              name: 'boolean',
+              value: 'boolean'
+            },
+            {
+              name: 'int',
+              value: 'int'
+            },
+            {
+              name: 'enum',
+              value: 'enum'
+            },
+            {
+              name: 'password',
+              value: 'password'
+            },
+            {
+              name: 'storageclass',
+              value: 'storageclass'
+            },
+            {
+              name: 'hostname',
+              value: 'hostname'
+            }
+          ]
+        },
+        {
+          message: 'Config Default Value:',
+          name: 'defaultValue',
+          type: 'input'
+        },
+        {
+          default: configItem.key,
+          message: 'Config Description:',
+          name: 'description',
+          type: 'input'
+        },
+        {
+          default: false,
+          message: 'Config Required:',
+          name: 'required',
+          type: 'confirm'
+        }
+      ]))
+    };
   }
 }
