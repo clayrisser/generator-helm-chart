@@ -30,8 +30,40 @@ spec:
       volumes:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
         - name: <%= volume.name %>
           {{- if .Values.persistence.enabled }}
+          {{- if (eq .Values.persistence.type "persistentVolumeClaim") }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "<%= name %>.fullname" . ) }}
+          {{- elif (eq .Values.persistence.type "awsElasticBlockStore") }}
+          awsElasticBlockStore:
+          {{- elif (eq .Values.persistence.type "azureDisk") }}
+          azureDisk:
+          {{- elif (eq .Values.persistence.type "azureFile") }}
+          azureFile:
+          {{- elif (eq .Values.persistence.type "cephfs") }}
+          cephfs:
+          {{- elif (eq .Values.persistence.type "flocker") }}
+          flocker:
+          {{- elif (eq .Values.persistence.type "gcePersistentDisk") }}
+          gcePersistentDisk:
+          {{- elif (eq .Values.persistence.type "glusterfs") }}
+          glusterfs:
+          {{- elif (eq .Values.persistence.type "local") }}
+          local:
+          {{- elif (eq .Values.persistence.type "nfs") }}
+          nfs:
+          {{- elif (eq .Values.persistence.type "portworxVolume") }}
+          portworxVolume:
+          {{- elif (eq .Values.persistence.type "quobyte") }}
+          quobyte:
+          {{- elif (eq .Values.persistence.type "rbd") }}
+          rbd:
+          {{- elif (eq .Values.persistence.type "scaleIO") }}
+          scaleIO:
+          {{- elif (eq .Values.persistence.type "storageOS") }}
+          storageOS:
+          {{- elif (eq .Values.persistence.type "vsphereVolume") }}
+          vsphereVolume:
+          {{- end }}
           {{- else }}
           emptyDir: {}
           {{- end }}<% }} %>
