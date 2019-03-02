@@ -1,0 +1,40 @@
+{{- if (not (or .Values.config.mongo.url .Values.config.mongo.host)) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%= name %>.fullname" . }}-mongo
+  labels:
+    app: {{ template "<%= name %>.name" . }}-mongo
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%= name %>.name" . }}-mongo
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%= name %>.fullname" . }}-mongo
+          image: {{ .Values.images.mongo.repository }}:{{ .Values.images.mongo.tag }}
+          imagePullPolicy: {{ .Values.images.mongo.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 27017
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+              subPath: mongo
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: <%= name %>
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+{{- end }}

@@ -79,7 +79,7 @@ export default async function writing(yo) {
     };
     if (workload.public) {
       yo.fs.copyTpl(
-        yo.templatePath('templates/deployments/public.yaml'),
+        yo.templatePath('templates/deployment.yaml'),
         yo.destinationPath(`templates/deployments/${workload.name}.yaml`),
         context
       );
@@ -95,7 +95,7 @@ export default async function writing(yo) {
       );
     } else {
       yo.fs.copyTpl(
-        yo.templatePath('templates/deployments/private.yaml'),
+        yo.templatePath('templates/deployment.yaml'),
         yo.destinationPath(`templates/deployments/${workload.name}.yaml`),
         yo.context
       );

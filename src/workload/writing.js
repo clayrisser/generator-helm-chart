@@ -14,10 +14,7 @@ export default async function writing(yo) {
   );
   if (yo.context.workload.public) {
     yo.fs.copyTpl(
-      path.resolve(
-        '../generators/app/templates',
-        'templates/deployments/public.yaml'
-      ),
+      path.resolve('../generators/app/templates', 'templates/deployment.yaml'),
       yo.destinationPath(
         `templates/deployments/${yo.context.workload.name}.yaml`
       ),
@@ -40,10 +37,7 @@ export default async function writing(yo) {
     );
   } else {
     yo.fs.copyTpl(
-      path.resolve(
-        '../generators/app/templates',
-        'templates/deployments/private.yaml'
-      ),
+      path.resolve('../generators/app/templates', 'templates/deployment.yaml'),
       yo.destinationPath(
         `templates/deployments/${yo.context.workload.name}.yaml`
       ),
