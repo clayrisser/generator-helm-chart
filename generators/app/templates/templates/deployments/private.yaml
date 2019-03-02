@@ -35,8 +35,16 @@ spec:
             claimName: {{ .Values.persistence.existingClaim | default (include "<%= name %>.fullname" . ) }}
           {{- elif (eq .Values.persistence.type "awsElasticBlockStore") }}
           awsElasticBlockStore:
+            volumeID: {{ .Values.persistence.volumeId }}
+            fsType: {{ .Values.persistence.fsType }}
           {{- elif (eq .Values.persistence.type "azureDisk") }}
           azureDisk:
+            cachingMode: {{ .Values.persistence.cachingMode }}
+            diskName: {{ .Values.persistence.diskName }}
+            diskURI: {{ .Values.persistence.diskUri }}
+            fsType: {{ .Values.persistence.fsType }}
+            kind: {{ .Values.persistence.diskKind }}
+            readOnly: {{ .Values.persistence.readOnly | quote }}
           {{- elif (eq .Values.persistence.type "azureFile") }}
           azureFile:
           {{- elif (eq .Values.persistence.type "cephfs") }}

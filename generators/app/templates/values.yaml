@@ -28,10 +28,17 @@ issuer:
 
 persistence:
   enabled: false
-  accessMode: ReadWriteOnce
-  size: 10Gi
-  existingClaim: ''
   type: persistentVolumeClaim
+  accessMode: ReadWriteOnce
+  cachingMode: None
+  diskName: ''
+  diskURI: ''
+  existingClaim: ''
+  fsType: ext4
+  kind: Shared
+  readOnly: false
+  size: 10Gi
+  volumeId: ''
 
 probes:
   liveness:
