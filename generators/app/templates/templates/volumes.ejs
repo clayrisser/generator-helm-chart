@@ -19,6 +19,12 @@
             readOnly: {{ .Values.persistence.readOnly | quote }}
           {{- elif (eq .Values.persistence.type "azureFile") }}
           azureFile:
+            readOnly: {{ .Values.persistence.readOnly | quote }}
+            secretName: {{ .Values.persistence.secretName }}
+            shareName: {{ .Values.persistence.shareName }}
+            {{- if (not (empty .Values.persistence.secretNamespace)) }}
+            secretNamespace: {{ .Values.persistence.secretNamespace }}
+            {{- end }}
           {{- elif (eq .Values.persistence.type "cephfs") }}
           cephfs:
           {{- elif (eq .Values.persistence.type "flocker") }}

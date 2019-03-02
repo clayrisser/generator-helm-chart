@@ -29,13 +29,14 @@ questions:
           - persistentVolumeClaim
           - awsElasticBlockStore
           - azureDisk
+          - azureFile
         required: true
         label: 'persistence type'
       - variable: persistence.size
         default: 10Gi
         description: 'persistent volume size'
         type: string
-        required: false
+        required: true
         show_if: persistence.type=persistentVolumeClaim
         label: 'volume size'
       - variable: persistence.storageClass
@@ -60,14 +61,14 @@ questions:
           - ext4
           - ext3
           - xfs
-        required: false
-        show_if: persistence.type=awsElasticBlockStore||persistence.type=azureDisk
+        required: true
+        show_if: persistence.type=awsElasticBlockStore||persistence.type=azureDisk||persistence.type=azureFile
         label: 'fs type'
       - variable: persistence.volumeId
         default: ''
         description: 'volume id'
         type: string
-        required: false
+        required: true
         show_if: persistence.type=awsElasticBlockStore
         label: 'volume id'
       - variable: persistence.cachingMode
@@ -113,6 +114,27 @@ questions:
         required: false
         show_if: persistence.type=azureDisk
         label: 'read only'
+      - variable: persistence.secretName
+        default: ''
+        description: 'secret name'
+        type: string
+        required: true
+        show_if: persistence.type=azureDisk
+        label: 'secret name'
+      - variable: persistence.secretNamespace
+        default: ''
+        description: 'secret namespace'
+        type: string
+        required: false
+        show_if: persistence.type=azureDisk
+        label: 'secret namespace'
+      - variable: persistence.shareName
+        default: ''
+        description: 'share name'
+        type: string
+        required: true
+        show_if: persistence.type=azureDisk
+        label: 'share name'
 <% if (publicWorkloads.length) { %>
 # Services and Load Balancing
   - variable: ingress.enabled
