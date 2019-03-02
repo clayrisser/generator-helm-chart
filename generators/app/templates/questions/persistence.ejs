@@ -1,0 +1,126 @@
+
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: 'enable persistent volume'
+    type: boolean
+    required: true
+    label: 'persistent volume enabled'
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.type
+        default: persistentVolumeClaim
+        description: 'persistence type'
+        type: enum
+        options:
+          - persistentVolumeClaim
+          - awsElasticBlockStore
+          - azureDisk
+          - azureFile
+        required: true
+        label: 'persistence type'
+      - variable: persistence.size
+        default: 10Gi
+        description: 'persistent volume size'
+        type: string
+        required: true
+        show_if: persistence.type=persistentVolumeClaim
+        label: 'volume size'
+      - variable: persistence.storageClass
+        default: ''
+        description: 'if undefined or null, uses the default storageclass. default to null'
+        type: storageclass
+        required: false
+        show_if: persistence.type=persistentVolumeClaim
+        label: 'default storageclass'
+      - variable: persistence.existingClaim
+        default: ''
+        description: 'If not empty, uses the specified existing PVC instead of creating new one'
+        type: string
+        required: false
+        show_if: persistence.type=persistentVolumeClaim
+        label: 'Existing Persistent Volume Claim for MariaDB'
+      - variable: persistence.fsType
+        default: ''
+        description: 'fs type'
+        type: enum
+        options:
+          - ext4
+          - ext3
+          - xfs
+        required: true
+        show_if: persistence.type=awsElasticBlockStore||persistence.type=azureDisk||persistence.type=azureFile
+        label: 'fs type'
+      - variable: persistence.volumeId
+        default: ''
+        description: 'volume id'
+        type: string
+        required: true
+        show_if: persistence.type=awsElasticBlockStore
+        label: 'volume id'
+      - variable: persistence.cachingMode
+        default: None
+        description: 'caching mode'
+        type: enum
+        options:
+          - None
+          - ReadOnly
+          - ReadWrite
+        required: false
+        show_if: persistence.type=azureDisk
+        label: 'caching mode'
+      - variable: persistence.diskName
+        default: ''
+        description: 'disk name'
+        type: string
+        required: true
+        show_if: persistence.type=azureDisk
+        label: 'disk name'
+      - variable: persistence.diskUri
+        default: ''
+        description: 'disk uri'
+        type: string
+        required: true
+        show_if: persistence.type=azureDisk
+        label: 'disk uri'
+      - variable: persistence.kind
+        default: Shared
+        description: kind
+        type: enum
+        options:
+          - Shared
+          - Dedicated
+          - Managed
+        required: false
+        show_if: persistence.type=azureDisk
+        label: kind
+      - variable: persistence.readOnly
+        default: false
+        description: 'read only'
+        type: boolean
+        required: false
+        show_if: persistence.type=azureDisk
+        label: 'read only'
+      - variable: persistence.secretName
+        default: ''
+        description: 'secret name'
+        type: string
+        required: true
+        show_if: persistence.type=azureDisk
+        label: 'secret name'
+      - variable: persistence.secretNamespace
+        default: ''
+        description: 'secret namespace'
+        type: string
+        required: false
+        show_if: persistence.type=azureDisk
+        label: 'secret namespace'
+      - variable: persistence.shareName
+        default: ''
+        description: 'share name'
+        type: string
+        required: true
+        show_if: persistence.type=azureDisk
+        label: 'share name'

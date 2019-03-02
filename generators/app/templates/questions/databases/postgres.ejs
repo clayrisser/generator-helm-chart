@@ -1,0 +1,47 @@
+<% if (_.find(databases, { name: 'postgres'})) { %>
+
+# Postgres Config
+  - variable: config.postgres.host
+    default: ''
+    description: 'postgres host'
+    type: string
+    required: false
+    label: 'postgres host'
+    group: 'Postgres Config'
+  - variable: config.postgres.database
+    default: rocketchat
+    description: 'postgres database'
+    type: string
+    required: false
+    label: 'postgres database'
+    group: 'Postgres Config'
+  - variable: config.postgres.password
+    default: ''
+    description: 'postgres password'
+    type: password
+    required: false
+    label: 'postgres password'
+    group: 'Postgres Config'
+  - variable: config.postgres.port
+    default: 27017
+    description: 'postgres port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'postgres port'
+    group: 'Postgres Config'
+  - variable: config.postgres.url
+    default: ''
+    description: 'postgres url'
+    type: string
+    required: false
+    label: 'postgres url'
+    group: 'Postgres Config'
+  - variable: config.postgres.username
+    default: ''
+    description: 'postgres username'
+    type: string
+    required: false
+    label: 'postgres username'
+    group: 'Postgres Config'<% } %>

@@ -1,0 +1,47 @@
+<% if (_.find(databases, { name: 'mariadb'})) { %>
+
+# Mariadb Config
+  - variable: config.mariadb.host
+    default: ''
+    description: 'mariadb host'
+    type: string
+    required: false
+    label: 'mariadb host'
+    group: 'Mariadb Config'
+  - variable: config.mariadb.database
+    default: rocketchat
+    description: 'mariadb database'
+    type: string
+    required: false
+    label: 'mariadb database'
+    group: 'Mariadb Config'
+  - variable: config.mariadb.password
+    default: ''
+    description: 'mariadb password'
+    type: password
+    required: false
+    label: 'mariadb password'
+    group: 'Mariadb Config'
+  - variable: config.mariadb.port
+    default: 27017
+    description: 'mariadb port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'mariadb port'
+    group: 'Mariadb Config'
+  - variable: config.mariadb.url
+    default: ''
+    description: 'mariadb url'
+    type: string
+    required: false
+    label: 'mariadb url'
+    group: 'Mariadb Config'
+  - variable: config.mariadb.username
+    default: ''
+    description: 'mariadb username'
+    type: string
+    required: false
+    label: 'mariadb username'
+    group: 'Mariadb Config'<% } %>

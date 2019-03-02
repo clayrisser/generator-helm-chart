@@ -1,0 +1,60 @@
+<% if (publicWorkloads.length) { %>
+
+# Services and Load Balancing
+  - variable: ingress.enabled
+    default: true
+    description: 'expose app using Layer 7 load balancer - ingress'
+    type: boolean
+    label: 'load balancer enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.tls
+        default: false
+        description: 'generate letsencrypt ssl certificate'
+        type: boolean
+        required: true
+        label: tls
+      - variable: issuer.name
+        default: letsencrypt-staging
+        description: 'letsencrypt issuer environment'
+        type: enum
+        options:
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: issuer<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
+      - variable: ingress.hosts.<%= workload.name %>[0].name
+        default: xip.io
+        description: 'hostname to your <%= workload.name %> installation'
+        type: hostname
+        required: true
+        label: '<%= workload.name %> hostname'
+      - variable: ingress.hosts.<%= workload.name %>[0].path
+        default: /
+        description: 'pathname to your <%= workload.name %> installation'
+        type: string
+        required: true
+        label: '<%= workload.name %> path'<% } %>
+  - variable: service.type
+    default: NodePort
+    description: 'service type'
+    type: enum
+    show_if: ingress.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
+      - variable: service.nodePorts.<%= workload.name %>.http
+        default: ''
+        description: 'NodePort <%= workload.name %> http port (to set explicitly, choose port between 30000-32767)'
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false&&service.type=NodePort
+        label: '<%= workload.name %> http port'<% }} %>

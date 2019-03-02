@@ -1,0 +1,47 @@
+<% if (_.find(databases, { name: 'cassandra'})) { %>
+
+# Cassandra Config
+  - variable: config.cassandra.host
+    default: ''
+    description: 'cassandra host'
+    type: string
+    required: false
+    label: 'cassandra host'
+    group: 'Cassandra Config'
+  - variable: config.cassandra.database
+    default: rocketchat
+    description: 'cassandra database'
+    type: string
+    required: false
+    label: 'cassandra database'
+    group: 'Cassandra Config'
+  - variable: config.cassandra.password
+    default: ''
+    description: 'cassandra password'
+    type: password
+    required: false
+    label: 'cassandra password'
+    group: 'Cassandra Config'
+  - variable: config.cassandra.port
+    default: 27017
+    description: 'cassandra port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'cassandra port'
+    group: 'Cassandra Config'
+  - variable: config.cassandra.url
+    default: ''
+    description: 'cassandra url'
+    type: string
+    required: false
+    label: 'cassandra url'
+    group: 'Cassandra Config'
+  - variable: config.cassandra.username
+    default: ''
+    description: 'cassandra username'
+    type: string
+    required: false
+    label: 'cassandra username'
+    group: 'Cassandra Config'<% } %>

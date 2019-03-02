@@ -1,0 +1,47 @@
+<% if (_.find(databases, { name: 'redis'})) { %>
+
+# Redis Config
+  - variable: config.redis.host
+    default: ''
+    description: 'redis host'
+    type: string
+    required: false
+    label: 'redis host'
+    group: 'Redis Config'
+  - variable: config.redis.database
+    default: rocketchat
+    description: 'redis database'
+    type: string
+    required: false
+    label: 'redis database'
+    group: 'Redis Config'
+  - variable: config.redis.password
+    default: ''
+    description: 'redis password'
+    type: password
+    required: false
+    label: 'redis password'
+    group: 'Redis Config'
+  - variable: config.redis.port
+    default: 27017
+    description: 'redis port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'redis port'
+    group: 'Redis Config'
+  - variable: config.redis.url
+    default: ''
+    description: 'redis url'
+    type: string
+    required: false
+    label: 'redis url'
+    group: 'Redis Config'
+  - variable: config.redis.username
+    default: ''
+    description: 'redis username'
+    type: string
+    required: false
+    label: 'redis username'
+    group: 'Redis Config'<% } %>

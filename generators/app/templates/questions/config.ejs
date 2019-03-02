@@ -1,0 +1,10 @@
+<% if (config.length) { %>
+
+# Config<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
+  - variable: config.<%= configItem.key %>
+    default: '<%= configItem.defaultValue %>'
+    description: '<%= configItem.description %>'
+    type: <%= configItem.type %>
+    required: <%= configItem.required %>
+    label: '<%= configItem.description %>'
+    group: Config<% }} %>

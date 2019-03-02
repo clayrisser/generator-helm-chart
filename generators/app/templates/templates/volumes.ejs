@@ -1,4 +1,4 @@
-<% if (workload.volumes.length) { %>
+<% if (workload && workload.volumes.length) { %>
       volumes:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
         - name: <%= volume.name %>
           {{- if .Values.persistence.enabled }}

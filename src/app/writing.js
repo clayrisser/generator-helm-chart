@@ -106,4 +106,22 @@ export default async function writing(yo) {
       );
     }
   });
+  yo.context.databases.forEach(database => {
+    const context = {
+      ...yo.context,
+      database,
+      workload: {
+        volumes: [
+          {
+            name: 'data'
+          }
+        ]
+      }
+    };
+    yo.fs.copyTpl(
+      yo.templatePath(`templates/databases/${database.name}.yaml`),
+      yo.destinationPath(`templates/deployments/${database.name}.yaml`),
+      context
+    );
+  });
 }

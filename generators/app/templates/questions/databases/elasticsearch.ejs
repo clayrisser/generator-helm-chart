@@ -1,0 +1,47 @@
+<% if (_.find(databases, { name: 'elasticsearch'})) { %>
+
+# Elasticsearch Config
+  - variable: config.elasticsearch.host
+    default: ''
+    description: 'elasticsearch host'
+    type: string
+    required: false
+    label: 'elasticsearch host'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.database
+    default: rocketchat
+    description: 'elasticsearch database'
+    type: string
+    required: false
+    label: 'elasticsearch database'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.password
+    default: ''
+    description: 'elasticsearch password'
+    type: password
+    required: false
+    label: 'elasticsearch password'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.port
+    default: 27017
+    description: 'elasticsearch port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'elasticsearch port'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.url
+    default: ''
+    description: 'elasticsearch url'
+    type: string
+    required: false
+    label: 'elasticsearch url'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.username
+    default: ''
+    description: 'elasticsearch username'
+    type: string
+    required: false
+    label: 'elasticsearch username'
+    group: 'Elasticsearch Config'<% } %>

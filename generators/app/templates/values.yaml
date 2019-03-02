@@ -1,58 +1,8 @@
-images:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-  <%= workload.name %>:
-    repository: <%= workload.image.substr(0, workload.image.indexOf(':')) %>
-    tag: <%= workload.image.substr(workload.image.indexOf(':') + 1) %>
-    pullPolicy: IfNotPresent<% } %>
-
-config:<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
-  <%= configItem.key %>: '<%= configItem.defaultValue %>'<% } %>
-
-service:
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  nodePorts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-    <%= workload.name %>:
-      http: ''<% } %>
-
-ingress:
-  enabled: false
-  tls: false
-  hosts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-    <%= workload.name %>:
-      - name: ''
-        path: /<% } %>
-
-issuer:
-  name: letsencrypt-staging
-  kind: ClusterIssuer
-
-persistence:
-  accessMode: ReadWriteOnce
-  cachingMode: None
-  diskName: ''
-  diskURI: ''
-  enabled: false
-  existingClaim: ''
-  fsType: ext4
-  kind: Shared
-  readOnly: false
-  secretName: ''
-  secretNamespace: ''
-  shareName: ''
-  size: 10Gi
-  type: persistentVolumeClaim
-  volumeId: ''
-
-probes:
-  liveness:
-    initialDelaySeconds: 120
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
+<%- include('./values/images'); -%>
+<%- include('./values/config'); -%>
+<%- include('./values/databases'); -%>
+<%- include('./values/service'); -%>
+<%- include('./values/ingress'); -%>
+<%- include('./values/issuer'); -%>
+<%- include('./values/persistence'); -%>
+<%- include('./values/probes'); -%>

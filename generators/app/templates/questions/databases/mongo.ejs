@@ -1,0 +1,47 @@
+<% if (_.find(databases, { name: 'mongo'})) { %>
+
+# Mongo Config
+  - variable: config.mongo.host
+    default: ''
+    description: 'mongo host'
+    type: string
+    required: false
+    label: 'mongo host'
+    group: 'Mongo Config'
+  - variable: config.mongo.database
+    default: rocketchat
+    description: 'mongo database'
+    type: string
+    required: false
+    label: 'mongo database'
+    group: 'Mongo Config'
+  - variable: config.mongo.password
+    default: ''
+    description: 'mongo password'
+    type: password
+    required: false
+    label: 'mongo password'
+    group: 'Mongo Config'
+  - variable: config.mongo.port
+    default: 27017
+    description: 'mongo port'
+    type: int
+    min: 0
+    max: 50000
+    required: false
+    label: 'mongo port'
+    group: 'Mongo Config'
+  - variable: config.mongo.url
+    default: ''
+    description: 'mongo url'
+    type: string
+    required: false
+    label: 'mongo url'
+    group: 'Mongo Config'
+  - variable: config.mongo.username
+    default: ''
+    description: 'mongo username'
+    type: string
+    required: false
+    label: 'mongo username'
+    group: 'Mongo Config'<% } %>

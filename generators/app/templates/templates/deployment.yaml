@@ -36,4 +36,4 @@ spec:
             httpGet:
               path: /
               port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('./volumes'); %>
