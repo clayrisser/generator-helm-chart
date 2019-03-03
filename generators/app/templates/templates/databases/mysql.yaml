@@ -1,0 +1,55 @@
+{{- if (not (or .Values.config.mysql.url .Values.config.mysql.host)) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%= name %>.fullname" . }}-mysql
+  labels:
+    app: {{ template "<%= name %>.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%= name %>.name" . }}-mysql
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%= name %>.fullname" . }}-mysql
+          image: {{ .Values.images.mysql.repository }}:{{ .Values.images.mysql.tag }}
+          imagePullPolicy: {{ .Values.images.mysql.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 3306
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+              subPath: mysql
+          env:
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: 'true'
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%= name %>.fullname" . }}
+                  key: mysql_database
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%= name %>.fullname" . }}
+                  key: mysql_user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "<%= name %>.fullname" . }}
+                  key: mysql_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+{{- end }}

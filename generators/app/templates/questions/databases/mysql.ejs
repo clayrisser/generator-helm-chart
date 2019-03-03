@@ -1,47 +1,47 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
 
-# Mysql Config
+# MySQL Config
   - variable: config.mysql.host
     default: ''
     description: 'mysql host'
     type: string
     required: false
     label: 'mysql host'
-    group: 'Mysql Config'
+    group: 'MySQL Config'
   - variable: config.mysql.database
     default: rocketchat
     description: 'mysql database'
     type: string
     required: false
     label: 'mysql database'
-    group: 'Mysql Config'
+    group: 'MySQL Config'
   - variable: config.mysql.password
     default: ''
     description: 'mysql password'
     type: password
     required: false
     label: 'mysql password'
-    group: 'Mysql Config'
+    group: 'MySQL Config'
   - variable: config.mysql.port
-    default: 27017
+    default: 3306
     description: 'mysql port'
     type: int
     min: 0
     max: 50000
     required: false
     label: 'mysql port'
-    group: 'Mysql Config'
+    group: 'MySQL Config'
   - variable: config.mysql.url
     default: ''
     description: 'mysql url'
     type: string
     required: false
     label: 'mysql url'
-    group: 'Mysql Config'
+    group: 'MySQL Config'
   - variable: config.mysql.username
     default: ''
     description: 'mysql username'
     type: string
     required: false
     label: 'mysql username'
-    group: 'Mysql Config'<% } %>
+    group: 'MySQL Config'<% } %>
