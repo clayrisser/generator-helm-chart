@@ -52,7 +52,7 @@ export default async function writing(yo) {
     yo.destinationPath('templates/pvc.yaml'),
     yo.context
   );
-  if (configMaps.length) {
+  if (configMaps.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/configmap.yaml'),
       yo.destinationPath('templates/configmap.yaml'),
@@ -62,7 +62,7 @@ export default async function writing(yo) {
       }
     );
   }
-  if (configSecrets.length) {
+  if (configSecrets.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/secret.yaml'),
       yo.destinationPath('templates/secret.yaml'),

@@ -1,7 +1,6 @@
-<% if (_.includes(_.map(databases, 'name'), 'mariadb')) { -%>
-{{- $mariadb := .Values.config.mariadb }}
+<% if (_.find(databases, { name: 'mariadb'})) { %>
+  {{- $mariadb := .Values.config.mariadb }}
   mariadb_host: {{ .Values.config.mariadb.host | quote }}
   mariadb_database: {{ .Values.config.mariadb.database | quote }}
   mariadb_port: {{ .Values.config.mariadb.port | quote }}
-  mariadb_username: {{ .Values.config.mariadb.username | quote }}
-<% } -%>
+  mariadb_username: {{ .Values.config.mariadb.username | quote }}<% } %>

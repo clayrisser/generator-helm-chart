@@ -1,19 +1,52 @@
 import modInline from 'mod-inline';
+import fs from 'fs-extra';
 import path from 'path';
 
 export default async function writing(yo) {
   if (yo.context.configItem.secret) {
-    yo.fs.copy(
-      path.resolve(yo.context.destination, 'templates/secret.yaml'),
-      yo.destinationPath('templates/secret.yaml'),
-      { process: content => processSecret(content, yo.context) }
+    const secretPath = path.resolve(
+      yo.context.destination,
+      'templates/secret.yaml'
     );
+    if (fs.existsSync(secretPath)) {
+      yo.fs.copy(secretPath, yo.destinationPath('templates/secret.yaml'), {
+        process: content => processSecret(content, yo.context)
+      });
+    } else {
+      yo.fs.copyTpl(
+        yo.templatePath('../../app/templates/templates/secret.yaml'),
+        yo.destinationPath('templates/secret.yaml'),
+        {
+          ...yo.context,
+          configSecrets: [yo.context.configItem],
+          databases: []
+        }
+      );
+    }
   } else {
-    yo.fs.copy(
-      path.resolve(yo.context.destination, 'templates/configmap.yaml'),
-      yo.destinationPath('templates/configmap.yaml'),
-      { process: content => processConfigMap(content, yo.context) }
+    const configMapPath = path.resolve(
+      yo.context.destination,
+      'templates/configmap.yaml'
     );
+    if (fs.existsSync(configMapPath)) {
+      yo.fs.copy(
+        configMapPath,
+        yo.destinationPath('templates/configmap.yaml'),
+        {
+          process: content => processConfigMap(content, yo.context)
+        }
+      );
+    } else {
+      yo.fs.copyTpl(
+        yo.templatePath('../../app/templates/templates/configmap.yaml'),
+        yo.destinationPath('templates/configmap.yaml'),
+        {
+          ...yo.context,
+          configMaps: [yo.context.configItem],
+          databases: []
+        }
+      );
+    }
   }
   yo.fs.copy(
     path.resolve(yo.context.destination, 'values.yaml'),
@@ -71,10 +104,11 @@ function processQuestions(content, context) {
   const IMPRECISE_CONFIG = /\nquestions:\n(.|\n)* {4}group: Config([^-#]|\n)*/;
   const PRECISE_CONFIG = /(\n {2}- [^\n]+(\n {4}[^\n]+)+)+/;
   content = content.toString();
-  content = modInline.append(
-    content,
-    [IMPRECISE_CONFIG, PRECISE_CONFIG],
-    `
+  try {
+    content = modInline.append(
+      content,
+      [IMPRECISE_CONFIG, PRECISE_CONFIG],
+      `
   - variable: config.${configItem.key}
     default: '${configItem.defaultValue}'
     description: '${configItem.description}'
@@ -82,6 +116,23 @@ function processQuestions(content, context) {
     required: ${configItem.required}
     label: '${configItem.description}'
     group: Config`
-  );
+    );
+  } catch (err) {
+    if (err.message !== "Cannot read property 'match' of null") throw err;
+    content = modInline.append(
+      content,
+      /questions:/,
+      `
+
+# Config
+  - variable: config.${configItem.key}
+    default: '${configItem.defaultValue}'
+    description: '${configItem.description}'
+    type: ${configItem.type}
+    required: ${configItem.required}
+    label: '${configItem.description}'
+    group: Config`
+    );
+  }
   return content;
 }

@@ -1,7 +1,6 @@
-<% if (_.includes(_.map(databases, 'name'), 'mongo')) { -%>
-{{- $mongo := .Values.config.mongo }}
+<% if (_.find(databases, { name: 'mongo'})) { %>
+  {{- $mongo := .Values.config.mongo }}
   mongo_host: {{ .Values.config.mongo.host | quote }}
   mongo_database: {{ .Values.config.mongo.database | quote }}
   mongo_port: {{ .Values.config.mongo.port | quote }}
-  mongo_username: {{ .Values.config.mongo.username | quote }}
-<% } -%>
+  mongo_username: {{ .Values.config.mongo.username | quote }}<% } %>

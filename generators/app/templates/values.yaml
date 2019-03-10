@@ -5,4 +5,4 @@
 <%- include('./values/ingress'); -%>
 <%- include('./values/issuer'); -%>
 <%- include('./values/persistence'); -%>
-<%- include('./values/probes'); -%>
+<%- include('./values/probes'); %>

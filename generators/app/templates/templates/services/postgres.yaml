@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-postgres
+  labels:
+    app: {{ template "<%- name %>.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 27017
+      targetPort: container
+  selector:
+    app: {{ template "<%- name %>.name" . }}-postgres
+    release: {{ .Release.Name }}
