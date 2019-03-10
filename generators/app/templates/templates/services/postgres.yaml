@@ -11,7 +11,7 @@ spec:
   type: ClusterIP
   ports:
     - name: postgres
-      port: 27017
+      port: 5432
       targetPort: container
   selector:
     app: {{ template "<%- name %>.name" . }}-postgres

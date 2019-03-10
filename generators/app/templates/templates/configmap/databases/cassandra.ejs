@@ -1,6 +1,0 @@
-<% if (_.find(databases, { name: 'cassandra'})) { %>
-  {{- $cassandra := .Values.config.cassandra }}
-  cassandra_host: {{ .Values.config.cassandra.host | quote }}
-  cassandra_database: {{ .Values.config.cassandra.database | quote }}
-  cassandra_port: {{ .Values.config.cassandra.port | quote }}
-  cassandra_username: {{ .Values.config.cassandra.username | quote }}<% } %>

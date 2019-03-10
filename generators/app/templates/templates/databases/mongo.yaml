@@ -28,7 +28,10 @@ spec:
               subPath: mongo
           env:
             - name: MONGO_INITDB_DATABASE
-              value: <%- name %>
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: mongo_database
           livenessProbe:
             tcpSocket:
               port: container

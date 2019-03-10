@@ -1,0 +1,38 @@
+{{- if (not (or .Values.config.redis.url .Values.config.redis.host)) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-redis
+  labels:
+    app: {{ template "<%- name %>.name" . }}-redis
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- name %>.name" . }}-redis
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%- name %>.fullname" . }}-redis
+          image: {{ .Values.images.redis.repository }}:{{ .Values.images.redis.tag }}
+          imagePullPolicy: {{ .Values.images.redis.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              subPath: redis
+          env: []
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+{{- end }}

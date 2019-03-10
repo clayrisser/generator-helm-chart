@@ -11,7 +11,7 @@ spec:
   type: ClusterIP
   ports:
     - name: elasticsearch
-      port: 27017
+      port: 9200
       targetPort: container
   selector:
     app: {{ template "<%- name %>.name" . }}-elasticsearch

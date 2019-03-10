@@ -24,7 +24,7 @@ spec:
               containerPort: 3306
           volumeMounts:
             - name: data
-              mountPath: /data/db
+              mountPath: /var/lib/mysql
               subPath: mysql
           env:
             - name: MYSQL_RANDOM_ROOT_PASSWORD

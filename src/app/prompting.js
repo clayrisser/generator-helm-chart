@@ -47,7 +47,6 @@ export default async function prompting(yo) {
         message: 'Databases:',
         default: [],
         choices: [
-          { name: 'Cassandra', value: 'cassandra' },
           { name: 'Elasticsearch', value: 'elasticsearch' },
           { name: 'Mariadb', value: 'mariadb' },
           { name: 'Mongo', value: 'mongo' },
@@ -59,10 +58,6 @@ export default async function prompting(yo) {
     ])).databases,
     database => {
       return {
-        cassandra: {
-          name: 'cassandra',
-          image: 'cassandra:latest'
-        },
         elasticsearch: {
           name: 'elasticsearch',
           image: 'elasticsearch:latest'

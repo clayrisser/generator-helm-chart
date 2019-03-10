@@ -1,0 +1,55 @@
+{{- if (not (or .Values.config.mariadb.url .Values.config.mysql.host)) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-mariadb
+  labels:
+    app: {{ template "<%- name %>.name" . }}-mariadb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- name %>.name" . }}-mariadb
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%- name %>.fullname" . }}-mariadb
+          image: {{ .Values.images.mariadb.repository }}:{{ .Values.images.mysql.tag }}
+          imagePullPolicy: {{ .Values.images.mariadb.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 3306
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+              subPath: mariadb
+          env:
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: 'true'
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: mariadb_database
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: mariadb_user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: mariadb_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+{{- end }}

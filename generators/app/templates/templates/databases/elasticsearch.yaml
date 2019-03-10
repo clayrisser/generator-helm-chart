@@ -1,0 +1,45 @@
+{{- if (not (or .Values.config.elasticsearch.url .Values.config.elasticsearch.host)) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-elasticsearch
+  labels:
+    app: {{ template "<%- name %>.name" . }}-elasticsearch
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- name %>.name" . }}-elasticsearch
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%- name %>.fullname" . }}-elasticsearch
+          image: {{ .Values.images.elasticsearch.repository }}:{{ .Values.images.elasticsearch.tag }}
+          imagePullPolicy: {{ .Values.images.elasticsearch.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 9200
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+              subPath: elasticsearch
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: elasticsearch_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+{{- end }}

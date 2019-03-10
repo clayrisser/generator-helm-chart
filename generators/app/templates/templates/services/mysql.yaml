@@ -11,7 +11,7 @@ spec:
   type: ClusterIP
   ports:
     - name: mysql
-      port: 27017
+      port: 3306
       targetPort: container
   selector:
     app: {{ template "<%- name %>.name" . }}-mysql
