@@ -1,7 +1,7 @@
 <% if (_.find(databases, { name: 'cassandra'})) { %>
   cassandra:
     host: ''
-    database: <%= name %>
+    database: <%- name %>
     password: ''
     port: 9042
     url: ''

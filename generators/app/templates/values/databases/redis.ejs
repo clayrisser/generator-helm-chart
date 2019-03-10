@@ -1,7 +1,7 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
   redis:
     host: ''
-    database: <%= name %>
+    database: <%- name %>
     password: ''
     port: 6379
     url: ''

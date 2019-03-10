@@ -1,16 +1,16 @@
 {{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts.<%= workload.name %> }}
+{{- range .Values.ingress.hosts.<%- workload.name %> }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "<%= name %>.fullname" $ }}-<%= workload.name %>
+  name: {{ template "<%- name %>.fullname" $ }}-<%- workload.name %>
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   annotations:
     certmanager.k8s.io/cluster-issuer: {{ $.Values.issuer.name }}
     kubernetes.io/tls-acme: "true"
   {{- end }}
   labels:
-    app: {{ template "<%= name %>.name" $ }}-<%= workload.name %>
+    app: {{ template "<%- name %>.name" $ }}-<%- workload.name %>
     chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
     release: {{ $.Release.Name }}
     heritage: {{ $.Release.Service }}
@@ -21,7 +21,7 @@ spec:
         paths:
           - path: {{ .path }}
             backend:
-              serviceName: {{ template "<%= name %>.fullname" $ }}-<%= workload.name %>
+              serviceName: {{ template "<%- name %>.fullname" $ }}-<%- workload.name %>
               servicePort: http
   {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   tls:

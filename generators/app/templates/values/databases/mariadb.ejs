@@ -1,7 +1,7 @@
 <% if (_.find(databases, { name: 'mariadb'})) { %>
   mariadb:
     host: ''
-    database: <%= name %>
+    database: <%- name %>
     password: ''
     port: 3306
     url: ''

@@ -1,10 +1,10 @@
 <% if (workloads.length || databases.length) { -%>
 images:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-  <%= workload.name %>:
-    repository: <%= workload.image.substr(0, workload.image.indexOf(':')) %>
-    tag: <%= workload.image.substr(workload.image.indexOf(':') + 1) %>
+  <%- workload.name %>:
+    repository: <%- workload.image.substr(0, workload.image.indexOf(':')) %>
+    tag: <%- workload.image.substr(workload.image.indexOf(':') + 1) %>
     pullPolicy: IfNotPresent<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%= database.name %>:
-    repository: <%= database.image.substr(0, database.image.indexOf(':')) %>
-    tag: <%= database.image.substr(database.image.indexOf(':') + 1) %>
+  <%- database.name %>:
+    repository: <%- database.image.substr(0, database.image.indexOf(':')) %>
+    tag: <%- database.image.substr(database.image.indexOf(':') + 1) %>
     pullPolicy: IfNotPresent<% }} %>

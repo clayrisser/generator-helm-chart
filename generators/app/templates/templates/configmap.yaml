@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}
+  name: {{ template "<%- name %>.fullname" . }}
   labels:
-    app: {{ template "<%= name %>.name" . }}
+    app: {{ template "<%- name %>.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:<% for (var i = 0; i < configMaps.length; i++) { configMap = configMaps[i]; %>
-  <%= configMap.key %>: {{ .Values.config.<%= configMap.key %> | quote }}<% } -%>
+  <%- configMap.key %>: {{ .Values.config.<%- configMap.key %> | quote }}<% } -%>
 <%- include('./configmap/databases'); %>

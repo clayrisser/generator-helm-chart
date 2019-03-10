@@ -2,9 +2,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}-mongo
+  name: {{ template "<%- name %>.fullname" . }}-mongo
   labels:
-    app: {{ template "<%= name %>.name" . }}-mongo
+    app: {{ template "<%- name %>.name" . }}-mongo
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%= name %>.name" . }}-mongo
+        app: {{ template "<%- name %>.name" . }}-mongo
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%= name %>.fullname" . }}-mongo
+        - name: {{ template "<%- name %>.fullname" . }}-mongo
           image: {{ .Values.images.mongo.repository }}:{{ .Values.images.mongo.tag }}
           imagePullPolicy: {{ .Values.images.mongo.pullPolicy }}
           ports:
@@ -28,7 +28,7 @@ spec:
               subPath: mongo
           env:
             - name: MONGO_INITDB_DATABASE
-              value: <%= name %>
+              value: <%- name %>
           livenessProbe:
             tcpSocket:
               port: container

@@ -1,7 +1,7 @@
 <% if (_.find(databases, { name: 'postgres'})) { %>
   postgres:
     host: ''
-    database: <%= name %>
+    database: <%- name %>
     password: ''
     port: 5432
     url: ''

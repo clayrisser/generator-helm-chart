@@ -1,10 +1,10 @@
 <% if (workload && workload.volumes.length) { %>
       volumes:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
-        - name: <%= volume.name %>
+        - name: <%- volume.name %>
           {{- if .Values.persistence.enabled }}
           {{- if (eq .Values.persistence.type "persistentVolumeClaim") }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "<%= name %>.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim | default (include "<%- name %>.fullname" . ) }}
           {{- elif (eq .Values.persistence.type "awsElasticBlockStore") }}
           awsElasticBlockStore:
             volumeID: {{ .Values.persistence.volumeId }}

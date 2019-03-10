@@ -4,5 +4,5 @@ service:
   type: NodePort
   externalTrafficPolicy: Cluster
   nodePorts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-    <%= workload.name %>:
+    <%- workload.name %>:
       http: ''<% } %>

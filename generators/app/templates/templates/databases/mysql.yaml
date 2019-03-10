@@ -2,9 +2,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}-mysql
+  name: {{ template "<%- name %>.fullname" . }}-mysql
   labels:
-    app: {{ template "<%= name %>.name" . }}-mysql
+    app: {{ template "<%- name %>.name" . }}-mysql
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%= name %>.name" . }}-mysql
+        app: {{ template "<%- name %>.name" . }}-mysql
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%= name %>.fullname" . }}-mysql
+        - name: {{ template "<%- name %>.fullname" . }}-mysql
           image: {{ .Values.images.mysql.repository }}:{{ .Values.images.mysql.tag }}
           imagePullPolicy: {{ .Values.images.mysql.pullPolicy }}
           ports:
@@ -32,17 +32,17 @@ spec:
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "<%= name %>.fullname" . }}
+                  name: {{ template "<%- name %>.fullname" . }}
                   key: mysql_database
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "<%= name %>.fullname" . }}
+                  name: {{ template "<%- name %>.fullname" . }}
                   key: mysql_user
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%= name %>.fullname" . }}
+                  name: {{ template "<%- name %>.fullname" . }}
                   key: mysql_password
           livenessProbe:
             tcpSocket:

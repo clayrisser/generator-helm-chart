@@ -4,6 +4,6 @@ ingress:
   enabled: false
   tls: false
   hosts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-    <%= workload.name %>:
+    <%- workload.name %>:
       - name: ''
         path: /<% } %>

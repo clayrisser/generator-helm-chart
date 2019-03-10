@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}-<%= workload.name %>
+  name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
   labels:
-    app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
+    app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,20 +11,20 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%= name %>.name" . }}-<%= workload.name %>
+        app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%= name %>.fullname" . }}-<%= workload.name %>
-          image: {{ .Values.images.<%= workload.name %>.repository }}:{{ .Values.images.<%= workload.name %>.tag }}
-          imagePullPolicy: {{ .Values.images.<%= workload.name %>.pullPolicy }}
+        - name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
+          image: {{ .Values.images.<%- workload.name %>.repository }}:{{ .Values.images.<%- workload.name %>.tag }}
+          imagePullPolicy: {{ .Values.images.<%- workload.name %>.pullPolicy }}
           ports:
             - name: container
-              containerPort: <%= workload.port %><% if (workload.volumes.length) { %>
+              containerPort: <%- workload.port %><% if (workload.volumes.length) { %>
           volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
-            - name: <%= volume.name %>
-              mountPath: '<%= volume.mountPath %>'<% if (volume.subPath) { %>
-              subPath: <%= volume.subPath %><% } if (volume.readOnly) { %>
+            - name: <%- volume.name %>
+              mountPath: '<%- volume.mountPath %>'<% if (volume.subPath) { %>
+              subPath: <%- volume.subPath %><% } if (volume.readOnly) { %>
               readOnly: true<% }}} %>
           env: []
           livenessProbe:
