@@ -123,5 +123,10 @@ export default async function writing(yo) {
       yo.destinationPath(`templates/deployments/${database.name}.yaml`),
       context
     );
+    yo.fs.copyTpl(
+      yo.templatePath(`templates/services/${database.name}.yaml`),
+      yo.destinationPath(`templates/services/${database.name}.yaml`),
+      context
+    );
   });
 }

@@ -1,6 +1,7 @@
+<% if (_.includes(_.map(databases, 'name'), 'mysql')) { -%>
+{{- $mysql := .Values.config.mysql }}
   mysql_host: {{ .Values.config.mysql.host | quote }}
   mysql_database: {{ .Values.config.mysql.database | quote }}
-  mysql_password: {{ .Values.config.mysql.password | quote }}
   mysql_port: {{ .Values.config.mysql.port | quote }}
-  mysql_url: {{ .Values.config.mysql.url | quote }}
   mysql_username: {{ .Values.config.mysql.username | quote }}
+<% } -%>
