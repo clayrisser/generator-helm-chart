@@ -38,7 +38,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "<%- name %>.fullname" . }}
-                  key: mariadb_user
+                  key: mariadb_username
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
