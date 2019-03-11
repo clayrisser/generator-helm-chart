@@ -2,7 +2,7 @@
   {{- $mongo := .Values.config.mongo }}
   {{- if (empty $mongo.host) }}
   mongo_host: {{ template "<%- name %>.fullname" . }}-mongo
-  mongo_port: 27017
+  mongo_port: '27017'
   {{- else }}
   mongo_host: {{ $mongo.host | quote }}
   mongo_port: {{ $mongo.port | quote }}

@@ -2,7 +2,7 @@
   {{- $elasticsearch := .Values.config.elasticsearch }}
   {{- if (empty $elasticsearch.host) }}
   elasticsearch_host: {{ template "<%- name %>.fullname" . }}-elasticsearch
-  elasticsearch_port: 9200
+  elasticsearch_port: '9200'
   {{- else }}
   elasticsearch_host: {{ $elasticsearch.host | quote }}
   elasticsearch_port: {{ $elasticsearch.port | quote }}

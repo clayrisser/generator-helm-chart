@@ -2,7 +2,7 @@
   {{- $redis := .Values.config.redis }}
   {{- if (empty $redis.host) }}
   redis_host: {{ template "<%- name %>.fullname" . }}-redis
-  redis_port: 6379
+  redis_port: '6379'
   {{- else }}
   redis_host: {{ $redis.host | quote }}
   redis_port: {{ $redis.port | quote }}

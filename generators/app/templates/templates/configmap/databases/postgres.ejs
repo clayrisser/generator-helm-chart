@@ -2,7 +2,7 @@
   {{- $postgres := .Values.config.postgres }}
   {{- if (empty $postgres.host) }}
   postgres_host: {{ template "<%- name %>.fullname" . }}-postgres
-  postgres_port: 5432
+  postgres_port: '5432'
   {{- else }}
   postgres_host: {{ $postgres.host | quote }}
   postgres_port: {{ $postgres.port | quote }}

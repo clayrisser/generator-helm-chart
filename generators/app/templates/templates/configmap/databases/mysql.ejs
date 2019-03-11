@@ -2,7 +2,7 @@
   {{- $mysql := .Values.config.mysql }}
   {{- if (empty $mysql.host) }}
   mysql_host: {{ template "<%- name %>.fullname" . }}-mysql
-  mysql_port: 3306
+  mysql_port: '3306'
   {{- else }}
   mysql_host: {{ $mysql.host | quote }}
   mysql_port: {{ $mysql.port | quote }}

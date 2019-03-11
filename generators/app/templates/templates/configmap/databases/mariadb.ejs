@@ -2,7 +2,7 @@
   {{- $mariadb := .Values.config.mariadb }}
   {{- if (empty $mariadb.host) }}
   mariadb_host: {{ template "<%- name %>.fullname" . }}-mariadb
-  mariadb_port: 3306
+  mariadb_port: '3306'
   {{- else }}
   mariadb_host: {{ $mariadb.host | quote }}
   mariadb_port: {{ $mariadb.port | quote }}
