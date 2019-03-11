@@ -5,11 +5,11 @@
           {{- if (eq .Values.persistence.type "persistentVolumeClaim") }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "<%- name %>.fullname" . ) }}
-          {{- elif (eq .Values.persistence.type "awsElasticBlockStore") }}
+          {{- else if (eq .Values.persistence.type "awsElasticBlockStore") }}
           awsElasticBlockStore:
             volumeID: {{ .Values.persistence.volumeId }}
             fsType: {{ .Values.persistence.fsType }}
-          {{- elif (eq .Values.persistence.type "azureDisk") }}
+          {{- else if (eq .Values.persistence.type "azureDisk") }}
           azureDisk:
             cachingMode: {{ .Values.persistence.cachingMode }}
             diskName: {{ .Values.persistence.diskName }}
@@ -17,7 +17,7 @@
             fsType: {{ .Values.persistence.fsType }}
             kind: {{ .Values.persistence.diskKind }}
             readOnly: {{ .Values.persistence.readOnly | quote }}
-          {{- elif (eq .Values.persistence.type "azureFile") }}
+          {{- else if (eq .Values.persistence.type "azureFile") }}
           azureFile:
             readOnly: {{ .Values.persistence.readOnly | quote }}
             secretName: {{ .Values.persistence.secretName }}
@@ -25,29 +25,29 @@
             {{- if (not (empty .Values.persistence.secretNamespace)) }}
             secretNamespace: {{ .Values.persistence.secretNamespace }}
             {{- end }}
-          {{- elif (eq .Values.persistence.type "cephfs") }}
+          {{- else if (eq .Values.persistence.type "cephfs") }}
           cephfs:
-          {{- elif (eq .Values.persistence.type "flocker") }}
+          {{- else if (eq .Values.persistence.type "flocker") }}
           flocker:
-          {{- elif (eq .Values.persistence.type "gcePersistentDisk") }}
+          {{- else if (eq .Values.persistence.type "gcePersistentDisk") }}
           gcePersistentDisk:
-          {{- elif (eq .Values.persistence.type "glusterfs") }}
+          {{- else if (eq .Values.persistence.type "glusterfs") }}
           glusterfs:
-          {{- elif (eq .Values.persistence.type "local") }}
+          {{- else if (eq .Values.persistence.type "local") }}
           local:
-          {{- elif (eq .Values.persistence.type "nfs") }}
+          {{- else if (eq .Values.persistence.type "nfs") }}
           nfs:
-          {{- elif (eq .Values.persistence.type "portworxVolume") }}
+          {{- else if (eq .Values.persistence.type "portworxVolume") }}
           portworxVolume:
-          {{- elif (eq .Values.persistence.type "quobyte") }}
+          {{- else if (eq .Values.persistence.type "quobyte") }}
           quobyte:
-          {{- elif (eq .Values.persistence.type "rbd") }}
+          {{- else if (eq .Values.persistence.type "rbd") }}
           rbd:
-          {{- elif (eq .Values.persistence.type "scaleIO") }}
+          {{- else if (eq .Values.persistence.type "scaleIO") }}
           scaleIO:
-          {{- elif (eq .Values.persistence.type "storageOS") }}
+          {{- else if (eq .Values.persistence.type "storageOS") }}
           storageOS:
-          {{- elif (eq .Values.persistence.type "vsphereVolume") }}
+          {{- else if (eq .Values.persistence.type "vsphereVolume") }}
           vsphereVolume:
           {{- end }}
           {{- else }}

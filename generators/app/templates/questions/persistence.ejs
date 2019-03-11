@@ -108,19 +108,19 @@
         description: 'secret name'
         type: string
         required: true
-        show_if: persistence.type=azureDisk
+        show_if: persistence.type=azureFile
         label: 'secret name'
       - variable: persistence.secretNamespace
         default: ''
         description: 'secret namespace'
         type: string
         required: false
-        show_if: persistence.type=azureDisk
+        show_if: persistence.type=azureFile
         label: 'secret namespace'
       - variable: persistence.shareName
         default: ''
         description: 'share name'
         type: string
         required: true
-        show_if: persistence.type=azureDisk
+        show_if: persistence.type=azureFile
         label: 'share name'
