@@ -1,6 +1,11 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
   {{- $elasticsearch := .Values.config.elasticsearch }}
-  elasticsearch_host: {{ .Values.config.elasticsearch.host | quote }}
-  elasticsearch_database: {{ .Values.config.elasticsearch.database | quote }}
-  elasticsearch_port: {{ .Values.config.elasticsearch.port | quote }}
-  elasticsearch_username: {{ .Values.config.elasticsearch.username | quote }}<% } -%>
+  {{- if (empty $elasticsearch.host) }}
+  elasticsearch_host: {{ template "<%- name %>.fullname" . }}-elasticsearch
+  elasticsearch_port: 9200
+  {{- else }}
+  elasticsearch_host: {{ $elasticsearch.host | quote }}
+  elasticsearch_port: {{ $elasticsearch.port | quote }}
+  {{- end }}
+  elasticsearch_database: {{ $elasticsearch.database | quote }}
+  elasticsearch_username: {{ $elasticsearch.username | quote }}<% } %>

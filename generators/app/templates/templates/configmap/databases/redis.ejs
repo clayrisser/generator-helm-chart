@@ -1,6 +1,11 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
   {{- $redis := .Values.config.redis }}
-  redis_host: {{ .Values.config.redis.host | quote }}
-  redis_database: {{ .Values.config.redis.database | quote }}
-  redis_port: {{ .Values.config.redis.port | quote }}
-  redis_username: {{ .Values.config.redis.username | quote }}<% } %>
+  {{- if (empty $redis.host) }}
+  redis_host: {{ template "<%- name %>.fullname" . }}-redis
+  redis_port: 6379
+  {{- else }}
+  redis_host: {{ $redis.host | quote }}
+  redis_port: {{ $redis.port | quote }}
+  {{- end }}
+  redis_database: {{ $redis.database | quote }}
+  redis_username: {{ $redis.username | quote }}<% } %>

@@ -1,6 +1,11 @@
 <% if (_.find(databases, { name: 'mariadb'})) { %>
   {{- $mariadb := .Values.config.mariadb }}
-  mariadb_host: {{ .Values.config.mariadb.host | quote }}
-  mariadb_database: {{ .Values.config.mariadb.database | quote }}
-  mariadb_port: {{ .Values.config.mariadb.port | quote }}
-  mariadb_username: {{ .Values.config.mariadb.username | quote }}<% } %>
+  {{- if (empty $mariadb.host) }}
+  mariadb_host: {{ template "<%- name %>.fullname" . }}-mariadb
+  mariadb_port: 3306
+  {{- else }}
+  mariadb_host: {{ $mariadb.host | quote }}
+  mariadb_port: {{ $mariadb.port | quote }}
+  {{- end }}
+  mariadb_database: {{ $mariadb.database | quote }}
+  mariadb_username: {{ $mariadb.username | quote }}<% } %>

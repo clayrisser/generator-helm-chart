@@ -1,6 +1,11 @@
 <% if (_.find(databases, { name: 'mongo'})) { %>
   {{- $mongo := .Values.config.mongo }}
-  mongo_host: {{ .Values.config.mongo.host | quote }}
-  mongo_database: {{ .Values.config.mongo.database | quote }}
-  mongo_port: {{ .Values.config.mongo.port | quote }}
-  mongo_username: {{ .Values.config.mongo.username | quote }}<% } %>
+  {{- if (empty $mongo.host) }}
+  mongo_host: {{ template "<%- name %>.fullname" . }}-mongo
+  mongo_port: 27017
+  {{- else }}
+  mongo_host: {{ $mongo.host | quote }}
+  mongo_port: {{ $mongo.port | quote }}
+  {{- end }}
+  mongo_database: {{ $mongo.database | quote }}
+  mongo_username: {{ $mongo.username | quote }}<% } %>
