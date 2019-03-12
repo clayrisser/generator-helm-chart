@@ -1,47 +1,52 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
 
 # Redis Config
+  - variable: config.redis.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'redis internal'
+    group: 'Redis Config'
   - variable: config.redis.host
     default: ''
-    description: 'redis host'
+    description: ''
     type: string
     required: false
     label: 'redis host'
-    group: 'Redis Config'
-  - variable: config.redis.database
-    default: <%- name %>
-    description: 'redis database'
-    type: string
-    required: false
-    label: 'redis database'
+    show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.password
     default: ''
-    description: 'redis password'
+    description: ''
     type: password
     required: false
     label: 'redis password'
+    show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.port
     default: 6379
-    description: 'redis port'
+    description: ''
     type: int
     min: 0
     max: 50000
-    required: false
+    required: true
     label: 'redis port'
+    show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.url
     default: ''
-    description: 'redis url'
+    description: ''
     type: string
     required: false
     label: 'redis url'
+    show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.username
     default: ''
-    description: 'redis username'
+    description: ''
     type: string
     required: false
     label: 'redis username'
+    show_if: config.redis.internal=false
     group: 'Redis Config'<% } %>

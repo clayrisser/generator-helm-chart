@@ -1,4 +1,4 @@
-{{- if (not (or .Values.config.redis.url .Values.config.redis.host)) }}
+{{- if .Values.config.redis.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:

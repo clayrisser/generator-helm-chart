@@ -1,47 +1,58 @@
 <% if (_.find(databases, { name: 'postgres'})) { %>
 
 # Postgres Config
+  - variable: config.postgres.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'postgres internal'
+    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
-    description: 'postgres host'
+    description: ''
     type: string
     required: false
     label: 'postgres host'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
     default: <%- name %>
-    description: 'postgres database'
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'postgres database'
     group: 'Postgres Config'
   - variable: config.postgres.password
-    default: ''
-    description: 'postgres password'
+    default: postgres
+    description: ''
     type: password
-    required: false
+    required: true
     label: 'postgres password'
     group: 'Postgres Config'
   - variable: config.postgres.port
     default: 5432
-    description: 'postgres port'
+    description: ''
     type: int
     min: 0
     max: 50000
-    required: false
+    required: true
     label: 'postgres port'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.url
     default: ''
-    description: 'postgres url'
+    description: ''
     type: string
     required: false
     label: 'postgres url'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.username
-    default: ''
-    description: 'postgres username'
+    default: postgres
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'postgres username'
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'<% } %>

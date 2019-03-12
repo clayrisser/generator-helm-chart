@@ -1,4 +1,4 @@
-{{- if (not (or .Values.config.elasticsearch.url .Values.config.elasticsearch.host)) }}
+{{- if .Values.config.elasticsearch.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:

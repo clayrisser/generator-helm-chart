@@ -1,47 +1,58 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
 
 # MySQL Config
+  - variable: config.mysql.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'mysql internal'
+    group: 'MySQL Config'
   - variable: config.mysql.host
     default: ''
-    description: 'mysql host'
+    description: ''
     type: string
     required: false
     label: 'mysql host'
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.database
     default: <%- name %>
-    description: 'mysql database'
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'mysql database'
     group: 'MySQL Config'
   - variable: config.mysql.password
-    default: ''
-    description: 'mysql password'
+    default: root
+    description: ''
     type: password
-    required: false
+    required: true
     label: 'mysql password'
     group: 'MySQL Config'
   - variable: config.mysql.port
     default: 3306
-    description: 'mysql port'
+    description: ''
     type: int
     min: 0
     max: 50000
-    required: false
+    required: true
     label: 'mysql port'
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.url
     default: ''
-    description: 'mysql url'
+    description: ''
     type: string
     required: false
     label: 'mysql url'
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.username
-    default: ''
-    description: 'mysql username'
+    default: root
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'mysql username'
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'<% } %>

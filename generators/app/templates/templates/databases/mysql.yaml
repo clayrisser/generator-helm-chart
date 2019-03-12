@@ -1,4 +1,4 @@
-{{- if (not (or .Values.config.mysql.url .Values.config.mysql.host)) }}
+{{- if .Values.config.mysql.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -27,19 +27,12 @@ spec:
               mountPath: /var/lib/mysql
               subPath: mysql
           env:
-            - name: MYSQL_RANDOM_ROOT_PASSWORD
-              value: 'true'
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "<%- name %>.fullname" . }}
                   key: mysql_database
-            - name: MYSQL_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
-                  key: mysql_username
-            - name: MYSQL_PASSWORD
+            - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "<%- name %>.fullname" . }}

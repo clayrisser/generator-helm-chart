@@ -1,8 +1,9 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   mysql:
-    host: ''
     database: <%- name %>
-    password: ''
+    host: ''
+    internal: true
+    password: root
     port: 3306
     url: ''
-    username: ''<% } %>
+    username: root<% } %>

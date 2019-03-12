@@ -1,8 +1,9 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
   elasticsearch:
-    host: ''
     database: <%- name %>
-    password: ''
+    host: ''
+    internal: true
+    password: elastic
     port: 9200
     url: ''
-    username: ''<% } %>
+    username: elastic<% } %>

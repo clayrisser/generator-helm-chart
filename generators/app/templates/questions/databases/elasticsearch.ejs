@@ -1,47 +1,58 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
 
 # Elasticsearch Config
+  - variable: config.elasticsearch.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'elasticsearch internal'
+    group: 'Elasticsearch Config'
   - variable: config.elasticsearch.host
     default: ''
-    description: 'elasticsearch host'
+    description: ''
     type: string
     required: false
     label: 'elasticsearch host'
+    show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.database
     default: <%- name %>
-    description: 'elasticsearch database'
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'elasticsearch database'
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.password
-    default: ''
-    description: 'elasticsearch password'
+    default: elastic
+    description: ''
     type: password
-    required: false
+    required: true
     label: 'elasticsearch password'
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.port
     default: 9200
-    description: 'elasticsearch port'
+    description: ''
     type: int
     min: 0
     max: 50000
-    required: false
+    required: true
     label: 'elasticsearch port'
+    show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.url
     default: ''
-    description: 'elasticsearch url'
+    description: ''
     type: string
     required: false
     label: 'elasticsearch url'
+    show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.username
-    default: ''
-    description: 'elasticsearch username'
+    default: elastic
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'elasticsearch username'
+    show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'<% } %>

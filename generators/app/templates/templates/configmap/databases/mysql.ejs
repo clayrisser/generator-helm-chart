@@ -1,11 +1,10 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   {{- $mysql := .Values.config.mysql }}
-  {{- if (empty $mysql.host) }}
+  {{- if $mysql.internal }}
   mysql_host: {{ template "<%- name %>.fullname" . }}-mysql
-  mysql_port: '3306'
   {{- else }}
   mysql_host: {{ $mysql.host | quote }}
-  mysql_port: {{ $mysql.port | quote }}
   {{- end }}
   mysql_database: {{ $mysql.database | quote }}
+  mysql_port: {{ $mysql.port | quote }}
   mysql_username: {{ $mysql.username | quote }}<% } %>

@@ -1,7 +1,8 @@
 <% if (_.find(databases, { name: 'mongo'})) { %>
   mongo:
-    host: ''
     database: <%- name %>
+    host: ''
+    internal: true
     password: ''
     port: 27017
     url: ''

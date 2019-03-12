@@ -1,11 +1,10 @@
 <% if (_.find(databases, { name: 'mariadb'})) { %>
   {{- $mariadb := .Values.config.mariadb }}
-  {{- if (empty $mariadb.host) }}
+  {{- if $mariadb.internal }}
   mariadb_host: {{ template "<%- name %>.fullname" . }}-mariadb
-  mariadb_port: '3306'
   {{- else }}
   mariadb_host: {{ $mariadb.host | quote }}
-  mariadb_port: {{ $mariadb.port | quote }}
   {{- end }}
   mariadb_database: {{ $mariadb.database | quote }}
+  mariadb_port: {{ $mariadb.port | quote }}
   mariadb_username: {{ $mariadb.username | quote }}<% } %>

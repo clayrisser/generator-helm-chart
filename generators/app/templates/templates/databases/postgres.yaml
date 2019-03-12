@@ -1,4 +1,4 @@
-{{- if (not (or .Values.config.postgres.url .Values.config.postgres.host)) }}
+{{- if .Values.config.postgres.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -32,11 +32,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "<%- name %>.fullname" . }}
                   key: postgres_database
-            - name: POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
-                  key: postgres_username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:

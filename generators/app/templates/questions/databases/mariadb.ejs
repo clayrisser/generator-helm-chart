@@ -1,47 +1,59 @@
 <% if (_.find(databases, { name: 'mariadb'})) { %>
 
 # Mariadb Config
+  - variable: config.mariadb.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'mariadb internal'
+    group: 'Mariadb Config'
   - variable: config.mariadb.host
     default: ''
-    description: 'mariadb host'
+    description: ''
     type: string
     required: false
     label: 'mariadb host'
+    show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.database
     default: <%- name %>
-    description: 'mariadb database'
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'mariadb database'
     group: 'Mariadb Config'
   - variable: config.mariadb.password
-    default: ''
-    description: 'mariadb password'
+    default: root
+    description: ''
     type: password
-    required: false
+    required: true
     label: 'mariadb password'
+    show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.port
     default: 3306
-    description: 'mariadb port'
+    description: ''
     type: int
     min: 0
     max: 50000
-    required: false
+    required: true
     label: 'mariadb port'
+    show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.url
     default: ''
-    description: 'mariadb url'
+    description: ''
     type: string
     required: false
     label: 'mariadb url'
+    show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.username
-    default: ''
-    description: 'mariadb username'
+    default: root
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'mariadb username'
+    show_if: config.mariadb.internal=false
     group: 'Mariadb Config'<% } %>

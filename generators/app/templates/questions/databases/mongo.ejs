@@ -1,47 +1,59 @@
 <% if (_.find(databases, { name: 'mongo'})) { %>
 
 # Mongo Config
+  - variable: config.mongo.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'mongo internal'
+    group: 'Mongo Config'
   - variable: config.mongo.host
     default: ''
-    description: 'mongo host'
+    description: ''
     type: string
     required: false
     label: 'mongo host'
+    show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.database
     default: <%- name %>
-    description: 'mongo database'
+    description: ''
     type: string
-    required: false
+    required: true
     label: 'mongo database'
     group: 'Mongo Config'
   - variable: config.mongo.password
     default: ''
-    description: 'mongo password'
+    description: ''
     type: password
     required: false
     label: 'mongo password'
+    show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.port
     default: 27017
-    description: 'mongo port'
+    description: ''
     type: int
     min: 0
     max: 50000
-    required: false
+    required: true
     label: 'mongo port'
+    show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.url
     default: ''
-    description: 'mongo url'
+    description: ''
     type: string
     required: false
     label: 'mongo url'
+    show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.username
     default: ''
-    description: 'mongo username'
+    description: ''
     type: string
     required: false
     label: 'mongo username'
+    show_if: config.mongo.internal=false
     group: 'Mongo Config'<% } %>

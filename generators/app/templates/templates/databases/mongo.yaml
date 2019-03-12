@@ -1,4 +1,4 @@
-{{- if (not (or .Values.config.mongo.url .Values.config.mongo.host)) }}
+{{- if .Values.config.mongo.internal }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
