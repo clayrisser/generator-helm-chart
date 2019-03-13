@@ -51,7 +51,7 @@ export default class Prompt {
       ...workload,
       ...(await this.yo.prompt([
         {
-          default: 'alpine:latest',
+          default: `${workload.name}:latest`,
           message: 'Workload Image:',
           name: 'image',
           type: 'input'

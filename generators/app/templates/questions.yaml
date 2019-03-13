@@ -1,6 +1,7 @@
 categories:
   - Server
-questions:<%- include('./questions/config'); -%>
+questions:<%- include('./questions/images'); -%>
+<%- include('./questions/config'); -%>
 <%- include('./questions/databases'); -%>
 <%- include('./questions/persistence'); -%>
 <%- include('./questions/servicesAndLoadBalancing'); %>

@@ -102,7 +102,7 @@ function processValues(content, context) {
 function processQuestions(content, context) {
   const { configItem } = context;
   const IMPRECISE_CONFIG = /\nquestions:\n(.|\n)* {4}group: Config([^-#]|\n)*/;
-  const PRECISE_CONFIG = /(\n {2}- [^\n]+(\n {4}[^\n]+)+)+/;
+  const PRECISE_CONFIG = /# Config(\n {2}- [^\n]+(\n {4}[^\n]+)+)+/;
   content = content.toString();
   try {
     content = modInline.append(

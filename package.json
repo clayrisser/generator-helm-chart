@@ -21,11 +21,11 @@
     "lint": "npm run format && npm run ejslint && eslint ./",
     "lint:fix": "npm run format && npm run ejslint && eslint --fix ./",
     "prepublish": "npm run clean && npm run build",
-    "start": "npm run clean && npm run build && yo --destination=demo rancher2-helm-chart",
-    "start:config": "npm run build && yo --destination=demo rancher2-helm-chart:config",
-    "start:workload": "npm run build && yo --destination=demo rancher2-helm-chart:workload",
+    "start": "npm run clean && npm run build && yo --destination=demo helm-chart",
+    "start:config": "npm run build && yo --destination=demo helm-chart:config",
+    "start:workload": "npm run build && yo --destination=demo helm-chart:workload",
     "test": "npm run lint",
-    "unlink": "npm unlink generator-rancher2-helm-chart"
+    "unlink": "npm unlink generator-helm-chart"
   },
   "dependencies": {
     "fs-extra": "^7.0.0",

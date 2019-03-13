@@ -1,0 +1,32 @@
+<% if (workloads.length || databases.length) { %>
+
+# Images
+<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; -%>
+  - variable: images.<%- workload.name %>.repository
+    default: <%- workload.image.substr(0, workload.image.indexOf(':')) %>
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.<%- workload.name %>.tag
+    default: <%- workload.image.substr(workload.image.indexOf(':') + 1) %>
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+  - variable: images.<%- database.name %>.repository
+    default: <%- database.image.substr(0, database.image.indexOf(':')) %>
+    description: ''
+    type: string
+    required: true
+    label: repository
+    group: Images
+  - variable: images.<%- database.name %>.tag
+    default: <%- database.image.substr(database.image.indexOf(':') + 1) %>
+    description: ''
+    type: string
+    required: true
+    label: tag
+    group: Images<% }} %>
