@@ -63,6 +63,44 @@ export default class Prompt {
           type: 'input'
         },
         {
+          default: 'tcpSocket',
+          message: 'Workload Healthcheck:',
+          name: 'healthcheck',
+          type: 'list',
+          choices: [
+            {
+              name: 'tcpSocket',
+              value: 'tcpSocket'
+            },
+            {
+              name: 'httpGet',
+              value: 'httpGet'
+            },
+            {
+              name: 'none',
+              value: 'none'
+            }
+          ]
+        }
+      ]))
+    };
+    if (workload.healthcheck === 'httpGet') {
+      workload = {
+        ...workload,
+        ...(await this.yo.prompt([
+          {
+            default: '/',
+            message: 'Workload Healthcheck Path:',
+            name: 'healthcheckPath',
+            type: 'input'
+          }
+        ]))
+      };
+    }
+    workload = {
+      ...workload,
+      ...(await this.yo.prompt([
+        {
           default: true,
           message: 'Workload Public:',
           name: 'public',
@@ -70,6 +108,7 @@ export default class Prompt {
         }
       ]))
     };
+
     workload.volumes = await this.getVolumes();
     return workload;
   }

@@ -26,14 +26,14 @@ spec:
               mountPath: '<%- volume.mountPath %>'<% if (volume.subPath) { %>
               subPath: <%- volume.subPath %><% } if (volume.readOnly) { %>
               readOnly: true<% }}} %>
-          env: []
+          env: []<% if (workload.healthcheck !== 'none') { %>
           livenessProbe:
-            httpGet:
-              path: /
+            <%- workload.healthcheck %>:<% if (workload.healthcheckPath) { %>
+              path: <%- workload.healthcheckPath %><% } %>
               port: container
 {{ toYaml .Values.probes.liveness | indent 12 }}
           readinessProbe:
-            httpGet:
-              path: /
+            <%- workload.healthcheck %>:<% if (workload.healthcheckPath) { %>
+              path: <%- workload.healthcheckPath %><% } %>
               port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('./volumes'); %>
+{{ toYaml .Values.probes.readiness | indent 12 }}<% } %><%- include('./volumes'); %>
