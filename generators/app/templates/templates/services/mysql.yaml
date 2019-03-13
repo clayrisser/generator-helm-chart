@@ -1,3 +1,4 @@
+{{- if .Values.config.mysql.internal }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,3 +17,4 @@ spec:
   selector:
     app: {{ template "<%- name %>.name" . }}-mysql
     release: {{ .Release.Name }}
+{{- end }}
