@@ -2,54 +2,8 @@
       volumes:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
         - name: <%- volume.name %>
           {{- if .Values.persistence.enabled }}
-          {{- if (eq .Values.persistence.type "persistentVolumeClaim") }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "<%- name %>.fullname" . ) }}
-          {{- else if (eq .Values.persistence.type "awsElasticBlockStore") }}
-          awsElasticBlockStore:
-            volumeID: {{ .Values.persistence.volumeId }}
-            fsType: {{ .Values.persistence.fsType }}
-          {{- else if (eq .Values.persistence.type "azureDisk") }}
-          azureDisk:
-            cachingMode: {{ .Values.persistence.cachingMode }}
-            diskName: {{ .Values.persistence.diskName }}
-            diskURI: {{ .Values.persistence.diskUri }}
-            fsType: {{ .Values.persistence.fsType }}
-            kind: {{ .Values.persistence.diskKind }}
-            readOnly: {{ .Values.persistence.readOnly | quote }}
-          {{- else if (eq .Values.persistence.type "azureFile") }}
-          azureFile:
-            readOnly: {{ .Values.persistence.readOnly | quote }}
-            secretName: {{ .Values.persistence.secretName }}
-            shareName: {{ .Values.persistence.shareName }}
-            {{- if (not (empty .Values.persistence.secretNamespace)) }}
-            secretNamespace: {{ .Values.persistence.secretNamespace }}
-            {{- end }}
-          {{- else if (eq .Values.persistence.type "cephfs") }}
-          cephfs:
-          {{- else if (eq .Values.persistence.type "flocker") }}
-          flocker:
-          {{- else if (eq .Values.persistence.type "gcePersistentDisk") }}
-          gcePersistentDisk:
-          {{- else if (eq .Values.persistence.type "glusterfs") }}
-          glusterfs:
-          {{- else if (eq .Values.persistence.type "local") }}
-          local:
-          {{- else if (eq .Values.persistence.type "nfs") }}
-          nfs:
-          {{- else if (eq .Values.persistence.type "portworxVolume") }}
-          portworxVolume:
-          {{- else if (eq .Values.persistence.type "quobyte") }}
-          quobyte:
-          {{- else if (eq .Values.persistence.type "rbd") }}
-          rbd:
-          {{- else if (eq .Values.persistence.type "scaleIO") }}
-          scaleIO:
-          {{- else if (eq .Values.persistence.type "storageOS") }}
-          storageOS:
-          {{- else if (eq .Values.persistence.type "vsphereVolume") }}
-          vsphereVolume:
-          {{- end }}
           {{- else }}
           emptyDir: {}
           {{- end }}<% }} %>
