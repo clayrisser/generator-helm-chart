@@ -33,3 +33,4 @@ Calculate base_url
 {{- end }}
 {{- end }}
 {{- end }}
+<%- include('./helpers/databases'); %>
