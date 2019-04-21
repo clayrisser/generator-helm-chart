@@ -2,10 +2,10 @@
 {{/*
 Calculate mongo_url
 */}}
-{{- define "wikijs.mongo_url" }}
+{{- define "<%- name %>.mongo_url" }}
 {{- $mongo := .Values.config.mongo }}
 {{- if $mongo.internal }}
-{{- printf "mongodb://%s-mongo:27017/%s" (include "wikijs.fullname" . ) $mongo.database }}
+{{- printf "mongodb://%s-mongo:27017/%s" (include "<%- name %>.fullname" . ) $mongo.database }}
 {{- else }}
 {{- if $mongo.url }}
 {{- printf $mongo.url }}
