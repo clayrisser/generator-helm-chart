@@ -3,6 +3,5 @@
 <%- include('./values/databases'); -%>
 <%- include('./values/service'); -%>
 <%- include('./values/ingress'); -%>
-<%- include('./values/issuer'); -%>
 <%- include('./values/persistence'); -%>
 <%- include('./values/probes'); %>

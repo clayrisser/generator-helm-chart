@@ -3,42 +3,42 @@
 # Services and Load Balancing
   - variable: ingress.enabled
     default: true
-    description: 'expose app using Layer 7 load balancer - ingress'
+    description: ''
     type: boolean
-    label: 'load balancer enabled'
+    label: 'ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
       - variable: ingress.tls
         default: false
-        description: 'generate letsencrypt ssl certificate'
+        description: ''
         type: boolean
         required: true
-        label: tls
-      - variable: issuer.name
+        label: 'ingress tls'
+      - variable: ingress.issuer.name
         default: letsencrypt-staging
-        description: 'letsencrypt issuer environment'
+        description: ''
         type: enum
         options:
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: issuer<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
+        label: 'ingress issuer name'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
       - variable: ingress.hosts.<%- workload.name %>[0].name
         default: xip.io
-        description: 'hostname to your <%- workload.name %> installation'
+        description: ''
         type: hostname
         required: true
-        label: '<%- workload.name %> hostname'
+        label: '<%- workload.name %> ingress hostname'
       - variable: ingress.hosts.<%- workload.name %>[0].path
         default: /
-        description: 'pathname to your <%- workload.name %> installation'
+        description: ''
         type: string
         required: true
-        label: '<%- workload.name %> path'<% } %>
+        label: '<%- workload.name %> ingress path'<% } %>
   - variable: service.type
     default: NodePort
-    description: 'service type'
+    description: ''
     type: enum
     show_if: ingress.enabled=false
     options:
@@ -52,7 +52,7 @@
     subquestions:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
       - variable: service.nodePorts.<%- workload.name %>.http
         default: ''
-        description: 'NodePort <%- workload.name %> http port (to set explicitly, choose port between 30000-32767)'
+        description: ''
         type: int
         min: 30000
         max: 32767
