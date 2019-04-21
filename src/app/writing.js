@@ -6,27 +6,27 @@ export default async function writing(yo) {
   const publicWorkloads = _.filter(yo.context.workloads, { public: true });
   yo.fs.copyTpl(
     yo.templatePath('Chart.yaml'),
-    yo.destinationPath('Chart.yaml'),
+    yo.destinationPath(`v${yo.context.version}/Chart.yaml`),
     yo.context
   );
   yo.fs.copyTpl(
     yo.templatePath('OWNERS'),
-    yo.destinationPath('OWNERS'),
+    yo.destinationPath(`v${yo.context.version}/OWNERS`),
     yo.context
   );
   yo.fs.copyTpl(
     yo.templatePath('README.md'),
-    yo.destinationPath('README.md'),
+    yo.destinationPath(`v${yo.context.version}/README.md`),
     yo.context
   );
   yo.fs.copyTpl(
     yo.templatePath('app-readme.md'),
-    yo.destinationPath('app-readme.md'),
+    yo.destinationPath(`v${yo.context.version}/app-readme.md`),
     yo.context
   );
   yo.fs.copyTpl(
     yo.templatePath('questions.yaml'),
-    yo.destinationPath('questions.yaml'),
+    yo.destinationPath(`v${yo.context.version}/questions.yaml`),
     {
       ...yo.context,
       publicWorkloads
@@ -34,28 +34,28 @@ export default async function writing(yo) {
   );
   yo.fs.copyTpl(
     yo.templatePath('values.yaml'),
-    yo.destinationPath('values.yaml'),
+    yo.destinationPath(`v${yo.context.version}/values.yaml`),
     yo.context
   );
   yo.fs.copyTpl(
     yo.templatePath('templates/NOTES.txt'),
-    yo.destinationPath('templates/NOTES.txt'),
+    yo.destinationPath(`v${yo.context.version}/templates/NOTES.txt`),
     yo.context
   );
   yo.fs.copyTpl(
     yo.templatePath('templates/_helpers.tpl'),
-    yo.destinationPath('templates/_helpers.tpl'),
+    yo.destinationPath(`v${yo.context.version}/templates/_helpers.tpl`),
     yo.context
   );
   yo.fs.copyTpl(
     yo.templatePath('templates/pvc.yaml'),
-    yo.destinationPath('templates/pvc.yaml'),
+    yo.destinationPath(`v${yo.context.version}/templates/pvc.yaml`),
     yo.context
   );
   if (configMaps.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/configmap.yaml'),
-      yo.destinationPath('templates/configmap.yaml'),
+      yo.destinationPath(`v${yo.context.version}/templates/configmap.yaml`),
       {
         ...yo.context,
         configMaps
@@ -65,7 +65,7 @@ export default async function writing(yo) {
   if (configSecrets.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/secret.yaml'),
-      yo.destinationPath('templates/secret.yaml'),
+      yo.destinationPath(`v${yo.context.version}/templates/secret.yaml`),
       {
         ...yo.context,
         configSecrets
@@ -80,28 +80,38 @@ export default async function writing(yo) {
     if (workload.public) {
       yo.fs.copyTpl(
         yo.templatePath('templates/deployment.yaml'),
-        yo.destinationPath(`templates/deployments/${workload.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/deployments/${workload.name}.yaml`
+        ),
         context
       );
       yo.fs.copyTpl(
         yo.templatePath('templates/services/public.yaml'),
-        yo.destinationPath(`templates/services/${workload.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/services/${workload.name}.yaml`
+        ),
         context
       );
       yo.fs.copyTpl(
         yo.templatePath('templates/ingress.yaml'),
-        yo.destinationPath(`templates/ingresses/${workload.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/ingresses/${workload.name}.yaml`
+        ),
         context
       );
     } else {
       yo.fs.copyTpl(
         yo.templatePath('templates/deployment.yaml'),
-        yo.destinationPath(`templates/deployments/${workload.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/deployments/${workload.name}.yaml`
+        ),
         yo.context
       );
       yo.fs.copyTpl(
         yo.templatePath('templates/services/private.yaml'),
-        yo.destinationPath(`templates/services/${workload.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/services/${workload.name}.yaml`
+        ),
         context
       );
     }
@@ -120,12 +130,16 @@ export default async function writing(yo) {
     };
     yo.fs.copyTpl(
       yo.templatePath(`templates/databases/${database.name}.yaml`),
-      yo.destinationPath(`templates/deployments/${database.name}.yaml`),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/deployments/${database.name}.yaml`
+      ),
       context
     );
     yo.fs.copyTpl(
       yo.templatePath(`templates/services/${database.name}.yaml`),
-      yo.destinationPath(`templates/services/${database.name}.yaml`),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/services/${database.name}.yaml`
+      ),
       context
     );
   });

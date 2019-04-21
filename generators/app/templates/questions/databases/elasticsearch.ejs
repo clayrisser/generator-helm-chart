@@ -6,14 +6,14 @@
     description: ''
     type: boolean
     required: true
-    label: 'elasticsearch internal'
+    label: internal
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.host
     default: ''
     description: ''
     type: string
     required: false
-    label: 'elasticsearch host'
+    label: host
     show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.database
@@ -21,14 +21,14 @@
     description: ''
     type: string
     required: true
-    label: 'elasticsearch database'
+    label: database
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.password
     default: elastic
     description: ''
     type: password
     required: true
-    label: 'elasticsearch password'
+    label: password
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.port
     default: 9200
@@ -37,7 +37,7 @@
     min: 0
     max: 50000
     required: true
-    label: 'elasticsearch port'
+    label: port
     show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.url
@@ -45,7 +45,7 @@
     description: ''
     type: string
     required: false
-    label: 'elasticsearch url'
+    label: url
     show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.username
@@ -53,6 +53,6 @@
     description: ''
     type: string
     required: true
-    label: 'elasticsearch username'
+    label: username
     show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'<% } %>

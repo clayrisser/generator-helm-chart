@@ -6,14 +6,14 @@
     description: ''
     type: boolean
     required: true
-    label: 'mysql internal'
+    label: internal
     group: 'MySQL Config'
   - variable: config.mysql.host
     default: ''
     description: ''
     type: string
     required: false
-    label: 'mysql host'
+    label: host
     show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.database
@@ -21,14 +21,14 @@
     description: ''
     type: string
     required: true
-    label: 'mysql database'
+    label: database
     group: 'MySQL Config'
   - variable: config.mysql.password
     default: root
     description: ''
     type: password
     required: true
-    label: 'mysql password'
+    label: password
     group: 'MySQL Config'
   - variable: config.mysql.port
     default: 3306
@@ -37,7 +37,7 @@
     min: 0
     max: 50000
     required: true
-    label: 'mysql port'
+    label: port
     show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.url
@@ -45,7 +45,7 @@
     description: ''
     type: string
     required: false
-    label: 'mysql url'
+    label: url
     show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.username
@@ -53,6 +53,6 @@
     description: ''
     type: string
     required: true
-    label: 'mysql username'
+    label: username
     show_if: config.mysql.internal=false
     group: 'MySQL Config'<% } %>

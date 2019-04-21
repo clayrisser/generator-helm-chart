@@ -6,14 +6,14 @@
     description: ''
     type: boolean
     required: true
-    label: 'mongo internal'
+    label: internal
     group: 'Mongo Config'
   - variable: config.mongo.host
     default: ''
     description: ''
     type: string
     required: false
-    label: 'mongo host'
+    label: host
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.database
@@ -21,14 +21,14 @@
     description: ''
     type: string
     required: true
-    label: 'mongo database'
+    label: database
     group: 'Mongo Config'
   - variable: config.mongo.password
     default: ''
     description: ''
     type: password
     required: false
-    label: 'mongo password'
+    label: password
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.port
@@ -38,7 +38,7 @@
     min: 0
     max: 50000
     required: true
-    label: 'mongo port'
+    label: port
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.url
@@ -46,7 +46,7 @@
     description: ''
     type: string
     required: false
-    label: 'mongo url'
+    label: url
     show_if: config.mongo.internal=false
     group: 'Mongo Config'
   - variable: config.mongo.username
@@ -54,6 +54,6 @@
     description: ''
     type: string
     required: false
-    label: 'mongo username'
+    label: username
     show_if: config.mongo.internal=false
     group: 'Mongo Config'<% } %>

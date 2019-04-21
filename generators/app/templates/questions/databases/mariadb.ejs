@@ -13,7 +13,7 @@
     description: ''
     type: string
     required: false
-    label: 'mariadb host'
+    label: host
     show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.database
@@ -21,14 +21,14 @@
     description: ''
     type: string
     required: true
-    label: 'mariadb database'
+    label: database
     group: 'Mariadb Config'
   - variable: config.mariadb.password
     default: root
     description: ''
     type: password
     required: true
-    label: 'mariadb password'
+    label: password
     show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.port
@@ -38,7 +38,7 @@
     min: 0
     max: 50000
     required: true
-    label: 'mariadb port'
+    label: port
     show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.url
@@ -46,7 +46,7 @@
     description: ''
     type: string
     required: false
-    label: 'mariadb url'
+    label: url
     show_if: config.mariadb.internal=false
     group: 'Mariadb Config'
   - variable: config.mariadb.username
@@ -54,6 +54,6 @@
     description: ''
     type: string
     required: true
-    label: 'mariadb username'
+    label: username
     show_if: config.mariadb.internal=false
     group: 'Mariadb Config'<% } %>

@@ -6,7 +6,7 @@
     description: ''
     type: boolean
     required: true
-    label: 'persistent enabled'
+    label: enabled
     show_subquestion_if: true
     group: Persistence
     subquestions:
@@ -16,24 +16,24 @@
         type: string
         required: true
         show_if: persistence.enabled
-        label: 'persistence size'
+        label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
         type: storageclass
         required: false
         show_if: persistence.enabled
-        label: 'persistence storage class'
+        label: 'storage class'
       - variable: persistence.existingClaim
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.enabled
-        label: 'persistence existing claim'
+        label: 'existing claim'
       - variable: persistence.volbackBackup
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'persistence volback backup'
+        label: 'volback backup'

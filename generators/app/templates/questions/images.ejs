@@ -7,26 +7,26 @@
     description: ''
     type: string
     required: true
-    label: repository
+    label: '<%- workload.name %> repository'
     group: Images
   - variable: images.<%- workload.name %>.tag
     default: <%- workload.image.substr(workload.image.indexOf(':') + 1) %>
     description: ''
     type: string
     required: true
-    label: tag
+    label: '<%- workload.name %> tag'
     group: Images<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
   - variable: images.<%- database.name %>.repository
     default: <%- database.image.substr(0, database.image.indexOf(':')) %>
     description: ''
     type: string
     required: true
-    label: repository
+    label: '<%- database.name %> repository'
     group: Images
   - variable: images.<%- database.name %>.tag
     default: <%- database.image.substr(database.image.indexOf(':') + 1) %>
     description: ''
     type: string
     required: true
-    label: tag
+    label: '<%- database.name %> tag'
     group: Images<% }} %>

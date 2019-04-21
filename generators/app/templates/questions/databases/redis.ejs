@@ -6,14 +6,14 @@
     description: ''
     type: boolean
     required: true
-    label: 'redis internal'
+    label: internal
     group: 'Redis Config'
   - variable: config.redis.host
     default: ''
     description: ''
     type: string
     required: false
-    label: 'redis host'
+    label: host
     show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.password
@@ -21,7 +21,7 @@
     description: ''
     type: password
     required: false
-    label: 'redis password'
+    label: password
     show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.port
@@ -31,7 +31,7 @@
     min: 0
     max: 50000
     required: true
-    label: 'redis port'
+    label: port
     show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.url
@@ -39,7 +39,7 @@
     description: ''
     type: string
     required: false
-    label: 'redis url'
+    label: url
     show_if: config.redis.internal=false
     group: 'Redis Config'
   - variable: config.redis.username
@@ -47,6 +47,6 @@
     description: ''
     type: string
     required: false
-    label: 'redis username'
+    label: username
     show_if: config.redis.internal=false
     group: 'Redis Config'<% } %>
