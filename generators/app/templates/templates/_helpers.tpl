@@ -17,6 +17,21 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{/*
+Calculate hostname
+*/}}
+{{- define "<%- name %>.hostname" }}
+{{- if (not (empty .Values.config.hostname)) }}
+{{- printf .Values.config.hostname }}
+{{- else }}
+{{- if .Values.ingress.enabled }}
+{{- printf (index .Values.ingress.hosts.<%- name %> 0) }}
+{{- else }}
+{{- printf "%s-<%- name %>" (include "<%- name %>.fullname" . ) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate base_url
 */}}
 {{- define "<%- name %>.base_url" }}
@@ -24,12 +39,16 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- $host := (index .Values.ingress.hosts.<%- name %> 0) }}
+{{- $host := ((empty (include "<%- name %>.hostname" . )) | (index .Values.ingress.hosts.<%- name %> 0) (include "<%- name %>.hostname" . ) }}
 {{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
-{{- printf "http://%s-<%- name %>" (include "<%- name %>.fullname" . ) }}
+{{- if (empty (include "<%- name %>.hostname" . )) }}
+{{- printf "http://%s-<%- name %>" (include "<%- name %>.hostname" . ) }}
+{{- else }}
+{{- printf "http://%s" (include "<%- name %>.hostname" . ) }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

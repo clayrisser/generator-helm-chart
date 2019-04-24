@@ -1,6 +1,6 @@
-# generator-rancher2-helm-chart
+# generator-helm-chart
 
-[![GitHub stars](https://img.shields.io/github/stars/codejamninja/generator-rancher2-helm-chart.svg?style=social&label=Stars)](https://github.com/codejamninja/generator-rancher2-helm-chart)
+[![GitHub stars](https://img.shields.io/github/stars/codejamninja/generator-helm-chart.svg?style=social&label=Stars)](https://github.com/codejamninja/generator-helm-chart)
 
 > yeoman generator rancher 2 helm charts
 
@@ -16,7 +16,7 @@ Please ★ this repo if you found it useful ★ ★ ★
 ## Installation
 
 ```sh
-npm install -g generator-rancher2-helm-chart
+npm install -g generator-helm-chart
 ```
 
 
@@ -31,13 +31,13 @@ npm install -g generator-rancher2-helm-chart
 ### Create a New Helm Chart
 
 ```sh
-yo rancher2-helm-chart
+yo helm-chart
 ```
 
 Below is an example of what you might enter to build an nginx rancher2 helm chart.
 
 ```sh
-? Project Name: generator-rancher2-helm-chart
+? Project Name: generator-helm-chart
 ? Project Description: yeoman generator rancher 2 helm charts
 ? Version: 0.1.0
 ? License: MIT
@@ -45,22 +45,22 @@ Below is an example of what you might enter to build an nginx rancher2 helm char
 ? Author Email: jam@codejam.ninja
 ? GitHub Username: codejamninja
 ? Author URL: https://codejamninja.com
-? Repository: https://github.com/codejamninja/generator-rancher2-helm-chart
-? Homepage: https://github.com/codejamninja/generator-rancher2-helm-chart
+? Repository: https://github.com/codejamninja/generator-helm-chart
+? Homepage: https://github.com/codejamninja/generator-helm-chart
 ? Keyword: nginx
 ? Keyword: server
-? Keyword: 
+? Keyword:
 ? Icon: https://nginx.org/nginx.png
 ? Workload Name: nginx
 ? Workload Image: nginx:latest
 ? Workload Port: 80
 ? Workload Public: Yes
-? Workload Name: 
+? Workload Name:
 ? Config Key: hello
 ? Config Secret: No
 ? Config Type: string
 ? Config Default Value: world
-? Config Description: hello
+? Config Label: hello
 ? Config Required: No
 ? Config Key: shhhh
 ? Config Secret: Yes
@@ -68,7 +68,7 @@ Below is an example of what you might enter to build an nginx rancher2 helm char
 ? Config Default Value: i-am-a-secret
 ? Config Description: shhhh
 ? Config Required: Yes
-? Config Key: 
+? Config Key:
    create Chart.yaml
    create OWNERS
    create README.md
@@ -89,35 +89,41 @@ Done in 179.02s.
 ### Add Workload to Existing Helm Chart
 
 ```sh
-yo rancher2-helm-chart:workload
+yo helm-chart:workload
+```
+
+### Add Config to Existing Helm Chart
+
+```sh
+yo helm-chart:config
 ```
 
 
 ## Support
 
-Submit an [issue](https://github.com/codejamninja/generator-rancher2-helm-chart/issues/new)
+Submit an [issue](https://github.com/codejamninja/generator-helm-chart/issues/new)
 
 
 ## Screenshots
 
-[Contribute](https://github.com/codejamninja/generator-rancher2-helm-chart/blob/master/CONTRIBUTING.md) a screenshot
+[Contribute](https://github.com/codejamninja/generator-helm-chart/blob/master/CONTRIBUTING.md) a screenshot
 
 
 ## Contributing
 
-Review the [guidelines for contributing](https://github.com/codejamninja/generator-rancher2-helm-chart/blob/master/CONTRIBUTING.md)
+Review the [guidelines for contributing](https://github.com/codejamninja/generator-helm-chart/blob/master/CONTRIBUTING.md)
 
 
 ## License
 
-[MIT License](https://github.com/codejamninja/generator-rancher2-helm-chart/blob/master/LICENSE)
+[MIT License](https://github.com/codejamninja/generator-helm-chart/blob/master/LICENSE)
 
 [Jam Risser](https://codejam.ninja) © 2018
 
 
 ## Changelog
 
-Review the [changelog](https://github.com/codejamninja/generator-rancher2-helm-chart/blob/master/CHANGELOG.md)
+Review the [changelog](https://github.com/codejamninja/generator-helm-chart/blob/master/CHANGELOG.md)
 
 
 ## Credits

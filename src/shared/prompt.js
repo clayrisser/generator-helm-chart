@@ -250,8 +250,8 @@ export default class Prompt {
         },
         {
           default: configItem.key,
-          message: 'Config Description:',
-          name: 'description',
+          message: 'Config Label:',
+          name: 'label',
           type: 'input'
         },
         {

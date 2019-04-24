@@ -111,10 +111,10 @@ function processQuestions(content, context) {
       `
   - variable: config.${configItem.key}
     default: '${configItem.defaultValue}'
-    description: '${configItem.description}'
+    description: ''
     type: ${configItem.type}
     required: ${configItem.required}
-    label: '${configItem.description}'
+    label: '${configItem.label}'
     group: Config`
     );
   } catch (err) {
@@ -127,10 +127,10 @@ function processQuestions(content, context) {
 # Config
   - variable: config.${configItem.key}
     default: '${configItem.defaultValue}'
-    description: '${configItem.description}'
+    description: ''
     type: ${configItem.type}
     required: ${configItem.required}
-    label: '${configItem.description}'
+    label: '${configItem.label}'
     group: Config`
     );
   }
