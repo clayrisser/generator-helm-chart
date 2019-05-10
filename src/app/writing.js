@@ -77,14 +77,14 @@ export default async function writing(yo) {
       ...yo.context,
       workload
     };
+    yo.fs.copyTpl(
+      yo.templatePath('templates/deployment.yaml'),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/deployments/${workload.name}.yaml`
+      ),
+      yo.context
+    );
     if (workload.public) {
-      yo.fs.copyTpl(
-        yo.templatePath('templates/deployment.yaml'),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/deployments/${workload.name}.yaml`
-        ),
-        context
-      );
       yo.fs.copyTpl(
         yo.templatePath('templates/services/public.yaml'),
         yo.destinationPath(
@@ -100,13 +100,6 @@ export default async function writing(yo) {
         context
       );
     } else {
-      yo.fs.copyTpl(
-        yo.templatePath('templates/deployment.yaml'),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/deployments/${workload.name}.yaml`
-        ),
-        yo.context
-      );
       yo.fs.copyTpl(
         yo.templatePath('templates/services/private.yaml'),
         yo.destinationPath(

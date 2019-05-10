@@ -12,24 +12,21 @@ export default async function writing(yo) {
     yo.destinationPath('values.yaml'),
     { process: content => processValues(content, yo.context) }
   );
+  yo.fs.copyTpl(
+    yo.templatePath('../../app/templates/templates/deployment.yaml'),
+    yo.destinationPath(
+      `templates/deployments/${yo.context.workload.name}.yaml`
+    ),
+    yo.context
+  );
   if (yo.context.workload.public) {
     yo.fs.copyTpl(
-      path.resolve('../generators/app/templates', 'templates/deployment.yaml'),
-      yo.destinationPath(
-        `templates/deployments/${yo.context.workload.name}.yaml`
-      ),
-      yo.context
-    );
-    yo.fs.copyTpl(
-      path.resolve(
-        '../generators/app/templates',
-        'templates/services/public.yaml'
-      ),
+      yo.templatePath('../../app/templates/templates/services/public.yaml'),
       yo.destinationPath(`templates/services/${yo.context.workload.name}.yaml`),
       yo.context
     );
     yo.fs.copyTpl(
-      path.resolve('../generators/app/templates', 'templates/ingress.yaml'),
+      yo.templatePath('../../app/templates/templates/ingress.yaml'),
       yo.destinationPath(
         `templates/ingresses/${yo.context.workload.name}.yaml`
       ),
@@ -37,17 +34,7 @@ export default async function writing(yo) {
     );
   } else {
     yo.fs.copyTpl(
-      path.resolve('../generators/app/templates', 'templates/deployment.yaml'),
-      yo.destinationPath(
-        `templates/deployments/${yo.context.workload.name}.yaml`
-      ),
-      yo.context
-    );
-    yo.fs.copyTpl(
-      path.resolve(
-        '../generators/app/templates',
-        'templates/services/private.yaml'
-      ),
+      yo.templatePath('../../app/templates/templates/services/private.yaml'),
       yo.destinationPath(`templates/services/${yo.context.workload.name}.yaml`),
       yo.context
     );
@@ -82,9 +69,7 @@ function processQuestions(content, context) {
       [SERVICE_TYPE, SUBQUESTIONS],
       `\n      - variable: service.nodePorts.${
         context.workload.name
-      }.http\n        default: ''\n        description: 'NodePort ${
-        context.workload.name
-      } http port (to set explicitly, choose port between 30000-32767)'\n        type: int\n        min: 30000\n        max: 32767\n        show_if: ingress.enabled=false&&service.type=NodePort\n        label: '${
+      }.http\n        default: ''\n        description: ''\n        type: int\n        min: 30000\n        max: 32767\n        show_if: ingress.enabled=false\n        label: '${
         context.workload.name
       } http port'`
     );
