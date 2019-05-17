@@ -4,8 +4,8 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "<%- name %>.fullname" $ }}-<%- workload.name %>
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
   annotations:
+  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
     certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
     kubernetes.io/tls-acme: "true"
   {{- end }}
