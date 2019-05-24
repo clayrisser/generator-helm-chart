@@ -8,5 +8,5 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:<% for (var i = 0; i < configMaps.length; i++) { configMap = configMaps[i]; %>
-  <%- configMap.key %>: {{ .Values.config.<%- configMap.key %> | quote }}<% } -%>
+  <%- _.snakeCase(configMap.key) %>: {{ .Values.config.<%- configMap.key %> | quote }}<% } -%>
 <%- include('./configmap/databases'); %>

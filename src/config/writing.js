@@ -1,5 +1,6 @@
-import modInline from 'mod-inline';
+import _ from 'lodash';
 import fs from 'fs-extra';
+import modInline from 'mod-inline';
 import path from 'path';
 
 export default async function writing(yo) {
@@ -68,7 +69,9 @@ function processConfigMap(content, context) {
     content,
     DATA,
     `
-  ${configItem.key}: {{ .Values.config.${configItem.key} | quote }}`
+  ${_.snakeCase(configItem.key)}: {{ .Values.config.${
+      configItem.key
+    } | quote }}`
   );
   return content;
 }
@@ -81,7 +84,9 @@ function processSecret(content, context) {
     content,
     DATA,
     `
-  ${configItem.key}: {{ .Values.config.${configItem.key} | b64enc }}`
+  ${_.snakeCase(configItem.key)}: {{ .Values.config.${
+      configItem.key
+    } | b64enc }}`
   );
   return content;
 }
