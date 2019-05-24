@@ -1,6 +1,6 @@
 {
   "name": "generator-helm-chart",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "description": "yeoman generator rancher 2 helm charts",
   "keywords": [
     "yeoman-generator",
@@ -17,7 +17,7 @@
     "clean": "git clean -fXd -e \\!node_modules -e \\!node_modules/**/*",
     "ejslint": "ejslint $(find generators -type f)",
     "format": "prettier --write ./src/**/*.js",
-    "link": "npm link && npm link generator-rancher2-helm-chart",
+    "link": "npm link && npm link generator-helm-chart",
     "lint": "npm run format && npm run ejslint && eslint ./",
     "lint:fix": "npm run format && npm run ejslint && eslint --fix ./",
     "prepublish": "npm run clean && npm run build",
@@ -54,9 +54,9 @@
     "email": "jam@codejam.ninja",
     "url": "https://codejam.ninja"
   },
-  "homepage": "https://github.com/codejamninja/generator-rancher2-helm-chart",
+  "homepage": "https://github.com/codejamninja/generator-helm-chart",
   "license": "MIT",
-  "repository": "https://github.com/codejamninja/generator-rancher2-helm-chart",
+  "repository": "https://github.com/codejamninja/generator-helm-chart",
   "eslintIgnore": [
     "generators",
     "demo"
