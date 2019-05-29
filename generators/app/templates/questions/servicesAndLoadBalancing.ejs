@@ -14,17 +14,7 @@
         description: ''
         type: boolean
         required: true
-        label: 'ingress tls'
-      - variable: ingress.issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: ingress.tls=true
-        options:
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: 'ingress issuer name'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
+        label: 'ingress tls'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
       - variable: ingress.hosts.<%- workload.name %>[0].name
         default: xip.io
         description: ''
@@ -37,6 +27,24 @@
         type: string
         required: true
         label: '<%- workload.name %> ingress path'<% } %>
+      - variable: ingress.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'ingress issuer name'
+      - variable: ingress.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.tls=true&&ingress.issuer.name=none
+        required: false
+        label: 'ingress certificate'
   - variable: service.type
     default: NodePort
     description: ''
