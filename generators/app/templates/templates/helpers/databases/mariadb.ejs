@@ -6,7 +6,7 @@ Calculate mariadb_url
 {{- $mariadb := .Values.config.mariadb }}
 {{- if $mariadb.internal }}
 {{- $credentials := (printf "%s:%s" $mariadb.username $mariadb.password) }}
-{{- printf "jdbc:mysql://%s@%s-mariadb:3306/%s" $credentials (include "<%- name %>.fullname" . ) $mariadb.database }}
+{{- printf "jdbc:mysql://%s@%s-mariadb:3306/%s" $credentials (include "<%- name %>.fullname" .) $mariadb.database }}
 {{- else }}
 {{- if $mariadb.url }}
 {{- printf $mariadb.url }}

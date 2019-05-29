@@ -6,7 +6,7 @@ Calculate mysql_url
 {{- $mysql := .Values.config.mysql }}
 {{- if $mysql.internal }}
 {{- $credentials := (printf "%s:%s" $mysql.username $mysql.password) }}
-{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "<%- name %>.fullname" . ) $mysql.database }}
+{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "<%- name %>.fullname" .) $mysql.database }}
 {{- else }}
 {{- if $mysql.url }}
 {{- printf $mysql.url }}
