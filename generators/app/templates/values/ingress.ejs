@@ -3,6 +3,7 @@
 ingress:
   enabled: false
   tls: false
+  certificate: ''
   issuer:
     name: letsencrypt-staging
   hosts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>

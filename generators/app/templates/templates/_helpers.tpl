@@ -17,6 +17,16 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Calculate certificate
+*/}}
+{{- define "<%- name %>.certificate" }}
+{{- if (not (empty .Values.ingress.certificate)) }}
+{{- else }}
+{{- printf "%s-letsencrypt" (include "nextcloud.fullname" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
 Calculate hostname
 */}}
 {{- define "<%- name %>.hostname" }}

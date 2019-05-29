@@ -1,34 +1,36 @@
 {{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts.<%- workload.name %> }}
+{{- $host := (index .Values.ingress.hosts.<%- workload.name %> 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "<%- name %>.fullname" $ }}-<%- workload.name %>
+  name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
   annotations:
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
-    certmanager.k8s.io/cluster-issuer: {{ $.Values.ingress.issuer.name }}
+    kubernetes.io/ingress.class: nginx
+    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+    {{- if (not (empty .Values.ingress.certificate)) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
     kubernetes.io/tls-acme: 'true'
-  {{- end }}
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
   labels:
-    app: {{ template "<%- name %>.name" $ }}-<%- workload.name %>
-    chart: {{ $.Chart.Name }}-{{ $.Chart.Version }}
-    release: {{ $.Release.Name }}
-    heritage: {{ $.Release.Service }}
+    app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ .name }}
+    - host: {{ $host.name }}
       http:
         paths:
-          - path: {{ .path }}
+          - path: {{ $host.path }}
             backend:
-              serviceName: {{ template "<%- name %>.fullname" $ }}-<%- workload.name %>
+              serviceName: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
               servicePort: http
-  {{- if (and $.Values.ingress.enabled $.Values.ingress.tls) }}
+  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
   tls:
-    - secretName: letsencrypt-staging
+    - secretName: {{ template "<%- name %>.certificate" . }}
       hosts:
-        - {{ .name }}
+        - {{ $host.name }}
   {{- end }}
----
-{{- end }}
 {{- end }}

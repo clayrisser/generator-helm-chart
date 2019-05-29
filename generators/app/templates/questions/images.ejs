@@ -1,7 +1,6 @@
 <% if (workloads.length || databases.length) { %>
 
-# Images
-<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; -%>
+# Images<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
   - variable: images.<%- workload.name %>.repository
     default: <%- workload.image.substr(0, workload.image.indexOf(':')) %>
     description: ''
