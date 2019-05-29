@@ -36,7 +36,7 @@ Calculate hostname
 {{- if .Values.ingress.enabled }}
 {{- printf (index .Values.ingress.hosts.<%- name %> 0).name }}
 {{- else }}
-{{- printf "%s-<%- name %>" (include "<%- name %>.fullname" . ) }}
+{{- printf "%s-<%- name %>" (include "<%- name %>.fullname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -49,15 +49,15 @@ Calculate base_url
 {{- printf .Values.config.base_url }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
-{{- $host := ((empty (include "<%- name %>.hostname" . )) | (index .Values.ingress.hosts.<%- name %> 0) (include "<%- name %>.hostname" . )) }}
+{{- $host := ((empty (include "<%- name %>.hostname" .)) | (index .Values.ingress.hosts.<%- name %> 0) (include "<%- name %>.hostname" . )) }}
 {{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
 {{- $path := (eq $host.path "/" | ternary "" $host.path) }}
 {{- printf "%s://%s%s" $protocol $host.name $path }}
 {{- else }}
 {{- if (empty (include "<%- name %>.hostname" . )) }}
-{{- printf "http://%s-<%- name %>" (include "<%- name %>.hostname" . ) }}
+{{- printf "http://%s-<%- name %>" (include "<%- name %>.hostname" .) }}
 {{- else }}
-{{- printf "http://%s" (include "<%- name %>.hostname" . ) }}
+{{- printf "http://%s" (include "<%- name %>.hostname" .) }}
 {{- end }}
 {{- end }}
 {{- end }}
