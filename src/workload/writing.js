@@ -50,28 +50,12 @@ function processQuestions(content, context) {
     content = modInline.append(
       content,
       [INGRESS_ENABLED, SUBQUESTIONS],
-      `\n      - variable: ingress.hosts.${
-        context.workload.name
-      }[0].name\n        default: xip.io\n        description: 'hostname to your ${
-        context.workload.name
-      } installation'\n        type: hostname\n        required: true\n        label: '${
-        context.workload.name
-      } hostname'\n      - variable: ingress.hosts.${
-        context.workload.name
-      }[0].path\n        default: /\n        description: 'pathname to your ${
-        context.workload.name
-      } installation'\n        type: string\n        required: true\n        label: '${
-        context.workload.name
-      } path'`
+      `\n      - variable: ingress.hosts.${context.workload.name}[0].name\n        default: xip.io\n        description: 'hostname to your ${context.workload.name} installation'\n        type: hostname\n        required: true\n        label: '${context.workload.name} hostname'\n      - variable: ingress.hosts.${context.workload.name}[0].path\n        default: /\n        description: 'pathname to your ${context.workload.name} installation'\n        type: string\n        required: true\n        label: '${context.workload.name} path'`
     );
     content = modInline.append(
       content,
       [SERVICE_TYPE, SUBQUESTIONS],
-      `\n      - variable: service.nodePorts.${
-        context.workload.name
-      }.http\n        default: ''\n        description: ''\n        type: int\n        min: 30000\n        max: 32767\n        show_if: ingress.enabled=false\n        label: '${
-        context.workload.name
-      } http port'`
+      `\n      - variable: service.nodePorts.${context.workload.name}.http\n        default: ''\n        description: ''\n        type: int\n        min: 30000\n        max: 32767\n        show_if: ingress.enabled=false\n        label: '${context.workload.name} http port'`
     );
   }
   return content;

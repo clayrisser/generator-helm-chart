@@ -21,8 +21,9 @@ Calculate certificate
 */}}
 {{- define "<%- name %>.certificate" }}
 {{- if (not (empty .Values.ingress.certificate)) }}
+{{- printf .Values.ingress.certificate }}
 {{- else }}
-{{- printf "%s-letsencrypt" (include "nextcloud.fullname" .) }}
+{{- printf "%s-letsencrypt" (include "<%- name %>.fullname" .) }}
 {{- end }}
 {{- end }}
 

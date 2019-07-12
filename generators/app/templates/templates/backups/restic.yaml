@@ -1,0 +1,34 @@
+{{- if .Values.persistence.backup }}
+apiVersion: stash.appscode.com/v1alpha1
+kind: Restic
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
+  labels:
+    app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+  fileGroups:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
+    - path: '<%- volume.mountPath %>'
+      retentionPolicyName: 'retention-policy'<% } %>
+  backend:
+    local:
+      mountPath: /safe/data
+      nfs:
+        server: "nfs-service.storage.svc.cluster.local"
+        path: "/"
+    storageSecretName: local-secret
+  schedule: '@every 1m'
+  volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
+    - name: <%- volume.name %>
+      mountPath: '<%- volume.mountPath %>'<% if (volume.subPath) { %>
+      subPath: <%- volume.subPath %><% }} %>
+  retentionPolicies:
+    - name: 'retention-policy'
+      keepLast: 5
+      prune: true
+{{- end }}

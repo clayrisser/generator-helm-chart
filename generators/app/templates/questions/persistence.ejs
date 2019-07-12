@@ -15,25 +15,29 @@
         description: ''
         type: string
         required: true
-        show_if: persistence.enabled
         label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
         type: storageclass
         required: false
-        show_if: persistence.enabled
         label: 'storage class'
       - variable: persistence.existingClaim
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.enabled
         label: 'existing claim'
-      - variable: persistence.volbackBackup
+      - variable: persistence.backup
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'volback backup'
+        label: backup
+      - variable: persistence.resticPassword
+        default: pass
+        description: ''
+        type: password
+        required: true
+        show_if: persistence.backup
+        label: 'restic password'

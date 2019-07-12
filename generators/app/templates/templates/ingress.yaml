@@ -7,7 +7,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
-    {{- if (not (empty .Values.ingress.certificate)) }}
+    {{- if (empty .Values.ingress.certificate) }}
     certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
