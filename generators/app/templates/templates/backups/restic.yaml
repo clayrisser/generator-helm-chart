@@ -1,4 +1,4 @@
-{{- if .Values.persistence.backup }}
+{{- if .Values.persistence.backup.enabled }}
 apiVersion: stash.appscode.com/v1alpha1
 kind: Restic
 metadata:
@@ -22,13 +22,13 @@ spec:
         server: "nfs-service.storage.svc.cluster.local"
         path: "/"
     storageSecretName: local-secret
-  schedule: '@every 1m'
+  schedule: {{ .Values.persistence.backup.schedule | quote }}
   volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
     - name: <%- volume.name %>
       mountPath: '<%- volume.mountPath %>'<% if (volume.subPath) { %>
       subPath: <%- volume.subPath %><% }} %>
   retentionPolicies:
     - name: 'retention-policy'
-      keepLast: 5
+      keepLast: {{ .Values.persistence.backup.keepLast }}
       prune: true
 {{- end }}

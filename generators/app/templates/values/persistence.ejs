@@ -6,5 +6,8 @@ persistence:
   existingClaim: ''
   size: 10Gi
   storageClass: ''
-  backup: false
-  resticPassword: pass
+  backup:
+    enabled: false
+    keepLast: 5
+    resticPassword: pass
+    schedule: '@every 1m'
