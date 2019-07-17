@@ -16,12 +16,11 @@ spec:
     - path: '<%- volume.mountPath %>'
       retentionPolicyName: 'retention-policy'<% } %>
   backend:
-    local:
-      mountPath: /safe/data
-      nfs:
-        server: "nfs-service.storage.svc.cluster.local"
-        path: "/"
-    storageSecretName: local-secret
+    s3:
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+    storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
     - name: <%- volume.name %>

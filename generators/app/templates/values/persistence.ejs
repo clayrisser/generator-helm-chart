@@ -7,7 +7,12 @@ persistence:
   size: 10Gi
   storageClass: ''
   backup:
+    awsAccessKey: ''
+    awsSecretKey: ''
+    bucket: ''
     enabled: false
+    endpoint: s3.amazonaws.com
     keepLast: 5
+    prefix: ''
     resticPassword: pass
     schedule: '@every 1m'

@@ -39,19 +39,55 @@
         description: ''
         type: password
         required: true
-        show_if: persistence.backup.enabled
+        # show_if: persistence.backup.enabled
         label: 'backup restic password'
       - variable: persistence.backup.schedule
         default: '@every 1m'
         description: ''
         type: string
         required: true
-        show_if: persistence.backup.enabled
+        # show_if: persistence.backup.enabled
         label: 'backup schedule'
       - variable: persistence.backup.keepLast
         default: 5
         description: ''
         type: int
         required: true
+        # show_if: persistence.backup.enabled
         show_if: persistence.backup.enabled
         label: 'backup keep last'
+      - variable: persistence.backup.awsAccessKey
+        default: ''
+        description: ''
+        type: string
+        required: false
+        # show_if: persistence.backup.enabled
+        label: 'aws access key'
+      - variable: persistence.backup.awsSecretKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        # show_if: persistence.backup.enabled
+        label: 'aws secret key'
+      - variable: persistence.backup.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        # show_if: persistence.backup.enabled
+        label: 'backup bucket'
+      - variable: persistence.backup.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        # show_if: persistence.backup.enabled
+        label: 'backup endpoint'
+      - variable: persistence.backup.prefix
+        default: ''
+        description: ''
+        type: string
+        required: false
+        # show_if: persistence.backup.enabled
+        label: 'backup prefix'
