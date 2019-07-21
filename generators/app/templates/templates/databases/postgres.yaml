@@ -9,6 +9,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
@@ -18,7 +20,7 @@ spec:
       containers:
         - name: {{ template "<%- name %>.fullname" . }}-postgres
           image: {{ .Values.images.postgres.repository }}:{{ .Values.images.postgres.tag }}
-          imagePullPolicy: {{ .Values.images.postgres.pullPolicy }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
             - name: container
               containerPort: 5432

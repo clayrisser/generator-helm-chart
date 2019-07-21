@@ -16,9 +16,16 @@ spec:
     - path: '<%- volume.mountPath %>'
       retentionPolicyName: 'retention-policy'<% } %>
   backend:
-    s3:
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.config.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
     storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
   schedule: {{ .Values.persistence.backup.schedule | quote }}

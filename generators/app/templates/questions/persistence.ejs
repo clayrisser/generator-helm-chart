@@ -22,6 +22,16 @@
         type: storageclass
         required: false
         label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
       - variable: persistence.existingClaim
         default: ''
         description: ''
@@ -55,20 +65,66 @@
         required: true
         show_if: persistence.backup.enabled=true
         label: 'backup keep last'
+      - variable: persistence.backup.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.backup.enabled=true
+        label: 'backup type'
       - variable: persistence.backup.awsAccessKey
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
         label: 'aws access key'
       - variable: persistence.backup.awsSecretKey
         default: ''
         description: ''
         type: password
         required: false
-        show_if: persistence.backup.enabled=true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
         label: 'aws secret key'
+      - variable: persistence.backup.googleProjectId
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google project id'
+      - variable: persistence.backup.googleServiceKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
+        label: 'google service key'
+      - variable: persistence.backup.azureAccountName
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account name'
+      - variable: persistence.backup.azureAccountKey
+        default: ''
+        description: ''
+        type: password
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'azure account key'
+      - variable: persistence.backup.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
+        label: 'backup container'
       - variable: persistence.backup.bucket
         default: ''
         description: ''
@@ -81,7 +137,7 @@
         description: ''
         type: string
         required: true
-        show_if: persistence.backup.enabled=true
+        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
         label: 'backup endpoint'
       - variable: persistence.backup.prefix
         default: ''
