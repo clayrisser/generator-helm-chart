@@ -12,7 +12,7 @@ spec:
   version: {{ .Values.config.mysql.version | quote }}
   configSource:
     configMap:
-      name: {{ template "<%- name %>.fullname" . }}-mysql # TODO
+      name: {{ template "<%- name %>.fullname" . }}-mysql
   standbyMode: {{ .Values.config.mysql.standbyMode | quote }}
   {{- if .Values.config.mysql.prometheus }}
   monitor:

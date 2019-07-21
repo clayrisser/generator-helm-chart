@@ -27,6 +27,14 @@
     label: prometheus
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
+  - variable: config.mysql.config
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: config
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
   - variable: config.mysql.host
     default: ''
     description: ''
