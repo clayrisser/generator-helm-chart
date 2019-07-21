@@ -9,9 +9,14 @@ persistence:
   backup:
     awsAccessKey: ''
     awsSecretKey: ''
+    azureAccountKey: ''
+    azureAccountName: ''
     bucket: ''
+    container: ''
     enabled: false
     endpoint: s3.amazonaws.com
+    googleProjectId: ''
+    googleServiceKey: ''
     keepLast: 5
     prefix: ''
     resticPassword: pass
@@ -20,3 +25,4 @@ persistence:
     restoreRepository: ''
     restoreSnapshot: ''
     schedule: '@every 1m'
+    type: s3

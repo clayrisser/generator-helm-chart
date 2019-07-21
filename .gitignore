@@ -72,3 +72,4 @@ generators/*/*.js
 generators/shared
 package-lock.json*
 yarn.lock
+.tern-port
