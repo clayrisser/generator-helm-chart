@@ -1,6 +1,5 @@
-{{- if .Values.config.mysql.internal }}
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
   name: {{ template "<%- name %>.fullname" . }}-mysql
   labels:
@@ -8,13 +7,5 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-spec:
-  type: ClusterIP
-  ports:
-    - name: mysql
-      port: 3306
-      targetPort: container
-  selector:
-    app: {{ template "<%- name %>.name" . }}-mysql
-    release: {{ .Release.Name }}
-{{- end }}
+data:
+  my-config.cnf: {{ .Values.config.mysql.config | quote }}

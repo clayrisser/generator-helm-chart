@@ -8,6 +8,33 @@
     required: true
     label: internal
     group: 'MySQL Config'
+  - variable: config.mysql.standbyMode
+    default: hot
+    description: ''
+    type: enum
+    options:
+      - hot
+      - warm
+    required: true
+    label: 'standby mode'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.config
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: config
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
   - variable: config.mysql.host
     default: ''
     description: ''
@@ -22,6 +49,7 @@
     type: string
     required: true
     label: database
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.password
     default: root
@@ -29,6 +57,7 @@
     type: password
     required: true
     label: password
+    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.port
     default: 3306

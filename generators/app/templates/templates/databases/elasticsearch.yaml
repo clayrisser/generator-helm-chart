@@ -9,6 +9,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
   template:
     metadata:
       labels:
@@ -18,7 +20,7 @@ spec:
       containers:
         - name: {{ template "<%- name %>.fullname" . }}-elasticsearch
           image: {{ .Values.images.elasticsearch.repository }}:{{ .Values.images.elasticsearch.tag }}
-          imagePullPolicy: {{ .Values.images.elasticsearch.pullPolicy }}
+          imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
             - name: container
               containerPort: 9200

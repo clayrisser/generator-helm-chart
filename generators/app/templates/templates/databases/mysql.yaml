@@ -1,6 +1,6 @@
 {{- if .Values.config.mysql.internal }}
-apiVersion: apps/v1beta1
-kind: Deployment
+apiVersion: kubedb.com/v1alpha1
+kind: MySQL
 metadata:
   name: {{ template "<%- name %>.fullname" . }}-mysql
   labels:
@@ -9,40 +9,78 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  template:
+  version: {{ .Values.config.mysql.version | quote }}
+  configSource:
+    configMap:
+      name: {{ template "<%- name %>.fullname" . }}-mysql
+  standbyMode: {{ .Values.config.mysql.standbyMode | quote }}
+  {{- if .Values.config.mysql.prometheus }}
+  monitor:
+    agent: prometheus.io/builtin
+  {{- end }}
+  {{- if .Values.persistence.enabled }}
+  storageType: Durable
+  storage:
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+    storageClassName: ''
+    {{- else }}
+    storageClassName: {{ .Values.persistence.storageClass }}
+    {{- end }}
+    {{- end }}
+    accessModes:
+      - {{ .Values.persistence.accessMode }}
+    resources:
+      requests:
+        storage: {{ .Values.persistence.size }}
+  {{- else }}
+  storageType: Ephemeral
+  {{- end }}
+  {{- if .Values.persistence.backup.enabled }}
+  backupSchedule:
+    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
+    storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+  {{- end }}
+  {{- if (not (empty .Values.persistence.backup.restore)) }}
+  init:
+    snapshotSource:
+      name: {{ .Values.persistence.backup.restoreSnapshot }}
+      {{- if (empty .Values.persistence.backup.restoreNamespace) }}
+      namespace: {{ .Release.Namespace }}
+      {{- else }}
+      namespace: {{ .Values.persistence.backup.restoreNamespace }}
+      {{- end }}
+  {{- end }}
+  serviceTemplate:
     metadata:
-      labels:
-        app: {{ template "<%- name %>.name" . }}-mysql
-        release: {{ .Release.Name }}
+      annotations:
+        passMe: ToService
     spec:
-      containers:
-        - name: {{ template "<%- name %>.fullname" . }}-mysql
-          image: {{ .Values.images.mysql.repository }}:{{ .Values.images.mysql.tag }}
-          imagePullPolicy: {{ .Values.images.mysql.pullPolicy }}
-          ports:
-            - name: container
-              containerPort: 3306
-          volumeMounts:
-            - name: data
-              mountPath: /var/lib/mysql
-              subPath: mysql
-          env:
-            - name: MYSQL_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
-                  key: mysql_database
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
-                  key: mysql_password
-          livenessProbe:
-            tcpSocket:
-              port: container
-{{ toYaml .Values.probes.liveness | indent 12 }}
-          readinessProbe:
-            tcpSocket:
-              port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+      type: ClusterIP
+      ports:
+        - name: mysql
+          port: 5432
+          targetPort: mysql
+  replicaServiceTemplate:
+    annotations:
+      passMe: ToReplicaService
+    spec:
+      type: ClusterIP
+      ports:
+        - name:  mysql
+          port:  5432
+          targetPort: mysql
+  updateStrategy:
+    type: {{ .Values.config.updateStrategy }}
 {{- end }}

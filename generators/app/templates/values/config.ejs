@@ -1,4 +1,6 @@
 <% if (config.length || databases.length) { %>
 
-config:<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
+config:
+  imagePullPolicy: IfNotPresent
+  updateStrategy: RollingUpdate<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
   <%- configItem.key %>: '<%- configItem.defaultValue %>'<% }} %>

@@ -150,12 +150,22 @@ export default async function writing(yo) {
       ),
       context
     );
-    yo.fs.copyTpl(
-      yo.templatePath(`templates/services/${database.name}.yaml`),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/services/${database.name}.yaml`
-      ),
-      context
-    );
+    if (database.name === 'mysql') {
+      yo.fs.copyTpl(
+        yo.templatePath(`templates/configmaps/${database.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/configmaps/${database.name}.yaml`
+        ),
+        context
+      );
+    } else {
+      yo.fs.copyTpl(
+        yo.templatePath(`templates/services/${database.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/services/${database.name}.yaml`
+        ),
+        context
+      );
+    }
   });
 }
