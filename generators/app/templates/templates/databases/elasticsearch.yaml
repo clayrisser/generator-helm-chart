@@ -9,16 +9,16 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  version: {{ .Values.config.version | quote }}
+  version: {{ .Values.config.elasticsearch.version | quote }}
   configSource:
     configMap:
       name: {{ template "<%- name %>.fullname" . }}-elasticsearch
-  {{- if .Values.config.prometheus }}
+  {{- if .Values.config.elasticsearch.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  {{- if (gt (.Values.config.replicas | int64) 1) }}
-  replicas: {{ .Values.config.replicas }}
+  {{- if (gt (.Values.config.elasticsearch.replicas | int64) 1) }}
+  replicas: {{ .Values.config.elasticsearch.replicas }}
   {{- end }}
   {{- if .Values.persistence.enabled }}
   storageType: Durable
@@ -55,10 +55,10 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
   databaseSecret:
-    {{- if (empty .Values.config.secret) }}
+    {{- if (empty .Values.config.elasticsearch.secret) }}
     secretName: {{ template "<%- name %>.sharedname" . }}-elasticsearch-auth
     {{- else }}
-    secretName: {{ .Values.config.secret }}
+    secretName: {{ .Values.config.elasticsearch.secret }}
     {{- end }}
   init:
     snapshotSource:

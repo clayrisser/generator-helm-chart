@@ -9,8 +9,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  version: {{ .Values.config.version | quote }}
-  {{- if .Values.config.prometheus }}
+  version: {{ .Values.config.mongodb.version | quote }}
+  {{- if .Values.config.mongodb.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
@@ -19,10 +19,10 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if .Values.config.sharding.enabled }}
+  {{- if .Values.config.mongodb.sharding.enabled }}
   shardTopology:
     configServer:
-      replicas: {{ .Values.config.sharding.configServerReplicas }}
+      replicas: {{ .Values.config.mongodb.sharding.configServerReplicas }}
       configSource:
         configMap:
           name: {{ template "<%- name %>.fullname" . }}-mongodb
@@ -42,15 +42,15 @@ spec:
             storage: {{ .Values.persistence.size }}
       {{- end }}
     mongos:
-      replicas: {{ .Values.config.sharding.mongosReplicas }}
+      replicas: {{ .Values.config.mongodb.sharding.mongosReplicas }}
       strategy:
-        type: {{ .Values.config.updateStrategy }}
+        type: {{ .Values.config.mongodb.updateStrategy }}
       configSource:
         configMap:
           name: {{ template "<%- name %>.fullname" . }}-mongodb
     shard:
-      replicas: {{ .Values.config.replicas }}
-      shards: {{ .Values.config.sharding.shards }}
+      replicas: {{ .Values.config.mongodb.replicas }}
+      shards: {{ .Values.config.mongodb.sharding.shards }}
       configSource:
         configMap:
           name: {{ template "<%- name %>.fullname" . }}-mongodb
@@ -73,8 +73,8 @@ spec:
   configSource:
     configMap:
       name: {{ template "<%- name %>.fullname" . }}-mongodb
-  {{- if (gt (.Values.config.replicas | int64) 1) }}
-  replicas: {{ .Values.config.replicas }}
+  {{- if (gt (.Values.config.mongodb.replicas | int64) 1) }}
+  replicas: {{ .Values.config.mongodb.replicas }}
   replicaSet:
     name: rs0
   {{- end }}
@@ -111,10 +111,10 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
   databaseSecret:
-    {{- if (empty .Values.config.secret) }}
+    {{- if (empty .Values.config.mongodb.secret) }}
     secretName: {{ template "<%- name %>.sharedname" . }}-mongodb-auth
     {{- else }}
-    secretName: {{ .Values.config.secret }}
+    secretName: {{ .Values.config.mongodb.secret }}
     {{- end }}
   init:
     snapshotSource:

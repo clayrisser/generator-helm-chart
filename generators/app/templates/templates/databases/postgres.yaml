@@ -1,5 +1,4 @@
 {{- if .Values.config.postgres.internal }}
-
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
@@ -10,17 +9,17 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  version: {{ .Values.config.version | quote }}
+  version: {{ .Values.config.postgres.version | quote }}
   configSource:
     configMap:
       name: {{ template "<%- name %>.fullname" . }}-postgres
-  standbyMode: {{ .Values.config.standbyMode | quote }}
-  {{- if .Values.config.prometheus }}
+  standbyMode: {{ .Values.config.postgres.standbyMode | quote }}
+  {{- if .Values.config.postgres.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  {{- if (gt (.Values.config.replicas | int64) 1) }}
-  replicas: {{ .Values.config.replicas }}
+  {{- if (gt (.Values.config.postgres.replicas | int64) 1) }}
+  replicas: {{ .Values.config.postgres.replicas }}
   {{- end }}
   {{- if .Values.persistence.enabled }}
   storageType: Durable
@@ -57,10 +56,10 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
   databaseSecret:
-    {{- if (empty .Values.config.secret) }}
+    {{- if (empty .Values.config.postgres.secret) }}
     secretName: {{ template "<%- name %>.sharedname" . }}-postgres-auth
     {{- else }}
-    secretName: {{ .Values.config.secret }}
+    secretName: {{ .Values.config.postgres.secret }}
     {{- end }}
   init:
     snapshotSource:

@@ -9,19 +9,19 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  version: {{ .Values.config.version | quote }}
+  version: {{ .Values.config.redis.version | quote }}
   configSource:
     configMap:
       name: {{ template "<%- name %>.fullname" . }}-redis
-  {{- if .Values.config.prometheus }}
+  {{- if .Values.config.redis.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  {{- if (or (gt (.Values.config.shards | int64) 1) (gt (.Values.config.shards | int64) 1)) }}
+  {{- if (or (gt (.Values.config.redis.shards | int64) 1) (gt (.Values.config.redis.shards | int64) 1)) }}
   mode: Cluster
   cluster:
-    master: {{ .Values.config.shards }}
-    replicas: {{ .Values.config.replicas }}
+    master: {{ .Values.config.redis.shards }}
+    replicas: {{ .Values.config.redis.replicas }}
   {{- else }}
   mode: Standalone
   {{- end }}
@@ -60,10 +60,10 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
   databaseSecret:
-    {{- if (empty .Values.config.secret) }}
+    {{- if (empty .Values.config.redis.secret) }}
     secretName: {{ template "<%- name %>.sharedname" . }}-redis-auth
     {{- else }}
-    secretName: {{ .Values.config.secret }}
+    secretName: {{ .Values.config.redis.secret }}
     {{- end }}
   init:
     snapshotSource:
