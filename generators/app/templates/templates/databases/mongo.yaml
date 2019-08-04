@@ -1,45 +1,163 @@
-{{- if .Values.config.mongo.internal }}
-apiVersion: apps/v1beta1
-kind: Deployment
+{{- if .Values.config.mongodb.internal }}
+apiVersion: kubedb.com/v1alpha1
+kind: MongoDB
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mongo
+  name: {{ template "<%- name %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- name %>.name" . }}-mongo
+    app: {{ template "<%- name %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  strategy:
-    type: {{ .Values.config.updateStrategy }}
-  template:
+  version: {{ .Values.config.version | quote }}
+  {{- if .Values.config.prometheus }}
+  monitor:
+    agent: prometheus.io/builtin
+  {{- end }}
+  {{- if .Values.persistence.enabled }}
+  storageType: Durable
+  {{- else }}
+  storageType: Ephemeral
+  {{- end }}
+  {{- if .Values.config.sharding.enabled }}
+  shardTopology:
+    configServer:
+      replicas: {{ .Values.config.sharding.configServerReplicas }}
+      configSource:
+        configMap:
+          name: {{ template "<%- name %>.fullname" . }}-mongodb
+      {{- if .Values.persistence.enabled }}
+      storage:
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
+        {{- end }}
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+      {{- end }}
+    mongos:
+      replicas: {{ .Values.config.sharding.mongosReplicas }}
+      strategy:
+        type: {{ .Values.config.updateStrategy }}
+      configSource:
+        configMap:
+          name: {{ template "<%- name %>.fullname" . }}-mongodb
+    shard:
+      replicas: {{ .Values.config.replicas }}
+      shards: {{ .Values.config.sharding.shards }}
+      configSource:
+        configMap:
+          name: {{ template "<%- name %>.fullname" . }}-mongodb
+      {{- if .Values.persistence.enabled }}
+      storage:
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
+        {{- end }}
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+      {{- end }}
+  {{- else }}
+  configSource:
+    configMap:
+      name: {{ template "<%- name %>.fullname" . }}-mongodb
+  {{- if (gt (.Values.config.replicas | int64) 1) }}
+  replicas: {{ .Values.config.replicas }}
+  replicaSet:
+    name: rs0
+  {{- end }}
+  {{- if .Values.persistence.enabled }}
+  storage:
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+    storageClassName: ''
+    {{- else }}
+    storageClassName: {{ .Values.persistence.storageClass }}
+    {{- end }}
+    {{- end }}
+    accessModes:
+      - {{ .Values.persistence.accessMode }}
+    resources:
+      requests:
+        storage: {{ .Values.persistence.size }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.persistence.backup.enabled }}
+  backupSchedule:
+    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
+    storageSecretName: {{ template "<%- name %>.sharedname" . }}-mongodb
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      prefix: {{ .Values.persistence.backup.prefix | quote }}
+  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  databaseSecret:
+    {{- if (empty .Values.config.secret) }}
+    secretName: {{ template "<%- name %>.sharedname" . }}-mongodb-auth
+    {{- else }}
+    secretName: {{ .Values.config.secret }}
+    {{- end }}
+  init:
+    snapshotSource:
+      name: {{ .Values.persistence.backup.restoreSnapshot }}
+      namespace: {{ .Release.Namespace }}
+  {{- end }}
+  {{- end }}
+  serviceTemplate:
     metadata:
-      labels:
-        app: {{ template "<%- name %>.name" . }}-mongo
-        release: {{ .Release.Name }}
+      annotations:
+        passMe: ToService
     spec:
-      containers:
-        - name: {{ template "<%- name %>.fullname" . }}-mongo
-          image: {{ .Values.images.mongo.repository }}:{{ .Values.images.mongo.tag }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
-          ports:
-            - name: container
-              containerPort: 27017
-          volumeMounts:
-            - name: data
-              mountPath: /data/db
-              subPath: mongo
-          env:
-            - name: MONGO_INITDB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
-                  key: mongo_database
-          livenessProbe:
-            tcpSocket:
-              port: container
-{{ toYaml .Values.probes.liveness | indent 12 }}
-          readinessProbe:
-            tcpSocket:
-              port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}<%- include('../volumes'); %>
+      type: {{ .Values.service.mongodb.type }}
+      {{- if (or (eq .Values.service.mongodb.type "LoadBalancer") (eq .Values.service.mongodb.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.mongodb.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: mongodb
+          port: 27017
+          targetPort: mongodb
+          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb.port))) }}
+          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb.port }}
+          {{- end }}
+  replicaServiceTemplate:
+    annotations:
+      passMe: ToReplicaService
+    spec:
+      type: {{ .Values.service.mongodb.type }}
+      {{- if (or (eq .Values.service.mongodb.type "LoadBalancer") (eq .Values.service.mongodb.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.mongodb.externalTrafficPolicy }}
+      {{- end }}
+      ports:
+        - name: mongodb
+          port: 27017
+          targetPort: mongodb
+          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb.port))) }}
+          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb.port }}
+          {{- end }}
+  updateStrategy:
+    type: {{ .Values.config.updateStrategy }}
+  {{- if .Values.persistence.enabled }}
+  terminationPolicy: Pause
+  {{- else }}
+  terminationPolicy: Delete
+  {{- end }}
 {{- end }}

@@ -9,14 +9,16 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  version: {{ .Values.config.mysql.version | quote }}
+  version: {{ .Values.config.version | quote }}
   configSource:
     configMap:
       name: {{ template "<%- name %>.fullname" . }}-mysql
-  standbyMode: {{ .Values.config.mysql.standbyMode | quote }}
-  {{- if .Values.config.mysql.prometheus }}
+  {{- if .Values.config.prometheus }}
   monitor:
     agent: prometheus.io/builtin
+  {{- end }}
+  {{- if (gt (.Values.config.replicas | int64) 1) }}
+  replicas: {{ .Values.config.replicas }}
   {{- end }}
   {{- if .Values.persistence.enabled }}
   storageType: Durable
@@ -39,7 +41,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
+    storageSecretName: {{ template "<%- name %>.sharedname" . }}-mysql
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
@@ -51,36 +53,55 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- end }}
-  {{- if (not (empty .Values.persistence.backup.restore)) }}
+  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  databaseSecret:
+    {{- if (empty .Values.config.secret) }}
+    secretName: {{ template "<%- name %>.sharedname" . }}-mysql-auth
+    {{- else }}
+    secretName: {{ .Values.config.secret }}
+    {{- end }}
   init:
     snapshotSource:
       name: {{ .Values.persistence.backup.restoreSnapshot }}
-      {{- if (empty .Values.persistence.backup.restoreNamespace) }}
       namespace: {{ .Release.Namespace }}
-      {{- else }}
-      namespace: {{ .Values.persistence.backup.restoreNamespace }}
-      {{- end }}
+  {{- end }}
   {{- end }}
   serviceTemplate:
     metadata:
       annotations:
         passMe: ToService
     spec:
-      type: ClusterIP
+      type: {{ .Values.service.mysql.type }}
+      {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
+      {{- end }}
       ports:
         - name: mysql
-          port: 5432
+          port: 3306
           targetPort: mysql
+          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
+          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+          {{- end }}
   replicaServiceTemplate:
     annotations:
       passMe: ToReplicaService
     spec:
-      type: ClusterIP
+      type: {{ .Values.service.mysql.type }}
+      {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
+      externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
+      {{- end }}
       ports:
-        - name:  mysql
-          port:  5432
+        - name: mysql
+          port: 3306
           targetPort: mysql
+          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
+          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+          {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}
+  {{- if .Values.persistence.enabled }}
+  terminationPolicy: Pause
+  {{- else }}
+  terminationPolicy: Delete
+  {{- end }}
 {{- end }}
