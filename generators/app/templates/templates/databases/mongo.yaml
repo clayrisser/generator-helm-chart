@@ -97,7 +97,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- name %>.sharedname" . }}-mongodb
+    storageSecretName: {{ template "<%- name %>.sharedname" . }}-backup
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
