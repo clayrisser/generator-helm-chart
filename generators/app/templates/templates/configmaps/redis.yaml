@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mysql
+  name: {{ template "<%- name %>.fullname" . }}-redis
   labels:
-    app: {{ template "<%- name %>.name" . }}-mysql
+    app: {{ template "<%- name %>.name" . }}-redis
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  my-config.cnf: {{ .Values.config.mysql.customConfig | quote }}
+  redis.conf: {{ .Values.config.redis.customConfig | quote }}

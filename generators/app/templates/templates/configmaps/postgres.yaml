@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mysql
+  name: {{ template "<%- name %>.fullname" . }}-postgres
   labels:
-    app: {{ template "<%- name %>.name" . }}-mysql
+    app: {{ template "<%- name %>.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  my-config.cnf: {{ .Values.config.mysql.customConfig | quote }}
+  user.conf: {{ .Values.config.postgres.customConfig | quote }}

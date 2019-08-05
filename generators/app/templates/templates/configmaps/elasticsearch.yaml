@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-elasticsearch
+  labels:
+    app: {{ template "<%- name %>.name" . }}-elasticsearch
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  common-config.yml: {{ .Values.config.elasticsearch.commonConfig | quote }}
+  data-config.yml: {{ .Values.config.elasticsearch.dataConfig | quote }}
+  master-config.yml: {{ .Values.config.elasticsearch.masterConfig | quote }}

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mysql
+  name: {{ template "<%- name %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- name %>.name" . }}-mysql
+    app: {{ template "<%- name %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  my-config.cnf: {{ .Values.config.mysql.customConfig | quote }}
+  mongodbd.conf: {{ .Values.config.mongodb.customConfig | quote }}
