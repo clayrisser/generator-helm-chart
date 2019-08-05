@@ -1,4 +1,4 @@
-{{- if (and .Values.ingress.enabled (and .Values.config.redis.internal .Values.config.redis.phpredisadmin.enabled)) }}
+{{- if (and .Values.ingress.enabled (and .Values.config.redis.internal .Values.config.phpredisadmin.enabled)) }}
 {{- $host := (index .Values.ingress.hosts.phpredisadmin 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress

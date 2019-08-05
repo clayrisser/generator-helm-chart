@@ -1,4 +1,4 @@
-{{- if (and .Values.config.redis.internal .Values.config.redis.phpredisadmin.enabled) }}
+{{- if (and .Values.config.redis.internal .Values.config.phpredisadmin.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:

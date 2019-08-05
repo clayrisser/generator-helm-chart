@@ -1,4 +1,4 @@
-{{- if (and .Values.ingress.enabled (and .Values.config.mongodb.internal .Values.config.mongodb.mongo_express.enabled)) }}
+{{- if (and .Values.ingress.enabled (and .Values.config.mongodb.internal .Values.config.mongo_express.enabled)) }}
 {{- $host := (index .Values.ingress.hosts.mongo_express 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress

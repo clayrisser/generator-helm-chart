@@ -1,4 +1,4 @@
-{{- if (and .Values.ingress.enabled (and .Values.config.postgres.internal .Values.config.postgres.pgadmin.enabled)) }}
+{{- if (and .Values.ingress.enabled (and .Values.config.postgres.internal .Values.config.pgadmin.enabled)) }}
 {{- $host := (index .Values.ingress.hosts.pgadmin 0) }}
 apiVersion: extensions/v1beta1
 kind: Ingress

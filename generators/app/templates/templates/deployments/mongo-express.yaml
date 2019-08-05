@@ -1,4 +1,4 @@
-{{- if (and .Values.config.mongodb.internal .Values.config.mongodb.mongo_express.enabled) }}
+{{- if (and .Values.config.mongodb.internal .Values.config.mongo_express.enabled) }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:

@@ -97,4 +97,29 @@
     required: false
     label: username
     show_if: config.redis.internal=false
-    group: 'Redis Config'<% } %>
+    group: 'Redis Config'
+
+# PHPRedisAdmin
+  - variable: config.phpredisadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: phpredisadmin
+    show_subquestion_if: true
+    group: PHPRedisAdmin
+    subquestions:
+      - variable: config.phpredisadmin.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'phpredisadmin username'
+        group: PHPRedisAdmin
+      - variable: config.phpredisadmin.password
+        default: pass
+        description: ''
+        type: password
+        required: true
+        label: 'phpredisadmin password'
+        group: PHPRedisAdmin<% } %>

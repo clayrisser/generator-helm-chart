@@ -108,4 +108,29 @@
     required: true
     label: username
     show_if: config.postgres.internal=false
-    group: 'Postgres Config'<% } %>
+    group: 'Postgres Config'
+
+# PGAdmin
+  - variable: config.pgadmin.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: pgadmin
+    show_subquestion_if: true
+    group: PGAdmin
+    subquestions:
+      - variable: config.pgadmin.email
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'pgadmin email'
+        group: PGAdmin
+      - variable: config.pgadmin.password
+        default: admin
+        description: ''
+        type: password
+        required: true
+        label: 'pgadmin password'
+        group: PGAdmin<% } %>

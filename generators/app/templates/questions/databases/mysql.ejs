@@ -16,6 +16,13 @@
     label: version
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
+  - variable: config.mysql.phpmyadmin
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: phpmyadmin
+    group: 'MySQL Config'
   - variable: config.mysql.prometheus
     default: false
     description: ''

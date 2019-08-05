@@ -131,4 +131,29 @@
     required: false
     label: username
     show_if: config.mongodb.internal=false
-    group: 'MongoDB Config'<% } %>
+    group: 'MongoDB Config'
+
+# MongoExpress
+  - variable: config.mongo_express.enabled
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: 'mongo express'
+    show_subquestion_if: true
+    group: MongoExpress
+    subquestions:
+      - variable: config.mongo_express.username
+        default: admin
+        description: ''
+        type: string
+        required: true
+        label: 'mongo express username'
+        group: MongoExpress
+      - variable: config.mongo_express.password
+        default: pass
+        description: ''
+        type: password
+        required: true
+        label: 'mongo express password'
+        group: MongoExpress<% } %>

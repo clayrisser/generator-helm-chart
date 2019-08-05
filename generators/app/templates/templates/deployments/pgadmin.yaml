@@ -1,4 +1,4 @@
-{{- if (and .Values.config.postgres.internal .Values.config.postgres.pgadmin.enabled) }}
+{{- if (and .Values.config.postgres.internal .Values.config.pgadmin.enabled) }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
