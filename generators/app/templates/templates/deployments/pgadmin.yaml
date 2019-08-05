@@ -1,0 +1,46 @@
+{{- if (and .Values.config.postgres.internal .Values.config.postgres.pgadmin.enabled) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-pgadmin
+  labels:
+    app: {{ template "<%- name %>.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- name %>.name" . }}-pgadmin
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%- name %>.fullname" . }}-pgadmin
+          image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
+          imagePullPolicy: {{ .Values.images.pgadmin.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: pgadmin_email
+            - name: PGADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: pgadmin_password
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}

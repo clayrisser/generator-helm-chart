@@ -1,0 +1,36 @@
+{{- if (and .Values.ingress.enabled (and .Values.config.redis.internal .Values.config.redis.phpredisadmin.enabled)) }}
+{{- $host := (index .Values.ingress.hosts.phpredisadmin 0) }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+    {{- if (empty .Values.ingress.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
+    kubernetes.io/tls-acme: 'true'
+    {{- end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    {{- end }}
+  labels:
+    app: {{ template "<%- name %>.name" . }}-phpredisadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: {{ $host.name }}
+      http:
+        paths:
+          - path: {{ $host.path }}
+            backend:
+              serviceName: {{ template "<%- name %>.fullname" $ }}-phpredisadmin
+              servicePort: http
+  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+  tls:
+    - secretName: {{ template "<%- name %>.certificate" . }}
+      hosts:
+        - {{ $host.name }}
+  {{- end }}
+{{- end }}

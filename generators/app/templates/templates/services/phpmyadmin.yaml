@@ -1,0 +1,30 @@
+{{- if (and .Values.config.mysql.internal .Values.config.mysql.phpmyadmin) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mysql.fullname" . }}-phpmyadmin
+  labels:
+    app: {{ template "mysql.name" . }}-phpmyadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.phpmyadmin.type }}
+  {{- if (or (eq .Values.service.phpmyadmin.type "LoadBalancer") (eq .Values.service.phpmyadmin.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.phpmyadmin.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.phpmyadmin.type "NodePort") (not (empty .Values.service.phpmyadmin.nodePorts.phpmyadmin.http))) }}
+      nodePort: {{ .Values.service.phpmyadmin.nodePorts.phpmyadmin.http }}
+      {{- end }}
+  selector:
+    app: {{ template "mysql.name" . }}-phpmyadmin
+    release: {{ .Release.Name }}
+{{- end }}

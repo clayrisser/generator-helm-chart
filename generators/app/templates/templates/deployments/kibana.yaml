@@ -1,0 +1,48 @@
+{{- if (and .Values.config.elasticsearch.internal .Values.config.elasticsearch.kibana) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-kibana
+  labels:
+    app: {{ template "<%- name %>.name" . }}-kibana
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- name %>.name" . }}-kibana
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%- name %>.fullname" . }}-kibana
+          image: {{ .Values.images.kibana.repository }}:{{ .Values.images.kibana.tag }}
+          imagePullPolicy: {{ .Values.images.kibana.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 5601
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              value: http://{{ template "<%- name %>.fullname" . }}-elasticsearch:9200
+            - name: ELASTICSEARCH_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%- name %>.sharedname" . }}-elasticsearch-auth
+                  key: username
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "<%- name %>.sharedname" . }}-elasticsearch-auth
+                  key: password
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}

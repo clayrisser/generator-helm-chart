@@ -1,3 +1,4 @@
+{{- if .Values.config.mysql.internal }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,3 +10,4 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   my-config.cnf: {{ .Values.config.mysql.customConfig | quote }}
+{{- end }}

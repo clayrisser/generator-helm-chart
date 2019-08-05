@@ -1,0 +1,48 @@
+{{- if (and .Values.config.redis.internal .Values.config.redis.phpredisadmin.enabled) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
+  labels:
+    app: {{ template "<%- name %>.name" . }}-phpredisadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- name %>.name" . }}-phpredisadmin
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
+          image: {{ .Values.images.phpredisadmin.repository }}:{{ .Values.images.phpredisadmin.tag }}
+          imagePullPolicy: {{ .Values.images.phpredisadmin.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          env:
+            - name: REDIS_1_HOST
+              value: {{ template "<%- name %>.fullname" . }}-redis
+            - name: REDIS_1_NAME
+              value: {{ template "<%- name %>.fullname" . }}-redis
+            - name: ADMIN_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: phpredisadmin_username
+            - name: ADMIN_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "<%- name %>.fullname" . }}
+                  key: phpredisadmin_password
+          livenessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}

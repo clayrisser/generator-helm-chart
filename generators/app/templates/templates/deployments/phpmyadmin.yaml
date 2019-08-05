@@ -1,0 +1,38 @@
+{{- if (and .Values.config.mysql.internal .Values.config.mysql.phpmyadmin) }}
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "<%- name %>.fullname" . }}-phpmyadmin
+  labels:
+    app: {{ template "<%- name %>.name" . }}-phpmyadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- name %>.name" . }}-phpmyadmin
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "<%- name %>.fullname" . }}-phpmyadmin
+          image: {{ .Values.images.phpmyadmin.repository }}:{{ .Values.images.phpmyadmin.tag }}
+          imagePullPolicy: {{ .Values.images.phpmyadmin.pullPolicy }}
+          ports:
+            - name: container
+              containerPort: 80
+          env:
+            - name: PMA_HOST
+              value: {{ template "<%- name %>.fullname" . }}-mysql
+          livenessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.liveness | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: container
+{{ toYaml .Values.probes.readiness | indent 12 }}
+{{- end }}

@@ -1,0 +1,30 @@
+{{- if (and .Values.config.redis.internal .Values.config.redis.phpredisadmin.enabled) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "redis.fullname" . }}-phpredisadmin
+  labels:
+    app: {{ template "redis.name" . }}-phpredisadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.phpredisadmin.type }}
+  {{- if (or (eq .Values.service.phpredisadmin.type "LoadBalancer") (eq .Values.service.phpredisadmin.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.phpredisadmin.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.phpredisadmin.type "NodePort") (not (empty .Values.service.phpredisadmin.nodePorts.phpredisadmin.http))) }}
+      nodePort: {{ .Values.service.phpredisadmin.nodePorts.phpredisadmin.http }}
+      {{- end }}
+  selector:
+    app: {{ template "redis.name" . }}-phpredisadmin
+    release: {{ .Release.Name }}
+{{- end }}

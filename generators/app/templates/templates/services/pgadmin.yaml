@@ -1,0 +1,30 @@
+{{- if (and .Values.config.postgres.internal .Values.config.postgres.pgadmin.enabled) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "postgres.fullname" . }}-pgadmin
+  labels:
+    app: {{ template "postgres.name" . }}-pgadmin
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.pgadmin.type }}
+  {{- if (or (eq .Values.service.pgadmin.type "LoadBalancer") (eq .Values.service.pgadmin.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.pgadmin.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.pgadmin.type "NodePort") (not (empty .Values.service.pgadmin.nodePorts.pgadmin.http))) }}
+      nodePort: {{ .Values.service.pgadmin.nodePorts.pgadmin.http }}
+      {{- end }}
+  selector:
+    app: {{ template "postgres.name" . }}-pgadmin
+    release: {{ .Release.Name }}
+{{- end }}

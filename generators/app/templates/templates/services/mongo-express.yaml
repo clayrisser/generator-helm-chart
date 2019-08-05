@@ -1,0 +1,30 @@
+{{- if (and .Values.config.mongodb.internal .Values.config.mongodb.mongo_express.enabled) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mongodb.fullname" . }}-mongo-express
+  labels:
+    app: {{ template "mongodb.name" . }}-mongo-express
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.mongo_express.type }}
+  {{- if (or (eq .Values.service.mongo_express.type "LoadBalancer") (eq .Values.service.mongo_express.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.mongo_express.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.mongo_express.type "NodePort") (not (empty .Values.service.mongo_express.nodePorts.mongo_express.http))) }}
+      nodePort: {{ .Values.service.mongo_express.nodePorts.mongo_express.http }}
+      {{- end }}
+  selector:
+    app: {{ template "mongodb.name" . }}-mongo-express
+    release: {{ .Release.Name }}
+{{- end }}

@@ -1,0 +1,30 @@
+{{- if (and .Values.config.elasticsearch.internal .Values.config.elasticsearch.kibana) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "elasticsearch.fullname" . }}-kibana
+  labels:
+    app: {{ template "elasticsearch.name" . }}-kibana
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.kibana.type }}
+  {{- if (or (eq .Values.service.kibana.type "LoadBalancer") (eq .Values.service.kibana.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.kibana.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.kibana.type "NodePort") (not (empty .Values.service.kibana.nodePorts.kibana.http))) }}
+      nodePort: {{ .Values.service.kibana.nodePorts.kibana.http }}
+      {{- end }}
+  selector:
+    app: {{ template "elasticsearch.name" . }}-kibana
+    release: {{ .Release.Name }}
+{{- end }}

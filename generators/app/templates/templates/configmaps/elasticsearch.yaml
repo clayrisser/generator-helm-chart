@@ -1,3 +1,4 @@
+{{- if .Values.config.elasticsearch.internal }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,3 +12,4 @@ data:
   common-config.yml: {{ .Values.config.elasticsearch.commonConfig | quote }}
   data-config.yml: {{ .Values.config.elasticsearch.dataConfig | quote }}
   master-config.yml: {{ .Values.config.elasticsearch.masterConfig | quote }}
+{{- end }}
