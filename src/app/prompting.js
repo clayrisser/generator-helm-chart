@@ -48,7 +48,6 @@ export default async function prompting(yo) {
         default: [],
         choices: [
           { name: 'Elasticsearch', value: 'elasticsearch' },
-          { name: 'Mariadb', value: 'mariadb' },
           { name: 'Mongo', value: 'mongo' },
           { name: 'MySQL', value: 'mysql' },
           { name: 'Postgres', value: 'postgres' },
@@ -59,28 +58,29 @@ export default async function prompting(yo) {
     database => {
       return {
         elasticsearch: {
-          name: 'elasticsearch',
-          image: 'elasticsearch:latest'
-        },
-        mariadb: {
-          name: 'mariadb',
-          image: 'mariadb:latest'
+          explorer: 'kibana',
+          explorerImage: 'kibana:7.3.0',
+          name: 'elasticsearch'
         },
         mongo: {
-          name: 'mongo',
-          image: 'mongo:latest'
+          explorer: 'mongo-express',
+          explorerImage: 'mongo-express:0.49.0',
+          name: 'mongodb'
         },
         mysql: {
-          name: 'mysql',
-          image: 'mysql:latest'
+          explorer: 'phpmyadmin',
+          explorerImage: 'phpmyadmin/phpmyadmin:4.7',
+          name: 'mysql'
         },
         postgres: {
-          name: 'postgres',
-          image: 'postgres:latest'
+          explorer: 'pgadmin',
+          explorerImage: 'dpage/pgadmin4:4.11',
+          name: 'postgres'
         },
         redis: {
-          name: 'redis',
-          image: 'redis:latest'
+          explorer: 'phpredisadmin',
+          explorerImage: 'erikdubbelboer/phpredisadmin:v1.11.4',
+          name: 'redis'
         }
       }[database];
     }

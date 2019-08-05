@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "mysql.fullname" . }}-phpmyadmin
+  name: {{ template "<%- name %>.fullname" . }}-phpmyadmin
   labels:
-    app: {{ template "mysql.name" . }}-phpmyadmin
+    app: {{ template "<%- name %>.name" . }}-phpmyadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -25,6 +25,6 @@ spec:
       nodePort: {{ .Values.service.phpmyadmin.nodePorts.phpmyadmin.http }}
       {{- end }}
   selector:
-    app: {{ template "mysql.name" . }}-phpmyadmin
+    app: {{ template "<%- name %>.name" . }}-phpmyadmin
     release: {{ .Release.Name }}
 {{- end }}

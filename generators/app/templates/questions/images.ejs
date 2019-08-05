@@ -16,14 +16,14 @@
     label: '<%- workload.name %> tag'
     group: Images<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
   - variable: images.<%- database.name %>.repository
-    default: <%- database.image.substr(0, database.image.indexOf(':')) %>
+    default: <%- database.explorerImage.substr(0, database.explorerImage.indexOf(':')) %>
     description: ''
     type: string
     required: true
     label: '<%- database.name %> repository'
     group: Images
   - variable: images.<%- database.name %>.tag
-    default: <%- database.image.substr(database.image.indexOf(':') + 1) %>
+    default: <%- database.explorerImage.substr(database.explorerImage.indexOf(':') + 1) %>
     description: ''
     type: string
     required: true

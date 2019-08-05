@@ -123,18 +123,8 @@ export default async function writing(yo) {
   });
   yo.context.databases.forEach(database => {
     const context = {
-      ...yo.context,
-      database,
-      name: database.name,
-      workload: {
-        volumes: [
-          {
-            name: 'data',
-            mountPath: '/data/db',
-            subPath: database.name
-          }
-        ]
-      }
+      ...database,
+      ...yo.context
     };
     yo.fs.copyTpl(
       yo.templatePath(`templates/databases/${database.name}.yaml`),
@@ -144,28 +134,25 @@ export default async function writing(yo) {
       context
     );
     yo.fs.copyTpl(
-      yo.templatePath('templates/backups/restic.yaml'),
+      yo.templatePath(`templates/configmaps/${database.name}.yaml`),
       yo.destinationPath(
-        `v${yo.context.version}/templates/backups/${database.name}.yaml`
+        `v${yo.context.version}/templates/configmaps/${database.name}.yaml`
       ),
       context
     );
-    if (database.name === 'mysql') {
-      yo.fs.copyTpl(
-        yo.templatePath(`templates/configmaps/${database.name}.yaml`),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/configmaps/${database.name}.yaml`
-        ),
-        context
-      );
-    } else {
-      yo.fs.copyTpl(
-        yo.templatePath(`templates/services/${database.name}.yaml`),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/services/${database.name}.yaml`
-        ),
-        context
-      );
-    }
+    yo.fs.copyTpl(
+      yo.templatePath(`templates/ingresses/${database.explorer}.yaml`),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/ingresses/${database.explorer}.yaml`
+      ),
+      context
+    );
+    yo.fs.copyTpl(
+      yo.templatePath(`templates/services/${database.explorer}.yaml`),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/services/${database.explorer}.yaml`
+      ),
+      context
+    );
   });
 }

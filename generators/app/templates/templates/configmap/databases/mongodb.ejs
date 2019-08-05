@@ -1,0 +1,10 @@
+<% if (_.find(databases, { name: 'mongodb'})) { %>
+  {{- $mongodb := .Values.config.mongodb }}
+  {{- if $mongodb.internal }}
+  mongodb_host: {{ template "<%- name %>.fullname" . }}-mongodb
+  {{- else }}
+  mongodb_host: {{ $mongodb.host | quote }}
+  {{- end }}
+  mongodb_database: {{ $mongodb.database | quote }}
+  mongodb_port: {{ $mongodb.port | quote }}
+  mongodb_username: {{ $mongodb.username | quote }}<% } %>

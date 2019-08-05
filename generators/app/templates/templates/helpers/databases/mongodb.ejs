@@ -1,0 +1,17 @@
+<% if (_.find(databases, { name: 'mongodb'})) { %>
+{{/*
+Calculate mongodb_url
+*/}}
+{{- define "<%- name %>.mongodb_url" }}
+{{- $mongodb := .Values.config.mongodb }}
+{{- if $mongodb.internal }}
+{{- printf "mongodb://%s-mongodb:27017/%s" (include "<%- name %>.fullname" .) $mongodb.database }}
+{{- else }}
+{{- if $mongodb.url }}
+{{- printf $mongodb.url }}
+{{- else }}
+{{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s" $mongodb.username $mongodb.password)) }}
+{{- printf "mongodb://%s@%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
+{{- end }}
+{{- end }}
+{{- end }}<% } %>

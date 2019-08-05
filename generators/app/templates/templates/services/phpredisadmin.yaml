@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "redis.fullname" . }}-phpredisadmin
+  name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
   labels:
-    app: {{ template "redis.name" . }}-phpredisadmin
+    app: {{ template "<%- name %>.name" . }}-phpredisadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -25,6 +25,6 @@ spec:
       nodePort: {{ .Values.service.phpredisadmin.nodePorts.phpredisadmin.http }}
       {{- end }}
   selector:
-    app: {{ template "redis.name" . }}-phpredisadmin
+    app: {{ template "<%- name %>.name" . }}-phpredisadmin
     release: {{ .Release.Name }}
 {{- end }}
