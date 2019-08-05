@@ -1,0 +1,23 @@
+<% if (_.find(databases, { name: 'mongodb'})) { %>
+  mongodb:
+    customConfig: ''
+    database: <%- name %>
+    host: ''
+    internal: true
+    password: ''
+    port: 27017
+    prometheus: false
+    replicas: 1
+    secret: ''
+    url: ''
+    username: ''
+    version: 4.1.7-v1
+    mongo_express:
+      enabled: true
+      password: pass
+      username: admin
+    sharding:
+      configServerReplicas: 3
+      enabled: false
+      mongosReplicas: 2
+      shards: 3<% } %>

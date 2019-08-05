@@ -8,6 +8,70 @@
     required: true
     label: internal
     group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.version
+    default: 6.4.0
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.kibana
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: kibana
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.commonConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'common config'
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.dataConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'data config'
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.masterConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'master config'
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
   - variable: config.elasticsearch.host
     default: ''
     description: ''
@@ -22,6 +86,7 @@
     type: string
     required: true
     label: database
+    show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.password
     default: elastic
@@ -29,6 +94,7 @@
     type: password
     required: true
     label: password
+    show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.port
     default: 9200

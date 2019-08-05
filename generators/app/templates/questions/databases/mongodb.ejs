@@ -1,0 +1,134 @@
+<% if (_.find(databases, { name: 'mongodb'})) { %>
+
+# MongoDB Config
+  - variable: config.mongodb.internal
+    default: true
+    description: ''
+    type: boolean
+    required: true
+    label: internal
+    group: 'MongoDB Config'
+  - variable: config.mongodb.version
+    default: 4.1.7-v1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'sharding enabled'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.configServerReplicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
+    label: 'sharding config server replicas'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
+    label: 'sharding mongos replicas'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.sharding.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.sharding.enabled=true
+    label: 'sharding shards'
+    group: 'MongoDB Config'
+
+
+  - variable: config.mongodb.host
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: host
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.database
+    default: <%- name %>
+    description: ''
+    type: string
+    required: true
+    label: database
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.password
+    default: ''
+    description: ''
+    type: password
+    required: false
+    label: password
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.port
+    default: 27017
+    description: ''
+    type: int
+    min: 0
+    max: 50000
+    required: true
+    label: port
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.url
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: url
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'
+  - variable: config.mongodb.username
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: username
+    show_if: config.mongodb.internal=false
+    group: 'MongoDB Config'<% } %>

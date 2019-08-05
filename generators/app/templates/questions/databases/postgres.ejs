@@ -8,6 +8,57 @@
     required: true
     label: internal
     group: 'Postgres Config'
+  - variable: config.postgres.version
+    default: 11.1
+    description: ''
+    type: string
+    required: true
+    label: version
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.standbyMode
+    default: hot
+    description: ''
+    type: enum
+    options:
+      - hot
+      - warm
+    required: true
+    label: 'standby mode'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.prometheus
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: prometheus
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.secret
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: secret
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
@@ -22,6 +73,7 @@
     type: string
     required: true
     label: database
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.password
     default: postgres
@@ -29,6 +81,7 @@
     type: password
     required: true
     label: password
+    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.port
     default: 5432

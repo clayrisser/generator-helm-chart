@@ -8,15 +8,12 @@
     required: true
     label: internal
     group: 'MySQL Config'
-  - variable: config.mysql.standbyMode
-    default: hot
+  - variable: config.mysql.version
+    default: 4.1.7-v1
     description: ''
-    type: enum
-    options:
-      - hot
-      - warm
+    type: string
     required: true
-    label: 'standby mode'
+    label: version
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
   - variable: config.mysql.prometheus
@@ -27,13 +24,61 @@
     label: prometheus
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
-  - variable: config.mysql.config
+  - variable: config.mysql.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.secret
     default: ''
     description: ''
     type: string
     required: false
-    label: config
+    label: secret
     show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.customConfig
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: 'custom config'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'sharding enabled'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.configServerReplicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding config server replicas'
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding mongos replicas'
+    group: 'MySQL Config'
+  - variable: config.mysql.sharding.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mysql.internal=true&&config.mysql.sharding.enabled=true
+    label: 'sharding shards'
     group: 'MySQL Config'
   - variable: config.mysql.host
     default: ''

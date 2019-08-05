@@ -1,9 +1,17 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
   elasticsearch:
+    commonConfig: ''
+    dataConfig: ''
     database: <%- name %>
     host: ''
     internal: true
+    kibana: true
+    masterConfig: ''
     password: elastic
     port: 9200
+    prometheus: false
+    replicas: 1
+    secret: ''
     url: ''
-    username: elastic<% } %>
+    username: elastic
+    version: 6.4.0<% } %>

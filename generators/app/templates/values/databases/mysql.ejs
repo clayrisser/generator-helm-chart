@@ -1,12 +1,18 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   mysql:
-    config: ''
+    customConfig: ''
     database: <%- name %>
     host: ''
     internal: true
     password: root
+    phpmyadmin: true
     port: 3306
     prometheus: false
+    prometheus: false
+    replicas: 3
+    secret: ''
     standbyMode: hot
+    topologyMode: GroupReplication
     url: ''
-    username: root<% } %>
+    username: root
+    version: 8.0.3<% } %>

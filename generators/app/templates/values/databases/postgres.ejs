@@ -1,9 +1,19 @@
 <% if (_.find(databases, { name: 'postgres'})) { %>
   postgres:
+    customConfig: ''
     database: <%- name %>
     host: ''
     internal: true
     password: postgres
     port: 5432
+    prometheus: false
+    replicas: 1
+    secret: ''
+    standbyMode: hot
     url: ''
-    username: postgres<% } %>
+    username: postgres
+    version: 11.1
+    pgadmin:
+      email: admin
+      enabled: true
+      password: pass<% } %>
