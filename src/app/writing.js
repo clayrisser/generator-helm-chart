@@ -129,7 +129,14 @@ export default async function writing(yo) {
     yo.fs.copyTpl(
       yo.templatePath(`templates/databases/${database.name}.yaml`),
       yo.destinationPath(
-        `v${yo.context.version}/templates/deployments/${database.name}.yaml`
+        `v${yo.context.version}/templates/databases/${database.name}.yaml`
+      ),
+      context
+    );
+    yo.fs.copyTpl(
+      yo.templatePath(`templates/deployments/${database.explorer.name}.yaml`),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/deployments/${database.explorer.name}.yaml`
       ),
       context
     );

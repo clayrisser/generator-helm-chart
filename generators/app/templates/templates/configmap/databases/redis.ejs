@@ -6,4 +6,7 @@
   redis_host: {{ $redis.host | quote }}
   {{- end }}
   redis_port: {{ $redis.port | quote }}
-  redis_username: {{ $redis.username | quote }}<% } %>
+  redis_username: {{ $redis.username | quote }}
+  {{- if .Values.config.phpredisadmin.enabled }}
+  phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}<% } %>
+  {{- end }}

@@ -7,4 +7,7 @@
   {{- end }}
   postgres_database: {{ $postgres.database | quote }}
   postgres_port: {{ $postgres.port | quote }}
-  postgres_username: {{ $postgres.username | quote }}<% } %>
+  postgres_username: {{ $postgres.username | quote }}
+  {{- if .Values.config.pgadmin.enabled }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}<% } %>
+  {{- end }}
