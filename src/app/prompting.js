@@ -48,7 +48,7 @@ export default async function prompting(yo) {
         default: [],
         choices: [
           { name: 'Elasticsearch', value: 'elasticsearch' },
-          { name: 'Mongo', value: 'mongo' },
+          { name: 'MongoDB', value: 'mongodb' },
           { name: 'MySQL', value: 'mysql' },
           { name: 'Postgres', value: 'postgres' },
           { name: 'Redis', value: 'redis' }
@@ -66,7 +66,7 @@ export default async function prompting(yo) {
             port: 1234
           }
         },
-        mongo: {
+        mongodb: {
           name: 'mongodb',
           explorer: {
             config: true,
