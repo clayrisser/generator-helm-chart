@@ -21,8 +21,8 @@ spec:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.phpredisadmin.type "NodePort") (not (empty .Values.service.phpredisadmin.nodePorts.phpredisadmin.http))) }}
-      nodePort: {{ .Values.service.phpredisadmin.nodePorts.phpredisadmin.http }}
+      {{- if (and (eq .Values.service.phpredisadmin.type "NodePort") (not (empty .Values.service.phpredisadmin.nodePorts.http))) }}
+      nodePort: {{ .Values.service.phpredisadmin.nodePorts.http }}
       {{- end }}
   selector:
     app: {{ template "<%- name %>.name" . }}-phpredisadmin

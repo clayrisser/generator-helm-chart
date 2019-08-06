@@ -21,8 +21,8 @@ spec:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.mongo_express.type "NodePort") (not (empty .Values.service.mongo_express.nodePorts.mongo_express.http))) }}
-      nodePort: {{ .Values.service.mongo_express.nodePorts.mongo_express.http }}
+      {{- if (and (eq .Values.service.mongo_express.type "NodePort") (not (empty .Values.service.mongo_express.nodePorts.http))) }}
+      nodePort: {{ .Values.service.mongo_express.nodePorts.http }}
       {{- end }}
   selector:
     app: {{ template "<%- name %>.name" . }}-mongo-express

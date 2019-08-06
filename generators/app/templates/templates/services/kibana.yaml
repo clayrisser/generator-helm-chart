@@ -21,8 +21,8 @@ spec:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.kibana.type "NodePort") (not (empty .Values.service.kibana.nodePorts.kibana.http))) }}
-      nodePort: {{ .Values.service.kibana.nodePorts.kibana.http }}
+      {{- if (and (eq .Values.service.kibana.type "NodePort") (not (empty .Values.service.kibana.nodePorts.http))) }}
+      nodePort: {{ .Values.service.kibana.nodePorts.http }}
       {{- end }}
   selector:
     app: {{ template "<%- name %>.name" . }}-kibana

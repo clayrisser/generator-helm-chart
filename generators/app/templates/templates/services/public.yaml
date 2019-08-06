@@ -11,17 +11,17 @@ spec:
   {{- if .Values.ingress.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.type }}
-  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  type: {{ .Values.service.<%- workload.name %>.type }}
+  {{- if (or (eq .Values.service.<%- workload.name %>.type "LoadBalancer") (eq .Values.service.<%- workload.name %>.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.<%- workload.name %>.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
       port: 80
       targetPort: container
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.<%- workload.name %>.http))) }}
-      nodePort: {{ .Values.service.nodePorts.<%- workload.name %>.http }}
+      {{- if (and (eq .Values.service.<%- workload.name %>.type "NodePort") (not (empty .Values.service.<%- workload.name %>.nodePorts.http))) }}
+      nodePort: {{ .Values.service.<%- workload.name %>.nodePorts.http }}
       {{- end }}
   selector:
     app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
