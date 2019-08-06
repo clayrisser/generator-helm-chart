@@ -135,8 +135,8 @@ spec:
         - name: mongodb
           port: 27017
           targetPort: mongodb
-          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb.port))) }}
-          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb.port }}
+          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb))) }}
+          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
@@ -150,8 +150,8 @@ spec:
         - name: mongodb
           port: 27017
           targetPort: mongodb
-          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb.port))) }}
-          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb.port }}
+          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb))) }}
+          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}

@@ -80,8 +80,8 @@ spec:
         - name: postgres
           port: 5432
           targetPort: postgres
-          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres.port))) }}
-          nodePort: {{ .Values.service.postgres.nodePorts.postgres.port }}
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
+          nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
@@ -95,8 +95,8 @@ spec:
         - name: postgres
           port: 5432
           targetPort: postgres
-          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres.port))) }}
-          nodePort: {{ .Values.service.postgres.nodePorts.postgres.port }}
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
+          nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}

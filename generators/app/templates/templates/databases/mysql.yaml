@@ -79,8 +79,8 @@ spec:
         - name: mysql
           port: 3306
           targetPort: mysql
-          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
-          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql))) }}
+          nodePort: {{ .Values.service.mysql.nodePorts.mysql }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
@@ -94,8 +94,8 @@ spec:
         - name: mysql
           port: 3306
           targetPort: mysql
-          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql.port))) }}
-          nodePort: {{ .Values.service.mysql.nodePorts.mysql.port }}
+          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql))) }}
+          nodePort: {{ .Values.service.mysql.nodePorts.mysql }}
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}

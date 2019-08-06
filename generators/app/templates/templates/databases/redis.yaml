@@ -84,8 +84,8 @@ spec:
         - name: redis
           port: 6380
           targetPort: redis
-          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis.port))) }}
-          nodePort: {{ .Values.service.redis.nodePorts.redis.port }}
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
+          nodePort: {{ .Values.service.redis.nodePorts.redis }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
@@ -99,8 +99,8 @@ spec:
         - name: redis
           port: 6380
           targetPort: redis
-          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis.port))) }}
-          nodePort: {{ .Values.service.redis.nodePorts.redis.port }}
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
+          nodePort: {{ .Values.service.redis.nodePorts.redis }}
           {{- end }}
   updateStrategy:
     type: {{ .Values.config.updateStrategy }}
