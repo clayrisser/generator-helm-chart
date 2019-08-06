@@ -1,4 +1,4 @@
-<% if (publicWorkloads.length) { %>
+<% if (publicWorkloads.length || databases.length) { %>
 
 # Services and Load Balancing
   - variable: ingress.enabled
@@ -14,7 +14,7 @@
         description: ''
         type: boolean
         required: true
-        label: 'ingress tls'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
+        label: 'ingress tls'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
       - variable: ingress.hosts.<%- workload.name %>[0].name
         default: xip.io
         description: ''
@@ -26,7 +26,19 @@
         description: ''
         type: string
         required: true
-        label: '<%- workload.name %> ingress path'<% } %>
+        label: '<%- workload.name %> ingress path'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+      - variable: ingress.hosts.<%- database.explorer.name %>[0].name
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: '<%- database.explorer.name %> ingress hostname'
+      - variable: ingress.hosts.<%- database.explorer.name %>[0].path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: '<%- database.explorer.name %> ingress path'<% } %>
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -44,8 +56,8 @@
         type: string
         show_if: ingress.tls=true&&ingress.issuer.name=none
         required: false
-        label: 'ingress certificate'
-  - variable: service.type
+        label: 'ingress certificate'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
+  - variable: service.<%- workload.name %>.type
     default: NodePort
     description: ''
     type: enum
@@ -58,12 +70,33 @@
     label: 'service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
-    subquestions:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = workloads[i]; %>
-      - variable: service.nodePorts.<%- workload.name %>.http
+    subquestions:
+      - variable: service.<%- workload.name %>.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false
-        label: '<%- workload.name %> http port'<% }} %>
+        label: '<%- workload.name %> http port'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+  - variable: service.<%- database.explorer.name %>.type
+    default: NodePort
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: '<%- database.explorer.name %> service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.<%- database.explorer.name %>.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: '<%- database.explorer.name %> port'<% }} %>

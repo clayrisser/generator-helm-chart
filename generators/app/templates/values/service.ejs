@@ -1,14 +1,18 @@
 
 
-service:
-  type: NodePort
-  externalTrafficPolicy: Cluster
-  nodePorts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-    <%- workload.name %>:
-      http: ''<% } %><% for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+service:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+  <%- workload.name %>:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
   <%- database.explorer.name %>:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+  <%- database.name %>:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      <%- database.explorer.name %>:
-        port: ''<% } %>
+      <%- database.name %>: ''<% } %>

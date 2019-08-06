@@ -60,6 +60,7 @@ export default async function prompting(yo) {
         elasticsearch: {
           name: 'elasticsearch',
           explorer: {
+            config: false,
             image: 'kibana:7.3.0',
             name: 'kibana',
             port: 1234
@@ -68,6 +69,7 @@ export default async function prompting(yo) {
         mongo: {
           name: 'mongodb',
           explorer: {
+            config: true,
             image: 'mongo-express:0.49.0',
             name: 'mongo-express',
             port: 1234
@@ -76,6 +78,7 @@ export default async function prompting(yo) {
         mysql: {
           name: 'mysql',
           explorer: {
+            config: false,
             image: 'phpmyadmin/phpmyadmin:4.7',
             name: 'phpmyadmin',
             port: 1234
@@ -84,6 +87,7 @@ export default async function prompting(yo) {
         postgres: {
           name: 'postgres',
           explorer: {
+            config: true,
             image: 'dpage/pgadmin4:4.11',
             name: 'pgadmin',
             port: 1234
@@ -92,6 +96,7 @@ export default async function prompting(yo) {
         redis: {
           name: 'redis',
           explorer: {
+            config: true,
             image: 'erikdubbelboer/phpredisadmin:v1.11.4',
             name: 'phpredisadmin',
             port: 1234
