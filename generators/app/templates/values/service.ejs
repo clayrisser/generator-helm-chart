@@ -5,4 +5,10 @@ service:
   externalTrafficPolicy: Cluster
   nodePorts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
     <%- workload.name %>:
-      http: ''<% } %>
+      http: ''<% } %><% for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+  <%- database.explorer.name %>:
+    type: ClusterIP
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      <%- database.explorer.name %>:
+        port: ''<% } %>

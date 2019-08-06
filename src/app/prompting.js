@@ -58,29 +58,44 @@ export default async function prompting(yo) {
     database => {
       return {
         elasticsearch: {
-          explorer: 'kibana',
-          explorerImage: 'kibana:7.3.0',
-          name: 'elasticsearch'
+          name: 'elasticsearch',
+          explorer: {
+            image: 'kibana:7.3.0',
+            name: 'kibana',
+            port: 1234
+          }
         },
         mongo: {
-          explorer: 'mongo-express',
-          explorerImage: 'mongo-express:0.49.0',
-          name: 'mongodb'
+          name: 'mongodb',
+          explorer: {
+            image: 'mongo-express:0.49.0',
+            name: 'mongo-express',
+            port: 1234
+          }
         },
         mysql: {
-          explorer: 'phpmyadmin',
-          explorerImage: 'phpmyadmin/phpmyadmin:4.7',
-          name: 'mysql'
+          name: 'mysql',
+          explorer: {
+            image: 'phpmyadmin/phpmyadmin:4.7',
+            name: 'phpmyadmin',
+            port: 1234
+          }
         },
         postgres: {
-          explorer: 'pgadmin',
-          explorerImage: 'dpage/pgadmin4:4.11',
-          name: 'postgres'
+          name: 'postgres',
+          explorer: {
+            image: 'dpage/pgadmin4:4.11',
+            name: 'pgadmin',
+            port: 1234
+          }
         },
         redis: {
-          explorer: 'phpredisadmin',
-          explorerImage: 'erikdubbelboer/phpredisadmin:v1.11.4',
-          name: 'redis'
+          name: 'redis',
+          explorer: {
+            image: 'erikdubbelboer/phpredisadmin:v1.11.4',
+            name: 'phpredisadmin',
+            port: 1234
+          }
         }
       }[database];
     }
