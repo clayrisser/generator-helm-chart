@@ -6,10 +6,10 @@ ingress:
   certificate: ''
   issuer:
     name: letsencrypt-staging
-  hosts:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
-    <%- workload.name %>:
+  hosts:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+    <%- _.snakeCase(workload.name) %>:
       - name: ''
         path: /<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-    <%- database.explorer.name %>:
+    <%- _.snakeCase(database.explorer.name) %>:
       - name: ''
         path: /<% } %>

@@ -15,19 +15,19 @@
     required: true
     label: '<%- workload.name %> tag'
     group: Images<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  - variable: images.<%- database.explorer.name %>.repository
+  - variable: images.<%- _.snakeCase(database.explorer.name) %>.repository
     default: <%- database.explorer.image.substr(0, database.explorer.image.indexOf(':')) %>
     description: ''
     type: string
     required: true
     label: '<%- database.explorer.name %> repository'
-    show_if: config<% if (!database.explorer.config) { %>.<%- database.name %><% } %>.<%- database.explorer.name %><% if (database.explorer.config) { %>.enabled<% } %>=true
+    show_if: config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
     group: Images
-  - variable: images.<%- database.explorer.name %>.tag
+  - variable: images.<%- _.snakeCase(database.explorer.name) %>.tag
     default: <%- database.explorer.image.substr(database.explorer.image.indexOf(':') + 1) %>
     description: ''
     type: string
     required: true
     label: '<%- database.explorer.name %> tag'
-    show_if: config<% if (!database.explorer.config) { %>.<%- database.name %><% } %>.<%- database.explorer.name %><% if (database.explorer.config) { %>.enabled<% } %>=true
+    show_if: config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
     group: Images<% }} %>

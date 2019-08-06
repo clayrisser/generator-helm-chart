@@ -6,13 +6,13 @@ service:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i];
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- database.explorer.name %>:
+  <%- _.snakeCase(database.explorer.name) %>:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- database.name %>:
+  <%- _.snakeCase(database.name) %>:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      <%- database.name %>: ''<% } %>
+      <%- _.snakeCase(database.name) %>: ''<% } %>

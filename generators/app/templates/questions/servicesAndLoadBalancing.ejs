@@ -27,18 +27,20 @@
         type: string
         required: true
         label: '<%- workload.name %> ingress path'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-      - variable: ingress.hosts.<%- database.explorer.name %>[0].name
+      - variable: ingress.hosts.<%- _.snakeCase(database.explorer.name) %>[0].name
         default: xip.io
         description: ''
         type: hostname
         required: true
         label: '<%- database.explorer.name %> ingress hostname'
-      - variable: ingress.hosts.<%- database.explorer.name %>[0].path
+        show_if: config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
+      - variable: ingress.hosts.<%- _.snakeCase(database.explorer.name) %>[0].path
         default: /
         description: ''
         type: string
         required: true
         label: '<%- database.explorer.name %> ingress path'<% } %>
+        show_if: config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
       - variable: ingress.issuer.name
         default: letsencrypt-staging
         description: ''
@@ -79,10 +81,11 @@
         max: 32767
         show_if: ingress.enabled=false
         label: '<%- workload.name %> http port'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  - variable: service.<%- database.explorer.name %>.type
+  - variable: service.<%- _.snakeCase(database.explorer.name) %>.type
     default: NodePort
     description: ''
     type: enum
+    show_if: ingress.enabled=false&&config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
     options:
       - ClusterIP
       - NodePort
@@ -92,11 +95,32 @@
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.<%- database.explorer.name %>.nodePorts.http
+      - variable: service.<%- _.snakeCase(database.explorer.name) %>.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
         show_if: ingress.enabled=false
-        label: '<%- database.explorer.name %> port'<% }} %>
+        label: '<%- database.explorer.name %> port'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+  - variable: service.<%- _.snakeCase(database.name) %>.type
+    default: ClusterIP
+    description: ''
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: '<%- database.name %> service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.<%- _.snakeCase(database.name) %>.nodePorts.<%- _.snakeCase(database.name) %>
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.enabled=false
+        label: '<%- database.name %> port'<% }} %>
