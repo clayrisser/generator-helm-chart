@@ -58,48 +58,48 @@ export default async function prompting(yo) {
     database => {
       return {
         elasticsearch: {
+          backup: true,
           name: 'elasticsearch',
           explorer: {
             config: false,
             image: 'kibana:7.3.0',
-            name: 'kibana',
-            port: 1234
+            name: 'kibana'
           }
         },
         mongodb: {
+          backup: true,
           name: 'mongodb',
           explorer: {
             config: true,
             image: 'mongo-express:0.49.0',
-            name: 'mongo-express',
-            port: 1234
+            name: 'mongo-express'
           }
         },
         mysql: {
+          backup: true,
           name: 'mysql',
           explorer: {
             config: false,
             image: 'phpmyadmin/phpmyadmin:4.7',
-            name: 'phpmyadmin',
-            port: 1234
+            name: 'phpmyadmin'
           }
         },
         postgres: {
+          backup: true,
           name: 'postgres',
           explorer: {
             config: true,
             image: 'dpage/pgadmin4:4.11',
-            name: 'pgadmin',
-            port: 1234
+            name: 'pgadmin'
           }
         },
         redis: {
+          backup: false,
           name: 'redis',
           explorer: {
             config: true,
             image: 'erikdubbelboer/phpredisadmin:v1.11.4',
-            name: 'phpredisadmin',
-            port: 1234
+            name: 'phpredisadmin'
           }
         }
       }[database];

@@ -54,7 +54,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
   databaseSecret:
     {{- if (empty .Values.config.postgres.secret) }}
     secretName: {{ template "<%- name %>.sharedname" . }}-postgres-auth
@@ -63,7 +63,7 @@ spec:
     {{- end }}
   init:
     snapshotSource:
-      name: {{ .Values.persistence.backup.restoreSnapshot }}
+      name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
       namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}

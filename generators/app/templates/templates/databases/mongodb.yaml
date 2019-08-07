@@ -97,7 +97,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- name %>.sharedname" . }}-backup
+    storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
@@ -109,7 +109,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
+  {{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
   databaseSecret:
     {{- if (empty .Values.config.mongodb.secret) }}
     secretName: {{ template "<%- name %>.sharedname" . }}-mongodb-auth
@@ -118,7 +118,7 @@ spec:
     {{- end }}
   init:
     snapshotSource:
-      name: {{ .Values.persistence.backup.restoreSnapshot }}
+      name: {{ .Values.persistence.backup.restore.mongodbSnapshot }}
       namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}

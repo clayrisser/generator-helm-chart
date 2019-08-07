@@ -53,6 +53,11 @@ export default async function writing(yo) {
     yo.context
   );
   yo.fs.copyTpl(
+    yo.templatePath('templates/role.yaml'),
+    yo.destinationPath(`v${yo.context.version}/templates/role.yaml`),
+    yo.context
+  );
+  yo.fs.copyTpl(
     yo.templatePath('templates/secrets/backup.yaml'),
     yo.destinationPath(`v${yo.context.version}/templates/secrets/backup.yaml`),
     yo.context
@@ -89,13 +94,15 @@ export default async function writing(yo) {
       ),
       yo.context
     );
-    yo.fs.copyTpl(
-      yo.templatePath('templates/backups/restic.yaml'),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/backups/${workload.name}.yaml`
-      ),
-      yo.context
-    );
+    if (workload.volumes.length) {
+      yo.fs.copyTpl(
+        yo.templatePath('templates/backups/restic.yaml'),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/backups/${workload.name}.yaml`
+        ),
+        yo.context
+      );
+    }
     if (workload.public) {
       yo.fs.copyTpl(
         yo.templatePath('templates/services/public.yaml'),

@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1alpha1
 kind: Restic
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
+  name: {{ template "<%- name %>.sharedname" . }}-<%- workload.name %>
   labels:
     app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -38,17 +38,12 @@ spec:
       keepLast: {{ .Values.persistence.backup.keepLast }}
       prune: true
 {{- end }}
-
 ---
-{{- if .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.backup.restore.<%- name %>Snapshot)) }}
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
-  {{- if (empty .Values.persistence.backup.restoreRepository) }}
-  name: deployment.{{ template "<%- name %>.fullname" . }}-<%- name %>
-  {{- else }}
-  name: deployment.{{ .Values.persistence.backup.restoreRepository }}
-  {{- end }}
+  name: deployment.{{ template "<%- name %>.sharedname" . }}-<%- name %>
   labels:
     app: {{ template "<%- name %>.name" . }}-<%- name %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -69,9 +64,8 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
     storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
 {{- end }}
-
 ---
-{{- if .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.backup.restore.<%- name %>Snapshot)) }}
 apiVersion: stash.appscode.com/v1alpha1
 kind: Recovery
 metadata:
@@ -83,24 +77,16 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    {{- if (empty .Values.persistence.backup.restoreRepository) }}
-    name: deployment.{{ template "<%- name %>.fullname" . }}-<%- name %>
-    {{- else }}
-    name: deployment.{{ .Values.persistence.backup.restoreRepository }}
-    {{- end }}
-    {{- if (empty .Values.persistence.backup.restoreNamespace) }}
+    name: deployment.{{ template "<%- name %>.sharedname" . }}-<%- name %>
     namespace: {{ .Release.Namespace }}
-    {{- else }}
-    namespace: {{ .Values.persistence.backup.restoreNamespace }}
-    {{- end }}
-    {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
-    snapshot: {{ .Values.persistence.backup.restoreSnapshot }}
+    {{- if (not (empty .Values.persistence.backup.restore.<%- name %>Snapshot)) }}
+    snapshot: {{ .Values.persistence.backup.restore.<%- name %>Snapshot }}
     {{- end }}
   paths:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
     - '<%- volume.mountPath %>'<% } %>
   recoveredVolumes:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
     - mountPath: '<%- volume.mountPath %>'<% if (volume.subPath) { %>
-      subPath: <%- volume.subPath %>
+      subPath: <%- volume.subPath %><% } %>
       persistentVolumeClaim:
-        claimName: {{ .Values.persistence.existingClaim | default (include "<%- name %>.fullname" . ) }}<% }} %>
+        claimName: {{ .Values.persistence.existingClaim | default (include "<%- name %>.fullname" . ) }}<% } %>
 {{- end }}

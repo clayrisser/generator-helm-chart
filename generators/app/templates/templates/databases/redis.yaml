@@ -43,34 +43,6 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if .Values.persistence.backup.enabled }}
-  backupSchedule:
-    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- name %>.sharedname" . }}-backup
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restoreSnapshot)) }}
-  databaseSecret:
-    {{- if (empty .Values.config.redis.secret) }}
-    secretName: {{ template "<%- name %>.sharedname" . }}-redis-auth
-    {{- else }}
-    secretName: {{ .Values.config.redis.secret }}
-    {{- end }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restoreSnapshot }}
-      namespace: {{ .Release.Namespace }}
-  {{- end }}
-  {{- end }}
   serviceTemplate:
     metadata:
       annotations:
