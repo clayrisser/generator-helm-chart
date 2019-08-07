@@ -44,7 +44,7 @@ spec:
     mongos:
       replicas: {{ .Values.config.mongodb.sharding.mongosReplicas }}
       strategy:
-        type: {{ .Values.config.mongodb.updateStrategy }}
+        type: RollingUpdate
       configSource:
         configMap:
           name: {{ template "<%- name %>.fullname" . }}-mongodb
@@ -154,7 +154,7 @@ spec:
           nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
           {{- end }}
   updateStrategy:
-    type: {{ .Values.config.updateStrategy }}
+    type: RollingUpdate
   {{- if .Values.persistence.enabled }}
   terminationPolicy: Pause
   {{- else }}

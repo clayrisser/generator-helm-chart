@@ -53,11 +53,6 @@ export default async function writing(yo) {
     yo.context
   );
   yo.fs.copyTpl(
-    yo.templatePath('templates/role.yaml'),
-    yo.destinationPath(`v${yo.context.version}/templates/role.yaml`),
-    yo.context
-  );
-  yo.fs.copyTpl(
     yo.templatePath('templates/secrets/backup.yaml'),
     yo.destinationPath(`v${yo.context.version}/templates/secrets/backup.yaml`),
     yo.context

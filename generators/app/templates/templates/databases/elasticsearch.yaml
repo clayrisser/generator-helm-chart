@@ -98,7 +98,7 @@ spec:
           nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
           {{- end }}
   updateStrategy:
-    type: {{ .Values.config.updateStrategy }}
+    type: RollingUpdate
   {{- if .Values.persistence.enabled }}
   terminationPolicy: Pause
   {{- else }}

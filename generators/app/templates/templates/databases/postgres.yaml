@@ -99,7 +99,7 @@ spec:
           nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
           {{- end }}
   updateStrategy:
-    type: {{ .Values.config.updateStrategy }}
+    type: RollingUpdate
   {{- if .Values.persistence.enabled }}
   terminationPolicy: Pause
   {{- else }}

@@ -75,7 +75,7 @@ spec:
           nodePort: {{ .Values.service.redis.nodePorts.redis }}
           {{- end }}
   updateStrategy:
-    type: {{ .Values.config.updateStrategy }}
+    type: RollingUpdate
   {{- if .Values.persistence.enabled }}
   terminationPolicy: Pause
   {{- else }}
