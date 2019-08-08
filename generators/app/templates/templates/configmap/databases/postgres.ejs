@@ -9,5 +9,5 @@
   postgres_port: {{ $postgres.port | quote }}
   postgres_username: {{ $postgres.username | quote }}
   {{- if .Values.config.pgadmin.enabled }}
-  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}<% } %>
-  {{- end }}
+  pgadmin_email: {{ .Values.config.pgadmin.email | quote }}
+  {{- end }}<% } %>

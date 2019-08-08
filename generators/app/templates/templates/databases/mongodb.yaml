@@ -122,6 +122,12 @@ spec:
       namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}
+  {{- if (empty .Values.persistence.backup.restore.mongodbSnapshot) }}
+  init:
+    scriptSource:
+      configMap:
+        name: {{ template "<%- name %>.fullname" . }}-mongodb-init
+  {{- end }}
   serviceTemplate:
     metadata:
       annotations:

@@ -67,6 +67,12 @@ spec:
       namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}
+  {{- if (empty .Values.persistence.backup.restore.postgresSnapshot) }}
+  init:
+    scriptSource:
+      configMap:
+        name: {{ template "<%- name %>.fullname" . }}-postgres-init
+  {{- end }}
   serviceTemplate:
     metadata:
       annotations:

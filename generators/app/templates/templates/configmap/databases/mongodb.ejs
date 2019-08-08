@@ -9,5 +9,5 @@
   mongodb_port: {{ $mongodb.port | quote }}
   mongodb_username: {{ $mongodb.username | quote }}
   {{- if .Values.config.mongo_express.enabled }}
-  mongo_express_username: {{ .Values.config.mongo_express.username | quote }}<% } %>
-  {{- end }}
+  mongo_express_username: {{ .Values.config.mongo_express.username | quote }}
+  {{- end }}<% } %>

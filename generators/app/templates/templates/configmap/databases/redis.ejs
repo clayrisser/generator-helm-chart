@@ -8,5 +8,5 @@
   redis_port: {{ $redis.port | quote }}
   redis_username: {{ $redis.username | quote }}
   {{- if .Values.config.phpredisadmin.enabled }}
-  phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}<% } %>
-  {{- end }}
+  phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}
+  {{- end }}<% } %>

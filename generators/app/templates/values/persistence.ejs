@@ -21,7 +21,7 @@ persistence:
     prefix: ''
     resticPassword: pass
     restore:
-      <%- _.camelCase(name) %>snapshot: ''<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
+      <%- _.camelCase(name) %>Snapshot: ''<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
       <%- _.camelCase(database.name) %>Snapshot: ''<% }} %>
     schedule: '@midnight'
     type: s3

@@ -66,6 +66,12 @@ spec:
       namespace: {{ .Release.Namespace }}
   {{- end }}
   {{- end }}
+  {{- if (empty .Values.persistence.backup.restore.mysqlSnapshot) }}
+  init:
+    scriptSource:
+      configMap:
+        name: {{ template "<%- name %>.fullname" . }}-mysql-init
+  {{- end }}
   serviceTemplate:
     metadata:
       annotations:
