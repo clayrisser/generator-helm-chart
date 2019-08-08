@@ -41,7 +41,7 @@ Calculate certificate
 Calculate hostname
 */}}
 {{- define "<%- name %>.hostname" }}
-{{- if (not (empty .Values.config.hostname)) }}
+{{- if (and .Values.config.hostname (not (empty .Values.config.hostname))) }}
 {{- printf .Values.config.hostname }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
@@ -56,8 +56,8 @@ Calculate hostname
 Calculate base_url
 */}}
 {{- define "<%- name %>.base_url" }}
-{{- if (not (empty .Values.config.base_url)) }}
-{{- printf .Values.config.base_url }}
+{{- if (and .Values.config.baseUrl (not (empty .Values.config.baseUrl))) }}
+{{- printf .Values.config.baseUrl }}
 {{- else }}
 {{- if .Values.ingress.enabled }}
 {{- $host := ((empty (include "<%- name %>.hostname" .)) | (index .Values.ingress.hosts.<%- name %> 0) (include "<%- name %>.hostname" . )) }}
