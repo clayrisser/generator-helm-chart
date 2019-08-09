@@ -2,5 +2,8 @@
 
 config:
   imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
+  updateStrategy: RollingUpdate<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+  <%- workload.name %>:<% if (workload.public) { %>
+    base_url: ''<% } %>
+    hostname: ''<% } for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
   <%- configItem.key %>: '<%- configItem.defaultValue %>'<% } %>

@@ -29,7 +29,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{/*
 Calculate <%- workload.name %> certificate
 */}}
-{{- define "<%- name %>.<%- workload.name %>_certificate" }}
+{{- define "<%- name %>.<%- workload.name %>-certificate" }}
 {{- if (not (empty .Values.ingress.<%- workload.name %>.certificate)) }}
 {{- printf .Values.ingress.<%- workload.name %>.certificate }}
 {{- else }}
@@ -40,7 +40,7 @@ Calculate <%- workload.name %> certificate
 {{/*
 Calculate <%- database.explorer.name %> certificate
 */}}
-{{- define "<%- name %>.<%- database.explorer.name %>_certificate" }}
+{{- define "<%- name %>.<%- database.explorer.name %>-certificate" }}
 {{- if (not (empty .Values.ingress.<%- database.explorer.name %>.certificate)) }}
 {{- printf .Values.ingress.<%- database.explorer.name %>.certificate }}
 {{- else }}
@@ -51,7 +51,7 @@ Calculate <%- database.explorer.name %> certificate
 {{/*
 Calculate <%- workload.name %> hostname
 */}}
-{{- define "<%- name %>.<%- workload.name %>_hostname" }}
+{{- define "<%- name %>.<%- workload.name %>-hostname" }}
 {{- if (and .Values.config.<%- workload.name %>.hostname (not (empty .Values.config.<%- workload.name %>.hostname))) }}
 {{- printf .Values.config.<%- workload.name %>.hostname }}
 {{- else }}<% if (workload.public) { %>
@@ -66,7 +66,7 @@ Calculate <%- workload.name %> hostname
 {{/*
 Calculate <%- workload.name %> base url
 */}}
-{{- define "<%- name %>.<%- workload.name %>_base_url" }}
+{{- define "<%- name %>.<%- workload.name %>-base-url" }}
 {{- if (and .Values.config.<%- workload.name %>.baseUrl (not (empty .Values.config.<%- workload.name %>.baseUrl))) }}
 {{- printf .Values.config.<%- workload.name %>.baseUrl }}
 {{- else }}
