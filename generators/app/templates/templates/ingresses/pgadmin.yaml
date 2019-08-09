@@ -1,14 +1,13 @@
-{{- if (and .Values.ingress.enabled (and .Values.config.postgres.internal .Values.config.pgadmin.enabled)) }}
-{{- $host := (index .Values.ingress.hosts.pgadmin 0) }}
+{{- if .Values.ingress.pgadmin.enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "<%- name %>.fullname" . }}-pgadmin
   annotations:
     kubernetes.io/ingress.class: nginx
-    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
-    {{- if (empty .Values.ingress.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
+    {{- if .Values.ingress.pgadmin.tls }}
+    {{- if (empty .Values.ingress.pgadmin.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
@@ -20,17 +19,17 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ $host.name }}
+    - host: {{ .Values.ingress.pgadmin.hostname }}
       http:
         paths:
-          - path: {{ $host.path }}
+          - path: {{ .Values.ingress.pgadmin.path }}
             backend:
-              serviceName: {{ template "<%- name %>.fullname" $ }}-pgadmin
+              serviceName: {{ template "<%- name %>.fullname" . }}-pgadmin
               servicePort: http
-  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+  {{- if .Values.ingress.pgadmin.tls }}
   tls:
-    - secretName: {{ template "<%- name %>.certificate" . }}
+    - secretName: {{ template "<%- name %>.pgadmin_certificate" . }}
       hosts:
-        - {{ $host.name }}
+        - {{ .Values.ingress.pgadmin.hostname }}
   {{- end }}
 {{- end }}

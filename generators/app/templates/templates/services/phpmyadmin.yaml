@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if .Values.ingress.enabled }}
+  {{- if .Values.ingress.phpmyadmin.enabled }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.phpmyadmin.type }}

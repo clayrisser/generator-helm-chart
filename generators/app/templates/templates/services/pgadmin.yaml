@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if .Values.ingress.enabled }}
+  {{- if .Values.ingress.pgadmin.enabled }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.pgadmin.type }}

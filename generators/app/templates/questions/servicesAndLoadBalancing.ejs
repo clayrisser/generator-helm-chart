@@ -1,91 +1,126 @@
 <% if (publicWorkloads.length || databases.length) { %>
 
 # Services and Load Balancing
-  - variable: ingress.enabled
+ingress:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
+  - variable: ingress.<%- _.snakeCase(workload.name) %>.enabled
     default: true
     description: ''
     type: boolean
-    label: 'ingress enabled'
+    label: '<%- workload.name %> ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: ingress.tls
+      - variable: ingress.<%- _.snakeCase(workload.name) %>.tls
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'ingress tls'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
-      - variable: ingress.hosts.<%- workload.name %>[0].name
+        label: '<%- workload.name %> ingress tls'
+      - variable: ingress.<%- _.snakeCase(workload.name) %>.hostname
         default: xip.io
         description: ''
         type: hostname
         required: true
         label: '<%- workload.name %> ingress hostname'
-      - variable: ingress.hosts.<%- workload.name %>[0].path
+      - variable: ingress.<%- _.snakeCase(workload.name) %>.path
         default: /
         description: ''
         type: string
         required: true
-        label: '<%- workload.name %> ingress path'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-      - variable: ingress.hosts.<%- _.snakeCase(database.explorer.name) %>[0].name
-        default: xip.io
-        description: ''
-        type: hostname
-        required: true
-        label: '<%- database.explorer.name %> ingress hostname'
-        show_if: config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
-      - variable: ingress.hosts.<%- _.snakeCase(database.explorer.name) %>[0].path
-        default: /
-        description: ''
-        type: string
-        required: true
-        label: '<%- database.explorer.name %> ingress path'<% } %>
-        show_if: config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
-      - variable: ingress.issuer.name
+        label: '<%- workload.name %> ingress path'
+      - variable: ingress.<%- _.snakeCase(workload.name) %>.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: ingress.tls=true
+        show_if: ingress.<%- _.snakeCase(workload.name) %>.tls=true
         options:
           - none
           - letsencrypt-staging
           - letsencrypt-prod
         required: true
-        label: 'ingress issuer name'
-      - variable: ingress.certificate
+        label: '<%- workload.name %> ingress issuer name'
+      - variable: ingress.<%- _.snakeCase(workload.name) %>.certificate
         default: ''
         description: ''
         type: string
-        show_if: ingress.tls=true&&ingress.issuer.name=none
+        show_if: ingress.<%- _.snakeCase(workload.name) %>.tls=true&&ingress.<%- _.snakeCase(workload.name) %>.issuer.name=none
         required: false
-        label: 'ingress certificate'<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
-  - variable: service.<%- workload.name %>.type
+        label: '<%- workload.name %> ingress certificate'
+  - variable: service.<%- _.snakeCase(workload.name) %>.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false
+    show_if: ingress.<%- _.snakeCase(workload.name) %>.enabled=false
     options:
       - ClusterIP
       - NodePort
       - LoadBalancer
     required: true
-    label: 'service type'
+    label: '<%- workload.name %> service type'
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:
-      - variable: service.<%- workload.name %>.nodePorts.http
+      - variable: service.<%- _.snakeCase(workload.name) %>.nodePorts.http
         default: ''
         description: ''
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
+        show_if: ingress.<%- _.snakeCase(workload.name) %>.enabled=false
         label: '<%- workload.name %> http port'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+  - variable: ingress.<%- _.snakeCase(database.explorer.name) %>.enabled
+    default: true
+    description: ''
+    type: boolean
+    show_if: config.<%- _.snakeCase(database.explorer.name) %>.enabled=true
+    label: '<%- database.explorer.name %> ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.<%- _.snakeCase(database.explorer.name) %>.tls
+        default: false
+        description: ''
+        type: boolean
+        show_if: config.<%- _.snakeCase(database.explorer.name) %>.enabled=true
+        required: true
+        label: '<%- database.explorer.name %> ingress tls'
+      - variable: ingress.<%- _.snakeCase(database.explorer.name) %>.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        show_if: config.<%- _.snakeCase(database.explorer.name) %>.enabled=true
+        required: true
+        label: '<%- database.explorer.name %> ingress hostname'
+      - variable: ingress.<%- _.snakeCase(database.explorer.name) %>.path
+        default: /
+        description: ''
+        type: string
+        show_if: config.<%- _.snakeCase(database.explorer.name) %>.enabled=true
+        required: true
+        label: '<%- database.explorer.name %> ingress path'
+      - variable: ingress.<%- _.snakeCase(database.explorer.name) %>.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: config.<%- _.snakeCase(database.explorer.name) %>.enabled=true&&ingress.<%- _.snakeCase(database.explorer.name) %>.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: '<%- database.explorer.name %> ingress issuer name'
+      - variable: ingress.<%- _.snakeCase(database.explorer.name) %>.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: config.<%- _.snakeCase(database.explorer.name) %>.enabled=true&&ingress.<%- _.snakeCase(database.explorer.name) %>.tls=true&&ingress.<%- _.snakeCase(database.explorer.name) %>.issuer.name=none
+        required: false
+        label: '<%- database.explorer.name %> ingress certificate'
   - variable: service.<%- _.snakeCase(database.explorer.name) %>.type
     default: NodePort
     description: ''
     type: enum
-    show_if: ingress.enabled=false&&config<% if (!database.explorer.config) { %>.<%- _.snakeCase(database.name) %><% } %>.<%- _.snakeCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
+    show_if: ingress.<%- _.snakeCase(database.explorer.name) %>.enabled=false&&config.<%- _.snakeCase(database.explorer.name) %>.enabled=true
     options:
       - ClusterIP
       - NodePort
@@ -101,7 +136,7 @@
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
+        show_if: ingress.<%- _.snakeCase(database.explorer.name) %>.enabled=false
         label: '<%- database.explorer.name %> port'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
   - variable: service.<%- _.snakeCase(database.name) %>.type
     default: ClusterIP
@@ -122,5 +157,4 @@
         type: int
         min: 30000
         max: 32767
-        show_if: ingress.enabled=false
         label: '<%- database.name %> port'<% }} %>

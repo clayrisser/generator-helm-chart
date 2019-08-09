@@ -35,7 +35,10 @@ export default async function writing(yo) {
   yo.fs.copyTpl(
     yo.templatePath('values.yaml'),
     yo.destinationPath(`v${yo.context.version}/values.yaml`),
-    yo.context
+    {
+      ...yo.context,
+      publicWorkloads
+    }
   );
   yo.fs.copyTpl(
     yo.templatePath('templates/NOTES.txt'),
@@ -45,7 +48,10 @@ export default async function writing(yo) {
   yo.fs.copyTpl(
     yo.templatePath('templates/_helpers.tpl'),
     yo.destinationPath(`v${yo.context.version}/templates/_helpers.tpl`),
-    yo.context
+    {
+      ...yo.context,
+      publicWorkloads
+    }
   );
   yo.fs.copyTpl(
     yo.templatePath('templates/pvc.yaml'),

@@ -22,4 +22,5 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  init.sql: ''
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS {{ .Values.config.mysql.database }};

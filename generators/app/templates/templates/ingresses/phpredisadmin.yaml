@@ -1,14 +1,13 @@
-{{- if (and .Values.ingress.enabled (and .Values.config.redis.internal .Values.config.phpredisadmin.enabled)) }}
-{{- $host := (index .Values.ingress.hosts.phpredisadmin 0) }}
+{{- if .Values.ingress.phpredisadmin.enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
   annotations:
     kubernetes.io/ingress.class: nginx
-    {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
-    {{- if (empty .Values.ingress.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer.name }}
+    {{- if .Values.ingress.phpredisadmin.tls }}
+    {{- if (empty .Values.ingress.phpredisadmin.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.phpredisadmin.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
@@ -20,17 +19,17 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ $host.name }}
+    - host: {{ .Values.ingress.phpredisadmin.hostname }}
       http:
         paths:
-          - path: {{ $host.path }}
+          - path: {{ .Values.ingress.phpredisadmin.path }}
             backend:
-              serviceName: {{ template "<%- name %>.fullname" $ }}-phpredisadmin
+              serviceName: {{ template "<%- name %>.fullname" . }}-phpredisadmin
               servicePort: http
-  {{- if (and .Values.ingress.enabled .Values.ingress.tls) }}
+  {{- if .Values.ingress.phpredisadmin.tls }}
   tls:
-    - secretName: {{ template "<%- name %>.certificate" . }}
+    - secretName: {{ template "<%- name %>.phpredisadmin_certificate" . }}
       hosts:
-        - {{ $host.name }}
+        - {{ .Values.ingress.phpredisadmin.hostname }}
   {{- end }}
 {{- end }}

@@ -24,53 +24,60 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- define "<%- name %>.sharedname" }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
+{{- end }}<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
+
+{{/*
+Calculate <%- workload.name %> certificate
+*/}}
+{{- define "<%- name %>.<%- workload.name %>_certificate" }}
+{{- if (not (empty .Values.ingress.<%- workload.name %>.certificate)) }}
+{{- printf .Values.ingress.<%- workload.name %>.certificate }}
+{{- else }}
+{{- printf "%s-<%- workload.name %>-letsencrypt" (include "<%- name %>.fullname" .) }}
+{{- end }}
+{{- end }}<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+
+{{/*
+Calculate <%- database.explorer.name %> certificate
+*/}}
+{{- define "<%- name %>.<%- database.explorer.name %>_certificate" }}
+{{- if (not (empty .Values.ingress.<%- database.explorer.name %>.certificate)) }}
+{{- printf .Values.ingress.<%- database.explorer.name %>.certificate }}
+{{- else }}
+{{- printf "%s-<%- database.explorer.name %>-letsencrypt" (include "<%- name %>.fullname" .) }}
+{{- end }}
+{{- end }}<% } for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+
+{{/*
+Calculate <%- workload.name %> hostname
+*/}}
+{{- define "<%- name %>.<%- workload.name %>_hostname" }}
+{{- if (and .Values.config.<%- workload.name %>.hostname (not (empty .Values.config.<%- workload.name %>.hostname))) }}
+{{- printf .Values.config.<%- workload.name %>.hostname }}
+{{- else }}<% if (workload.public) { %>
+{{- if .Values.ingress.<%- workload.name %>.enabled }}
+{{- printf .Values.ingress.<%- workload.name %>.hostsname }}
+{{- else }}<% } %>
+{{- printf "%s-<%- workload.name %>" (include "<%- name %>.fullname" .) }}<% if (workload.public) { %>
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{/*
-Calculate certificate
+Calculate <%- workload.name %> base url
 */}}
-{{- define "<%- name %>.certificate" }}
-{{- if (not (empty .Values.ingress.certificate)) }}
-{{- printf .Values.ingress.certificate }}
+{{- define "<%- name %>.<%- workload.name %>_base_url" }}
+{{- if (and .Values.config.<%- workload.name %>.baseUrl (not (empty .Values.config.<%- workload.name %>.baseUrl))) }}
+{{- printf .Values.config.<%- workload.name %>.baseUrl }}
 {{- else }}
-{{- printf "%s-letsencrypt" (include "<%- name %>.fullname" .) }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate hostname
-*/}}
-{{- define "<%- name %>.hostname" }}
-{{- if (and .Values.config.hostname (not (empty .Values.config.hostname))) }}
-{{- printf .Values.config.hostname }}
+{{- if .Values.ingress.<%- workload.name %>.enabled }}
+{{- $hostname := ((empty (include "<%- name %>.<%- workload.name %>_hostname" .)) | ternary .Values.ingress.<%- workload.name %>.hostname (include "<%- name %>.<%- workload.name %>_hostname" .)) }}
+{{- $path := (eq .Values.ingress.<%- workload.name %>.path "/" | ternary "" .Values.ingress.<%- workload.name %>.path) }}
+{{- $protocol := (.Values.ingress.<%- workload.name %>.tls | ternary "https" "http") }}
+{{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
-{{- if .Values.ingress.enabled }}
-{{- printf (index .Values.ingress.hosts.<%- name %> 0).name }}
-{{- else }}
-{{- printf "%s-<%- name %>" (include "<%- name %>.fullname" .) }}
+{{- printf "http://%s" (include "<%- name %>.<%- workload.name %>_hostname" .) }}
+{{- end }}<% } %>
 {{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Calculate base_url
-*/}}
-{{- define "<%- name %>.base_url" }}
-{{- if (and .Values.config.baseUrl (not (empty .Values.config.baseUrl))) }}
-{{- printf .Values.config.baseUrl }}
-{{- else }}
-{{- if .Values.ingress.enabled }}
-{{- $host := ((empty (include "<%- name %>.hostname" .)) | (index .Values.ingress.hosts.<%- name %> 0) (include "<%- name %>.hostname" . )) }}
-{{- $protocol := (.Values.ingress.tls | ternary "https" "http") }}
-{{- $path := (eq $host.path "/" | ternary "" $host.path) }}
-{{- printf "%s://%s%s" $protocol $host.name $path }}
-{{- else }}
-{{- if (empty (include "<%- name %>.hostname" . )) }}
-{{- printf "http://%s-<%- name %>" (include "<%- name %>.hostname" .) }}
-{{- else }}
-{{- printf "http://%s" (include "<%- name %>.hostname" .) }}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- end }}<% } %>
 <%- include('./helpers/databases'); %>
