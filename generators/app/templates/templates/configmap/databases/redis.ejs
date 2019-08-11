@@ -1,7 +1,7 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
   {{- $redis := .Values.config.redis }}
   {{- if $redis.internal }}
-  redis_host: {{ template "<%- name %>.fullname" . }}-redis
+  redis_host: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-redis
   {{- else }}
   redis_host: {{ $redis.host | quote }}
   {{- end }}

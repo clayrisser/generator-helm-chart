@@ -2,9 +2,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Redis
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-redis
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-redis
   labels:
-    app: {{ template "<%- name %>.name" . }}-redis
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-redis
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   version: {{ .Values.config.redis.version | quote }}
   configSource:
     configMap:
-      name: {{ template "<%- name %>.fullname" . }}-redis
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-redis
   {{- if .Values.config.redis.prometheus }}
   monitor:
     agent: prometheus.io/builtin

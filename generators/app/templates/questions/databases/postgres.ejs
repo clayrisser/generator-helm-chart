@@ -68,7 +68,7 @@
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
-    default: <%- name %>
+    default: <%- _.snakeCase(name) %>
     description: ''
     type: string
     required: true

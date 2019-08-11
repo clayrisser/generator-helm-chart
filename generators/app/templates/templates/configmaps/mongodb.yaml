@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mongodb
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- name %>.name" . }}-mongodb
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,9 +15,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mongodb-init
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb-init
   labels:
-    app: {{ template "<%- name %>.name" . }}-mongodb-init
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb-init
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

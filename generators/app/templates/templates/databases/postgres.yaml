@@ -2,9 +2,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-postgres
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   labels:
-    app: {{ template "<%- name %>.name" . }}-postgres
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   version: {{ .Values.config.postgres.version | quote }}
   configSource:
     configMap:
-      name: {{ template "<%- name %>.fullname" . }}-postgres
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   standbyMode: {{ .Values.config.postgres.standbyMode | quote }}
   {{- if .Values.config.postgres.prometheus }}
   monitor:
@@ -42,7 +42,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- name %>.sharedname" . }}-backup
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
@@ -57,7 +57,7 @@ spec:
   {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
   databaseSecret:
     {{- if (empty .Values.config.postgres.secret) }}
-    secretName: {{ template "<%- name %>.sharedname" . }}-postgres-auth
+    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres-auth
     {{- else }}
     secretName: {{ .Values.config.postgres.secret }}
     {{- end }}
@@ -71,7 +71,7 @@ spec:
   init:
     scriptSource:
       configMap:
-        name: {{ template "<%- name %>.fullname" . }}-postgres-init
+        name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres-init
   {{- end }}
   serviceTemplate:
     metadata:

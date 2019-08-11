@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mysql
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   labels:
-    app: {{ template "<%- name %>.name" . }}-mysql
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mysql
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,9 +15,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mysql-init
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql-init
   labels:
-    app: {{ template "<%- name %>.name" . }}-mysql-init
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mysql-init
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

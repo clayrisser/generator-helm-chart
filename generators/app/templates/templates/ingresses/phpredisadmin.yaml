@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpredisadmin
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.phpredisadmin.tls }}
@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "<%- name %>.name" . }}-phpredisadmin
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpredisadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,11 +24,11 @@ spec:
         paths:
           - path: {{ .Values.ingress.phpredisadmin.path }}
             backend:
-              serviceName: {{ template "<%- name %>.fullname" . }}-phpredisadmin
+              serviceName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpredisadmin
               servicePort: http
   {{- if .Values.ingress.phpredisadmin.tls }}
   tls:
-    - secretName: {{ template "<%- name %>.phpredisadmin_certificate" . }}
+    - secretName: {{ template "<%- _.kebabCase(name) %>.phpredisadmin-certificate" . }}
       hosts:
         - {{ .Values.ingress.phpredisadmin.hostname }}
   {{- end }}

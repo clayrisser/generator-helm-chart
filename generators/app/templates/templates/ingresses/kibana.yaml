@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-kibana
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kibana
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.kibana.tls }}
@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "<%- name %>.name" . }}-kibana
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-kibana
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,11 +24,11 @@ spec:
         paths:
           - path: {{ .Values.ingress.kibana.path }}
             backend:
-              serviceName: {{ template "<%- name %>.fullname" . }}-kibana
+              serviceName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kibana
               servicePort: http
   {{- if .Values.ingress.kibana.tls }}
   tls:
-    - secretName: {{ template "<%- name %>.kibana_certificate" . }}
+    - secretName: {{ template "<%- _.kebabCase(name) %>.kibana-certificate" . }}
       hosts:
         - {{ .Values.ingress.kibana.hostname }}
   {{- end }}

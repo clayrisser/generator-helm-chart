@@ -1,13 +1,13 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
 
 {{/*
-Calculate mysql_url
+Calculate mysql url
 */}}
-{{- define "<%- name %>.mysql_url" }}
+{{- define "<%- _.kebabCase(name) %>.mysql_url" }}
 {{- $mysql := .Values.config.mysql }}
 {{- if $mysql.internal }}
 {{- $credentials := (printf "%s:%s" $mysql.username $mysql.password) }}
-{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "<%- name %>.fullname" .) $mysql.database }}
+{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "<%- _.kebabCase(name) %>.fullname" .) $mysql.database }}
 {{- else }}
 {{- if $mysql.url }}
 {{- printf $mysql.url }}

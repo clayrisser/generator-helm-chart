@@ -1,7 +1,7 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
   {{- $elasticsearch := .Values.config.elasticsearch }}
   {{- if $elasticsearch.internal }}
-  elasticsearch_host: {{ template "<%- name %>.fullname" . }}-elasticsearch
+  elasticsearch_host: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   {{- else }}
   elasticsearch_host: {{ $elasticsearch.host | quote }}
   {{- end }}

@@ -2,9 +2,9 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Elasticsearch
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-elasticsearch
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   labels:
-    app: {{ template "<%- name %>.name" . }}-elasticsearch
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-elasticsearch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   version: {{ .Values.config.elasticsearch.version | quote }}
   configSource:
     configMap:
-      name: {{ template "<%- name %>.fullname" . }}-elasticsearch
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   {{- if .Values.config.elasticsearch.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -41,7 +41,7 @@ spec:
   {{- if .Values.persistence.backup.enabled }}
   backupSchedule:
     cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- name %>.sharedname" . }}-backup
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
     {{ .Values.persistence.backup.type }}:
       {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
       bucket: {{ .Values.persistence.backup.bucket | quote }}
@@ -56,7 +56,7 @@ spec:
   {{- if (not (empty .Values.persistence.backup.restore.elasticsearchSnapshot)) }}
   databaseSecret:
     {{- if (empty .Values.config.elasticsearch.secret) }}
-    secretName: {{ template "<%- name %>.sharedname" . }}-elasticsearch-auth
+    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
     {{- else }}
     secretName: {{ .Values.config.elasticsearch.secret }}
     {{- end }}

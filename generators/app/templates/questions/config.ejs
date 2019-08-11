@@ -21,10 +21,10 @@
     required: true
     label: 'update strategy'
     group: Config<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
-  - variable: config.<%- configItem.key %>
-    default: '<%- configItem.defaultValue %>'
+  - variable: config.<%- _.camelCase(configItem.key) %>
+    default: <%- quote(configItem.defaultValue) %>
     description: ''
     type: <%- configItem.type %>
     required: <%- configItem.required %>
-    label: '<%- configItem.label %>'
+    label: <%- quote(configItem.label) %>
     group: Config<% } %>

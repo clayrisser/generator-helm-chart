@@ -2,16 +2,16 @@
 apiVersion: stash.appscode.com/v1alpha1
 kind: Restic
 metadata:
-  name: {{ template "<%- name %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
+  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
   labels:
-    app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
+      app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
   fileGroups:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
     - path: '<%- volume.mountPath %>'
       retentionPolicyName: 'retention-policy'<% } %>
@@ -27,7 +27,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: {{ .Values.persistence.backup.prefix | quote }}
-    storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
     - name: <%- volume.name %>
@@ -39,19 +39,19 @@ spec:
       prune: true
 {{- end }}
 ---
-{{- if (not (empty .Values.persistence.backup.restore.<%- name %>Snapshot)) }}
+{{- if (not (empty .Values.persistence.backup.restore.<%- _.camelCase(name) %>Snapshot)) }}
 apiVersion: stash.appscode.com/v1alpha1
 kind: Recovery
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-<%- name %>
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(name) %>
   labels:
-    app: {{ template "<%- name %>.name" . }}-<%- name %>
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(name) %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: deployment.{{ template "<%- name %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
+    name: deployment.{{ template "<%- _.kebabCase(name) %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
     namespace: {{ .Release.Namespace }}
     {{- if (and (not (empty .Values.persistence.backup.restore.<%- name %>Snapshot)) (not (eq .Values.persistence.backup.restore.<%- name %>Snapshot "latest"))) }}
     snapshot: {{ .Values.persistence.backup.restore.<%- name %>Snapshot }}

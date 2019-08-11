@@ -152,11 +152,11 @@
         type: string
         required: false
         show_if: persistence.backup.enabled=true
-        label: 'backup restore <%- _.camelCase(name) %> snapshot'<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
+        label: 'backup restore <%- spaceCase(name) %> snapshot'<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
       - variable: persistence.backup.restore.<%- _.camelCase(database.name) %>Snapshot
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.backup.enabled=true
-        label: 'backup restore <%- _.camelCase(database.name) %> snapshot'<% }} %>
+        label: 'backup restore <%- spaceCase(database.name) %> snapshot'<% }} %>

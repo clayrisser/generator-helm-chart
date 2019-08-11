@@ -1,13 +1,13 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
 
 {{/*
-Calculate redis_url
+Calculate redis url
 */}}
-{{- define "<%- name %>.redis_url" }}
+{{- define "<%- _.kebabCase(name) %>.redis_url" }}
 {{- $redis := .Values.config.redis }}
 {{- if $redis.internal }}
 {{- $credentials := (printf "%s:%s" $redis.username $redis.password) }}
-{{- printf "redis://%s-redis:6379" (include "<%- name %>.fullname" .) }}
+{{- printf "redis://%s-redis:6379" (include "<%- _.kebabCase(name) %>.fullname" .) }}
 {{- else }}
 {{- if $redis.url }}
 {{- printf $redis.url }}

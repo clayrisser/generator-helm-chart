@@ -2,9 +2,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-pgadmin
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-pgadmin
   labels:
-    app: {{ template "<%- name %>.name" . }}-pgadmin
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-pgadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%- name %>.name" . }}-pgadmin
+        app: {{ template "<%- _.kebabCase(name) %>.name" . }}-pgadmin
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%- name %>.fullname" . }}-pgadmin
+        - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-pgadmin
           image: {{ .Values.images.pgadmin.repository }}:{{ .Values.images.pgadmin.tag }}
           imagePullPolicy: {{ .Values.images.pgadmin.pullPolicy }}
           ports:
@@ -26,12 +26,12 @@ spec:
             - name: PGADMIN_DEFAULT_EMAIL
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
                   key: pgadmin_email
             - name: PGADMIN_DEFAULT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
                   key: pgadmin_password
           livenessProbe:
             httpGet:

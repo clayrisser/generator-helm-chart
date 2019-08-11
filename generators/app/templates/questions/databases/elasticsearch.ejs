@@ -81,7 +81,7 @@
     show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.database
-    default: <%- name %>
+    default: <%- _.snakeCase(name) %>
     description: ''
     type: string
     required: true

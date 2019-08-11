@@ -1,35 +1,35 @@
-{{- if .Values.ingress.mongo_express.enabled }}
+{{- if .Values.ingress.mongoExpress.enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mongo-express
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongo-express
   annotations:
     kubernetes.io/ingress.class: nginx
-    {{- if .Values.ingress.mongo_express.tls }}
-    {{- if (empty .Values.ingress.mongo_express.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.mongo_express.issuer.name }}
+    {{- if .Values.ingress.mongoExpress.tls }}
+    {{- if (empty .Values.ingress.mongoExpress.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.mongoExpress.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "<%- name %>.name" . }}-mongo-express
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongo-express
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ .Values.ingress.mongo_express.hostname }}
+    - host: {{ .Values.ingress.mongoExpress.hostname }}
       http:
         paths:
-          - path: {{ .Values.ingress.mongo_express.path }}
+          - path: {{ .Values.ingress.mongoExpress.path }}
             backend:
-              serviceName: {{ template "<%- name %>.fullname" . }}-mongo-express
+              serviceName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongo-express
               servicePort: http
-  {{- if .Values.ingress.mongo_express.tls }}
+  {{- if .Values.ingress.mongoExpress.tls }}
   tls:
-    - secretName: {{ template "<%- name %>.mongo_express_certificate" . }}
+    - secretName: {{ template "<%- _.kebabCase(name) %>.mongo-express-certificate" . }}
       hosts:
-        - {{ .Values.ingress.mongo_express.hostname }}
+        - {{ .Values.ingress.mongoExpress.hostname }}
   {{- end }}
 {{- end }}

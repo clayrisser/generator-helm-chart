@@ -27,56 +27,56 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
 
 {{/*
-Calculate <%- _.snakeCase(workload.name).replace(/_/g, ' ') %> certificate
+Calculate <%- spaceCase(workload.name) %> certificate
 */}}
 {{- define "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-certificate" }}
-{{- if (not (empty .Values.ingress.<%- workload.name %>.certificate)) }}
-{{- printf .Values.ingress.<%- workload.name %>.certificate }}
+{{- if (not (empty .Values.ingress.<%- _.camelCase(workload.name) %>.certificate)) }}
+{{- printf .Values.ingress.<%- _.camelCase(workload.name) %>.certificate }}
 {{- else }}
-{{- printf "%s-<%- _.kebabCase(workload.name) %>-letsencrypt" (include "<%- name %>.fullname" .) }}
+{{- printf "%s-<%- _.kebabCase(workload.name) %>-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
 {{- end }}
 {{- end }}<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
 
 {{/*
-Calculate <%- _.snakeCase(database.explorer.name).replace(/_/g, ' ') %> certificate
+Calculate <%- spaceCase(database.explorer.name) %> certificate
 */}}
 {{- define "<%- _.kebabCase(name) %>.<%- _.kebabCase(database.explorer.name) %>-certificate" }}
-{{- if (not (empty .Values.ingress.<%- database.explorer.name %>.certificate)) }}
-{{- printf .Values.ingress.<%- database.explorer.name %>.certificate }}
+{{- if (not (empty .Values.ingress.<%- _.camelCase(database.explorer.name) %>.certificate)) }}
+{{- printf .Values.ingress.<%- _.camelCase(database.explorer.name) %>.certificate }}
 {{- else }}
-{{- printf "%s-<%- database.explorer.name %>-letsencrypt" (include "<%- name %>.fullname" .) }}
+{{- printf "%s-<%- _.kebabCase(database.explorer.name) %>-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
 {{- end }}
 {{- end }}<% } for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
 
 {{/*
-Calculate <%- _.snakeCase(workload.name).replace(/_/g, ' ') %> hostname
+Calculate <%- spaceCase(workload.name) %> hostname
 */}}
 {{- define "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" }}
-{{- if (and .Values.config.<%- _.snakeCase(workload.name) %>.hostname (not (empty .Values.config.<%- _.snakeCase(workload.name) %>.hostname))) }}
-{{- printf .Values.config.<%- _.snakeCase(workload.name) %>.hostname }}
+{{- if (and .Values.config.<%- _.camelCase(workload.name) %>.hostname (not (empty .Values.config.<%- _.camelCase(workload.name) %>.hostname))) }}
+{{- printf .Values.config.<%- _.camelCase(workload.name) %>.hostname }}
 {{- else }}<% if (workload.public) { %>
-{{- if .Values.ingress.<%- workload.name %>.enabled }}
-{{- printf .Values.ingress.<%- workload.name %>.hostsname }}
+{{- if .Values.ingress.<%- _.camelCase(workload.name) %>.enabled }}
+{{- printf .Values.ingress.<%- _.camelCase(workload.name) %>.hostsname }}
 {{- else }}<% } %>
-{{- printf "%s-<%- _.kebabCase(workload.name) %>" (include "<%- name %>.fullname" .) }}<% if (workload.public) { %>
+{{- printf "%s-<%- _.kebabCase(workload.name) %>" (include "<%- _.kebabCase(name) %>.fullname" .) }}<% if (workload.public) { %>
 {{- end }}
 {{- end }}
 {{- end }}
 
 {{/*
-Calculate <%- _.snakeCase(workload.name).replace(/_/g, ' ') %> base url
+Calculate <%- spaceCase(workload.name) %> base url
 */}}
-{{- define "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name %>-base-url" }}
-{{- if (and .Values.config.<%- _.snakeCase(workload.name) %>.baseUrl (not (empty .Values.config.<%- _.snakeCase(workload.name) %>.baseUrl))) }}
-{{- printf .Values.config.<%- _.snakeCase(workload.name) %>.baseUrl }}
+{{- define "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-base-url" }}
+{{- if (and .Values.config.<%- _.camelCase(workload.name) %>.baseUrl (not (empty .Values.config.<%- _.camelCase(workload.name) %>.baseUrl))) }}
+{{- printf .Values.config.<%- _.camelCase(workload.name) %>.baseUrl }}
 {{- else }}
-{{- if .Values.ingress.<%- workload.name %>.enabled }}
-{{- $hostname := ((empty (include "<%- name %>.<%- workload.name %>_hostname" .)) | ternary .Values.ingress.<%- workload.name %>.hostname (include "<%- name %>.<%- workload.name %>_hostname" .)) }}
-{{- $path := (eq .Values.ingress.<%- workload.name %>.path "/" | ternary "" .Values.ingress.<%- workload.name %>.path) }}
-{{- $protocol := (.Values.ingress.<%- workload.name %>.tls | ternary "https" "http") }}
+{{- if .Values.ingress.<%- _.camelCase(workload.name) %>.enabled }}
+{{- $hostname := ((empty (include "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" .)) | ternary .Values.ingress.<%- _.camelCase(workload.name) %>.hostname (include "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" .)) }}
+{{- $path := (eq .Values.ingress.<%- _.camelCase(workload.name) %>.path "/" | ternary "" .Values.ingress.<%- _.camelCase(workload.name) %>.path) }}
+{{- $protocol := (.Values.ingress.<%- _.camelCase(workload.name) %>.tls | ternary "https" "http") }}
 {{- printf "%s://%s%s" $protocol $hostname $path }}
 {{- else }}
-{{- printf "http://%s" (include "<%- name %>.<%- workload.name %>_hostname" .) }}
+{{- printf "http://%s" (include "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" .) }}
 {{- end }}<% } %>
 {{- end }}
 {{- end }}<% } %>

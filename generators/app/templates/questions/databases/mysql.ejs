@@ -96,7 +96,7 @@
     show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.database
-    default: <%- name %>
+    default: <%- _.snakeCase(name) %>
     description: ''
     type: string
     required: true

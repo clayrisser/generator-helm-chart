@@ -1,12 +1,12 @@
 <% if (_.find(databases, { name: 'mongodb'})) { %>
 
 {{/*
-Calculate mongodb_url
+Calculate mongodb url
 */}}
-{{- define "<%- name %>.mongodb_url" }}
+{{- define "<%- _.kebabCase(name) %>.mongodb_url" }}
 {{- $mongodb := .Values.config.mongodb }}
 {{- if $mongodb.internal }}
-{{- printf "mongodb://%s-mongodb:27017/%s" (include "<%- name %>.fullname" .) $mongodb.database }}
+{{- printf "mongodb://%s-mongodb:27017/%s" (include "<%- _.kebabCase(name) %>.fullname" .) $mongodb.database }}
 {{- else }}
 {{- if $mongodb.url }}
 {{- printf $mongodb.url }}

@@ -2,9 +2,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-phpmyadmin
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpmyadmin
   labels:
-    app: {{ template "<%- name %>.name" . }}-phpmyadmin
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpmyadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%- name %>.name" . }}-phpmyadmin
+        app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpmyadmin
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%- name %>.fullname" . }}-phpmyadmin
+        - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpmyadmin
           image: {{ .Values.images.phpmyadmin.repository }}:{{ .Values.images.phpmyadmin.tag }}
           imagePullPolicy: {{ .Values.images.phpmyadmin.pullPolicy }}
           ports:
@@ -24,7 +24,7 @@ spec:
               containerPort: 80
           env:
             - name: PMA_HOST
-              value: {{ template "<%- name %>.fullname" . }}-mysql
+              value: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
           livenessProbe:
             httpGet:
               path: /

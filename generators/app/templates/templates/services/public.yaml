@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   labels:
-    app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,5 +24,5 @@ spec:
       nodePort: {{ .Values.service.<%- workload.name %>.nodePorts.http }}
       {{- end }}
   selector:
-    app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
     release: {{ .Release.Name }}

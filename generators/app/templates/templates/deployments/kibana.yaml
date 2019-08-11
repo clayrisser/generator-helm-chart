@@ -2,9 +2,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-kibana
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kibana
   labels:
-    app: {{ template "<%- name %>.name" . }}-kibana
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-kibana
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%- name %>.name" . }}-kibana
+        app: {{ template "<%- _.kebabCase(name) %>.name" . }}-kibana
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%- name %>.fullname" . }}-kibana
+        - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kibana
           image: {{ .Values.images.kibana.repository }}:{{ .Values.images.kibana.tag }}
           imagePullPolicy: {{ .Values.images.kibana.pullPolicy }}
           ports:
@@ -24,16 +24,16 @@ spec:
               containerPort: 5601
           env:
             - name: ELASTICSEARCH_HOSTS
-              value: http://{{ template "<%- name %>.fullname" . }}-elasticsearch:9200
+              value: http://{{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch:9200
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "<%- name %>.sharedname" . }}-elasticsearch-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
                   key: username
             - name: ELASTICSEARCH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.sharedname" . }}-elasticsearch-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
                   key: password
           livenessProbe:
             httpGet:

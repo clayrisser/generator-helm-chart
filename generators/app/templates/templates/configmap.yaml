@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
   labels:
-    app: {{ template "<%- name %>.name" . }}
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

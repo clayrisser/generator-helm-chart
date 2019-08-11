@@ -2,9 +2,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpredisadmin
   labels:
-    app: {{ template "<%- name %>.name" . }}-phpredisadmin
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpredisadmin
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%- name %>.name" . }}-phpredisadmin
+        app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpredisadmin
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%- name %>.fullname" . }}-phpredisadmin
+        - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpredisadmin
           image: {{ .Values.images.phpredisadmin.repository }}:{{ .Values.images.phpredisadmin.tag }}
           imagePullPolicy: {{ .Values.images.phpredisadmin.pullPolicy }}
           ports:
@@ -24,18 +24,18 @@ spec:
               containerPort: 80
           env:
             - name: REDIS_1_HOST
-              value: {{ template "<%- name %>.fullname" . }}-redis
+              value: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-redis
             - name: REDIS_1_NAME
-              value: {{ template "<%- name %>.fullname" . }}-redis
+              value: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-redis
             - name: ADMIN_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
                   key: phpredisadmin_username
             - name: ADMIN_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
                   key: phpredisadmin_password
           livenessProbe:
             tcpSocket:

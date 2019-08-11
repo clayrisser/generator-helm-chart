@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-redis
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-redis
   labels:
-    app: {{ template "<%- name %>.name" . }}-redis
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-redis
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

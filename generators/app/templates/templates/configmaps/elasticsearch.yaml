@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-elasticsearch
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   labels:
-    app: {{ template "<%- name %>.name" . }}-elasticsearch
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-elasticsearch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

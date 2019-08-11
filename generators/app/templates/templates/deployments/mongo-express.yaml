@@ -1,10 +1,10 @@
-{{- if (and .Values.config.mongodb.internal .Values.config.mongo_express.enabled) }}
+{{- if (and .Values.config.mongodb.internal .Values.config.mongoExpress.enabled) }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-mongo-express
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongo-express
   labels:
-    app: {{ template "<%- name %>.name" . }}-mongo-express
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongo-express
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,50 +12,50 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%- name %>.name" . }}-mongo-express
+        app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongo-express
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%- name %>.fullname" . }}-mongo-express
-          image: {{ .Values.images.mongo_express.repository }}:{{ .Values.images.mongo_express.tag }}
-          imagePullPolicy: {{ .Values.images.mongo_express.pullPolicy }}
+        - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongo-express
+          image: {{ .Values.images.mongoExpress.repository }}:{{ .Values.images.mongoExpress.tag }}
+          imagePullPolicy: {{ .Values.images.mongoExpress.pullPolicy }}
           ports:
             - name: container
               containerPort: 8081
           env:
             - name: ME_CONFIG_MONGODB_SERVER
-              value: {{ template "<%- name %>.fullname" . }}-mongodb
+              value: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
             - name: ME_CONFIG_MONGODB_AUTH_DATABASE
               value: admin
             - name: ME_CONFIG_BASICAUTH_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
                   key: mongo_express_username
             - name: ME_CONFIG_BASICAUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.fullname" . }}
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
                   key: mongo_express_password
             - name: ME_CONFIG_MONGODB_AUTH_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.sharedname" . }}-mongodb-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
                   key: username
             - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.sharedname" . }}-mongodb-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
                   key: password
             - name: ME_CONFIG_MONGODB_ADMINUSERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.sharedname" . }}-mongodb-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
                   key: username
             - name: ME_CONFIG_MONGODB_ADMINPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- name %>.sharedname" . }}-mongodb-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
                   key: password
           livenessProbe:
             exec:

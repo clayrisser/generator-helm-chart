@@ -1,7 +1,7 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   {{- $mysql := .Values.config.mysql }}
   {{- if $mysql.internal }}
-  mysql_host: {{ template "<%- name %>.fullname" . }}-mysql
+  mysql_host: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   {{- else }}
   mysql_host: {{ $mysql.host | quote }}
   {{- end }}
