@@ -1,8 +1,8 @@
 <% if (workloads.length || databases.length) { -%>
 images:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-  <%- _.snakeCase(workload.name) %>:
+  <%- _.camelCase(workload.name) %>:
     repository: <%- workload.image.substr(0, workload.image.indexOf(':')) %>
     tag: <%- workload.image.substr(workload.image.indexOf(':') + 1) %><% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- _.snakeCase(database.explorer.name) %>:
+  <%- _.camelCase(database.explorer.name) %>:
     repository: <%- database.explorer.image.substr(0, database.explorer.image.indexOf(':')) %>
     tag: <%- database.explorer.image.substr(database.explorer.image.indexOf(':') + 1) %><% }} %>

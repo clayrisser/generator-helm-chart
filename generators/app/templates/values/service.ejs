@@ -1,18 +1,18 @@
 
 
 service:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-  <%- _.snakeCase(workload.name) %>:
+  <%- _.camelCase(workload.name) %>:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- _.snakeCase(database.explorer.name) %>:
+  <%- _.camelCase(database.explorer.name) %>:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- _.snakeCase(database.name) %>:
+  <%- _.camelCase(database.name) %>:
     type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
-      <%- _.snakeCase(database.name) %>: ''<% } %>
+      <%- _.camelCase(database.name) %>: ''<% } %>

@@ -1,7 +1,6 @@
 <% if (publicWorkloads.length || databases.length) { %>
 
-# Services and Load Balancing
-ingress:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
+# Services and Load Balancing<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
   - variable: ingress.<%- _.camelCase(workload.name) %>.enabled
     default: true
     description: ''
