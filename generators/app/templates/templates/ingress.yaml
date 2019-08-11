@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
+  name: {{ template "<%- name %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   annotations:
     kubernetes.io/ingress.class: nginx
     {{- if .Values.ingress.<%- workload.name %>.tls }}
@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     {{- end }}
   labels:
-    app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+    app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -24,7 +24,7 @@ spec:
         paths:
           - path: {{ .Values.ingress.<%- workload.name %>.path }}
             backend:
-              serviceName: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
+              serviceName: {{ template "<%- name %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
               servicePort: http
   {{- if .Values.ingress.<%- workload.name %>.tls }}
   tls:

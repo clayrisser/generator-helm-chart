@@ -1,7 +1,7 @@
 
 
 service:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-  <%- workload.name %>:
+  <%- _.snakeCase(workload.name) %>:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:

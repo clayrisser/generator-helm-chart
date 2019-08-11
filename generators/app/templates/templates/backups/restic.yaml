@@ -2,16 +2,16 @@
 apiVersion: stash.appscode.com/v1alpha1
 kind: Restic
 metadata:
-  name: {{ template "<%- name %>.sharedname" . }}-<%- workload.name %>
+  name: {{ template "<%- name %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
   labels:
-    app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+    app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+      app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
   fileGroups:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
     - path: '<%- volume.mountPath %>'
       retentionPolicyName: 'retention-policy'<% } %>
@@ -51,7 +51,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: deployment.{{ template "<%- name %>.sharedname" . }}-<%- workload.name %>
+    name: deployment.{{ template "<%- name %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
     namespace: {{ .Release.Namespace }}
     {{- if (and (not (empty .Values.persistence.backup.restore.<%- name %>Snapshot)) (not (eq .Values.persistence.backup.restore.<%- name %>Snapshot "latest"))) }}
     snapshot: {{ .Values.persistence.backup.restore.<%- name %>Snapshot }}

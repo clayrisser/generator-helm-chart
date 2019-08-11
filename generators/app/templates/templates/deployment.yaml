@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
+  name: {{ template "<%- name %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   labels:
-    app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+    app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,11 +13,11 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "<%- name %>.name" . }}-<%- workload.name %>
+        app: {{ template "<%- name %>.name" . }}-<%- _.kebabCase(workload.name) %>
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ template "<%- name %>.fullname" . }}-<%- workload.name %>
+        - name: {{ template "<%- name %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
           image: {{ .Values.images.<%- workload.name %>.repository }}:{{ .Values.images.<%- workload.name %>.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           ports:
