@@ -99,7 +99,7 @@ spec:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
       path: /
-      port: 5432
+      port: 9200
       query: sslmode=disable
       scheme: elasticsearchql
   secret:

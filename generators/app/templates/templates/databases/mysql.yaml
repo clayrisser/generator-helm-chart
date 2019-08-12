@@ -105,7 +105,7 @@ spec:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
       path: /
-      port: 5432
+      port: 3306
       query: sslmode=disable
       scheme: mysqlql
   secret:

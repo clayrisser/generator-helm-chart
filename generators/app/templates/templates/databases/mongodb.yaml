@@ -161,7 +161,7 @@ spec:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
       path: /
-      port: 5432
+      port: 27017
       query: sslmode=disable
       scheme: mongodbql
   secret:
