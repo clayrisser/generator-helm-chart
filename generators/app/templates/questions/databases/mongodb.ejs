@@ -32,14 +32,6 @@
     label: replicas
     show_if: config.mongodb.internal=true
     group: 'MongoDB Config'
-  - variable: config.mongodb.secret
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: secret
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
   - variable: config.mongodb.customConfig
     default: ''
     description: ''

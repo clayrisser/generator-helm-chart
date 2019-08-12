@@ -8,6 +8,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+  {{- end }}
 spec:
   version: {{ .Values.config.postgres.version | quote }}
   configSource:
@@ -56,11 +60,7 @@ spec:
       prefix: {{ .Values.persistence.backup.prefix | quote }}
   {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
   databaseSecret:
-    {{- if (empty .Values.config.postgres.secret) }}
     secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres-auth
-    {{- else }}
-    secretName: {{ .Values.config.postgres.secret }}
-    {{- end }}
   init:
     snapshotSource:
       name: {{ .Values.persistence.backup.restore.postgresSnapshot }}
@@ -111,4 +111,90 @@ spec:
   {{- else }}
   terminationPolicy: Delete
   {{- end }}
+{{- end }}
+{{- if .Values.persistence.backup.enabled }}
+---
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+spec:
+  clientConfig:
+    service:
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
+      path: /
+      port: 5432
+      query: sslmode=disable
+      scheme: postgresql
+  secret:
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres-auth
+  secretTransforms:
+    - renameKey:
+        from: POSTGRES_USER
+        to: username
+    - renameKey:
+        from: POSTGRES_PASSWORD
+        to: password
+  type: kubedb.com/postgres
+  version: {{ .Values.config.postgres.version | quote }}
+{{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-postgres
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres/{{ $fullname }}-postgres'
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    kubedb.com/kind: Postgres
+spec:
+  driver: Restic
+  task:
+    name: postgres-restore-${TARGET_APP_VERSION}
+  repository:
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-postgres
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
+  rules:
+    - snapshots:
+      - {{ $restore.postgresSnapshot }}
+{{- end }}
 {{- end }}

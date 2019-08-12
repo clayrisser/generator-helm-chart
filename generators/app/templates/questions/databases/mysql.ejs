@@ -39,14 +39,6 @@
     label: replicas
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
-  - variable: config.mysql.secret
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: secret
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
   - variable: config.mysql.customConfig
     default: ''
     description: ''

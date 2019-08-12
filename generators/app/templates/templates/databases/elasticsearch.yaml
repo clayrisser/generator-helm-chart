@@ -8,6 +8,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+  {{- end }}
 spec:
   version: {{ .Values.config.elasticsearch.version | quote }}
   configSource:
@@ -37,34 +41,6 @@ spec:
         storage: {{ .Values.persistence.size }}
   {{- else }}
   storageType: Ephemeral
-  {{- end }}
-  {{- if .Values.persistence.backup.enabled }}
-  backupSchedule:
-    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.elasticsearchSnapshot)) }}
-  databaseSecret:
-    {{- if (empty .Values.config.elasticsearch.secret) }}
-    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
-    {{- else }}
-    secretName: {{ .Values.config.elasticsearch.secret }}
-    {{- end }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restore.elasticsearchSnapshot }}
-      namespace: {{ .Release.Namespace }}
-  {{- end }}
   {{- end }}
   serviceTemplate:
     metadata:
@@ -104,4 +80,90 @@ spec:
   {{- else }}
   terminationPolicy: Delete
   {{- end }}
+{{- end }}
+{{- if .Values.persistence.backup.enabled }}
+---
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-elasticsearch
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+spec:
+  clientConfig:
+    service:
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+      path: /
+      port: 5432
+      query: sslmode=disable
+      scheme: elasticsearchql
+  secret:
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
+  secretTransforms:
+    - renameKey:
+        from: ELASTICSEARCH_USER
+        to: username
+    - renameKey:
+        from: ELASTICSEARCH_PASSWORD
+        to: password
+  type: kubedb.com/elasticsearch
+  version: {{ .Values.config.elasticsearch.version | quote }}
+{{- if (not (empty .Values.persistence.backup.restore.elasticsearchSnapshot)) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-elasticsearch
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-elasticsearch
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/elasticsearch/{{ $fullname }}-elasticsearch'
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-elasticsearch
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    kubedb.com/kind: Elasticsearch
+spec:
+  driver: Restic
+  task:
+    name: elasticsearch-restore-${TARGET_APP_VERSION}
+  repository:
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-elasticsearch
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+  rules:
+    - snapshots:
+      - {{ $restore.elasticsearchSnapshot }}
+{{- end }}
 {{- end }}

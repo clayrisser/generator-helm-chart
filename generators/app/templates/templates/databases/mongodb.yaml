@@ -8,6 +8,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+  {{- end }}
 spec:
   version: {{ .Values.config.mongodb.version | quote }}
   {{- if .Values.config.mongodb.prometheus }}
@@ -94,34 +98,6 @@ spec:
         storage: {{ .Values.persistence.size }}
   {{- end }}
   {{- end }}
-  {{- if .Values.persistence.backup.enabled }}
-  backupSchedule:
-    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
-  databaseSecret:
-    {{- if (empty .Values.config.mongodb.secret) }}
-    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
-    {{- else }}
-    secretName: {{ .Values.config.mongodb.secret }}
-    {{- end }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restore.mongodbSnapshot }}
-      namespace: {{ .Release.Namespace }}
-  {{- end }}
-  {{- end }}
   {{- if (empty .Values.persistence.backup.restore.mongodbSnapshot) }}
   init:
     scriptSource:
@@ -166,4 +142,90 @@ spec:
   {{- else }}
   terminationPolicy: Delete
   {{- end }}
+{{- end }}
+{{- if .Values.persistence.backup.enabled }}
+---
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+spec:
+  clientConfig:
+    service:
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+      path: /
+      port: 5432
+      query: sslmode=disable
+      scheme: mongodbql
+  secret:
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
+  secretTransforms:
+    - renameKey:
+        from: MONGODB_USER
+        to: username
+    - renameKey:
+        from: MONGODB_PASSWORD
+        to: password
+  type: kubedb.com/mongodb
+  version: {{ .Values.config.mongodb.version | quote }}
+{{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mongodb
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-mongodb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mongodb/{{ $fullname }}-mongodb'
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    kubedb.com/kind: MongoDB
+spec:
+  driver: Restic
+  task:
+    name: mongodb-restore-${TARGET_APP_VERSION}
+  repository:
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mongodb
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+  rules:
+    - snapshots:
+      - {{ $restore.mongodbSnapshot }}
+{{- end }}
 {{- end }}

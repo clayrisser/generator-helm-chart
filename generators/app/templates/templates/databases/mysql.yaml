@@ -8,6 +8,10 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  {{- if .Values.persistence.backup.enabled }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+  {{- end }}
 spec:
   version: {{ .Values.config.mysql.version | quote }}
   configSource:
@@ -37,34 +41,6 @@ spec:
         storage: {{ .Values.persistence.size }}
   {{- else }}
   storageType: Ephemeral
-  {{- end }}
-  {{- if .Values.persistence.backup.enabled }}
-  backupSchedule:
-    cronExpression: {{ .Values.persistence.backup.schedule | quote }}
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: {{ .Values.persistence.backup.prefix | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
-  databaseSecret:
-    {{- if (empty .Values.config.mysql.secret) }}
-    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql-auth
-    {{- else }}
-    secretName: {{ .Values.config.mysql.secret }}
-    {{- end }}
-  init:
-    snapshotSource:
-      name: {{ .Values.persistence.backup.restore.mysqlSnapshot }}
-      namespace: {{ .Release.Namespace }}
-  {{- end }}
   {{- end }}
   {{- if (empty .Values.persistence.backup.restore.mysqlSnapshot) }}
   init:
@@ -110,4 +86,90 @@ spec:
   {{- else }}
   terminationPolicy: Delete
   {{- end }}
+{{- end }}
+{{- if .Values.persistence.backup.enabled }}
+---
+apiVersion: appcatalog.appscode.com/v1alpha1
+kind: AppBinding
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+spec:
+  clientConfig:
+    service:
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
+      path: /
+      port: 5432
+      query: sslmode=disable
+      scheme: mysqlql
+  secret:
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql-auth
+  secretTransforms:
+    - renameKey:
+        from: MYSQL_USER
+        to: username
+    - renameKey:
+        from: MYSQL_PASSWORD
+        to: password
+  type: kubedb.com/mysql
+  version: {{ .Values.config.mysql.version | quote }}
+{{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
+{{- $restore := .Values.persistence.backup.restore }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mysql
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backend:
+    {{ .Values.persistence.backup.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
+      bucket: {{ .Values.persistence.backup.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.backup.type) }}
+      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.backup.type) }}
+      container: {{ .Values.persistence.backup.container | quote }}
+      {{- end }}
+      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql/{{ $fullname }}-mysql'
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: RestoreSession
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    kubedb.com/kind: Mysql
+spec:
+  driver: Restic
+  task:
+    name: mysql-restore-${TARGET_APP_VERSION}
+  repository:
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mysql
+  target:
+    ref:
+      apiVersion: appcatalog.appscode.com/v1alpha1
+      kind: AppBinding
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
+  rules:
+    - snapshots:
+      - {{ $restore.mysqlSnapshot }}
+{{- end }}
 {{- end }}

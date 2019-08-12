@@ -43,14 +43,6 @@
     label: replicas
     show_if: config.postgres.internal=true
     group: 'Postgres Config'
-  - variable: config.postgres.secret
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: secret
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
   - variable: config.postgres.customConfig
     default: ''
     description: ''

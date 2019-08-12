@@ -63,6 +63,29 @@ export default async function writing(yo) {
     yo.destinationPath(`v${yo.context.version}/templates/secrets/backup.yaml`),
     yo.context
   );
+  if (
+    _.includes(
+      _.map(yo.context.workloads, workload => !!workload.volumes.length),
+      true
+    )
+  ) {
+    yo.fs.copyTpl(
+      yo.templatePath('templates/backups/deployment.yaml'),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/backups/deployment.yaml`
+      ),
+      yo.context
+    );
+  }
+  if (yo.context.databases?.length) {
+    yo.fs.copyTpl(
+      yo.templatePath('templates/backups/kubedb.yaml'),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/backups/kubedb.yaml`
+      ),
+      yo.context
+    );
+  }
   if (configMaps.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/configmap.yaml'),
@@ -95,15 +118,6 @@ export default async function writing(yo) {
       ),
       yo.context
     );
-    if (workload.volumes.length) {
-      yo.fs.copyTpl(
-        yo.templatePath('templates/backups/restic.yaml'),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/backups/${workload.name}.yaml`
-        ),
-        yo.context
-      );
-    }
     if (workload.public) {
       yo.fs.copyTpl(
         yo.templatePath('templates/services/public.yaml'),
