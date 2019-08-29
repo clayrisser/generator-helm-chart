@@ -118,7 +118,6 @@ spec:
         from: MYSQL_PASSWORD
         to: password
   type: kubedb.com/mysql
-  version: {{ .Values.config.mysql.version | quote }}
 {{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---

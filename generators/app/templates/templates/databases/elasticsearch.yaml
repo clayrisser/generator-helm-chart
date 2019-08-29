@@ -112,7 +112,6 @@ spec:
         from: ELASTICSEARCH_PASSWORD
         to: password
   type: kubedb.com/elasticsearch
-  version: {{ .Values.config.elasticsearch.version | quote }}
 {{- if (not (empty .Values.persistence.backup.restore.elasticsearchSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---

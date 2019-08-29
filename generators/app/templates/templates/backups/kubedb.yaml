@@ -25,8 +25,8 @@ spec:
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
   schedule: {{ .Values.persistence.backup.schedule | quote }}
-  retentionPolicy:
-    name: retention-policy
-    keepLast: {{ .Values.persistence.backup.keepLast | quote }}
-    prune: true
+  # retentionPolicy:
+  #   name: retention-policy
+  #   keepLast: {{ .Values.persistence.backup.keepLast | quote }}
+  #   prune: true
 {{- end }}

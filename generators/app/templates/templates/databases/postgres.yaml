@@ -143,7 +143,6 @@ spec:
         from: POSTGRES_PASSWORD
         to: password
   type: kubedb.com/postgres
-  version: {{ .Values.config.postgres.version | quote }}
 {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---

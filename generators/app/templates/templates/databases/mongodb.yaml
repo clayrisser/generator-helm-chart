@@ -174,7 +174,6 @@ spec:
         from: MONGODB_PASSWORD
         to: password
   type: kubedb.com/mongodb
-  version: {{ .Values.config.mongodb.version | quote }}
 {{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---
