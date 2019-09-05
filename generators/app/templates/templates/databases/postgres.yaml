@@ -18,6 +18,10 @@ spec:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   standbyMode: {{ .Values.config.postgres.standbyMode | quote }}
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres-auth
+  {{- end }}
   {{- if .Values.config.postgres.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -133,8 +137,6 @@ spec:
       port: 5432
       query: sslmode=disable
       scheme: postgresql
-  secret:
-    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres-auth
   secretTransforms:
     - renameKey:
         from: POSTGRES_USER
@@ -167,8 +169,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres/{{ $fullname }}-postgres'
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres'
     storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
@@ -184,7 +185,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: postgres-restore-${TARGET_APP_VERSION}
+    name: postgres-restore-{{ .Values.config.postgres.version }}
   repository:
     name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-postgres
   target:

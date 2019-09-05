@@ -27,7 +27,7 @@ spec:
               value: http://{{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch:9200
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
                   key: username
             - name: ELASTICSEARCH_PASSWORD

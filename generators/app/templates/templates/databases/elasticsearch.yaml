@@ -17,6 +17,10 @@ spec:
   configSource:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
+  {{- end }}
   {{- if .Values.config.elasticsearch.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -101,16 +105,7 @@ spec:
       path: /
       port: 9200
       query: sslmode=disable
-      scheme: elasticsearchql
-  secret:
-    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
-  secretTransforms:
-    - renameKey:
-        from: ELASTICSEARCH_USER
-        to: username
-    - renameKey:
-        from: ELASTICSEARCH_PASSWORD
-        to: password
+      scheme: elasticsearch
   type: kubedb.com/elasticsearch
 {{- if (not (empty .Values.persistence.backup.restore.elasticsearchSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
@@ -136,8 +131,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/elasticsearch/{{ $fullname }}-elasticsearch'
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/elasticsearch'
     storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
@@ -153,7 +147,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: elasticsearch-restore-${TARGET_APP_VERSION}
+    name: elasticsearch-restore-{{ .Values.config.elasticsearch.version }}
   repository:
     name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-elasticsearch
   target:

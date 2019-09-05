@@ -14,6 +14,10 @@ metadata:
   {{- end }}
 spec:
   version: {{ .Values.config.mongodb.version | quote }}
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
+  {{- end }}
   {{- if .Values.config.mongodb.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -163,16 +167,7 @@ spec:
       path: /
       port: 27017
       query: sslmode=disable
-      scheme: mongodbql
-  secret:
-    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
-  secretTransforms:
-    - renameKey:
-        from: MONGODB_USER
-        to: username
-    - renameKey:
-        from: MONGODB_PASSWORD
-        to: password
+      scheme: mongodb
   type: kubedb.com/mongodb
 {{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
@@ -198,8 +193,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mongodb/{{ $fullname }}-mongodb'
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mongodb'
     storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
@@ -215,7 +209,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mongodb-restore-${TARGET_APP_VERSION}
+    name: mongodb-restore-{{ .Values.config.mongodb.version }}
   repository:
     name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mongodb
   target:

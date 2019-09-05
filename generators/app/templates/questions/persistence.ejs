@@ -52,7 +52,7 @@
         show_if: persistence.backup.enabled=true
         label: 'backup restic password'
       - variable: persistence.backup.schedule
-        default: '@midnight'
+        default: '0 0 * * *'
         description: ''
         type: string
         required: true
@@ -146,13 +146,6 @@
         required: false
         show_if: persistence.backup.enabled=true
         label: 'backup prefix'
-      - variable: persistence.backup.restore.fullname
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore fullname'
       - variable: persistence.backup.restore.<%- _.camelCase(name) %>Snapshot
         default: ''
         description: ''

@@ -17,6 +17,10 @@ spec:
   configSource:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
+  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  databaseSecret:
+    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql-auth
+  {{- end }}
   {{- if .Values.config.mysql.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -107,16 +111,7 @@ spec:
       path: /
       port: 3306
       query: sslmode=disable
-      scheme: mysqlql
-  secret:
-    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql-auth
-  secretTransforms:
-    - renameKey:
-        from: MYSQL_USER
-        to: username
-    - renameKey:
-        from: MYSQL_PASSWORD
-        to: password
+      scheme: mysql
   type: kubedb.com/mysql
 {{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
@@ -142,8 +137,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      {{- $fullname := (empty $restore.fullname | ternary (include "<%- _.kebabCase(name) %>.fullname" .) $restore.fullname) }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql/{{ $fullname }}-mysql'
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql'
     storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
@@ -159,7 +153,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mysql-restore-${TARGET_APP_VERSION}
+    name: mysql-restore-{{ .Values.config.mysql.version }}
   repository:
     name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mysql
   target:

@@ -20,9 +20,8 @@ persistence:
     keepLast: 5
     prefix: ''
     resticPassword: pass
-    schedule: '@midnight'
+    schedule: '0 0 * * *'
     type: s3
     restore:
-      fullname: ''
-      <%- _.camelCase(name) %>Snapshot: ''<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
-      <%- _.camelCase(database.name) %>Snapshot: ''<% }} %>
+      <%- _.camelCase(name) %>snapshot: ''<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
+      <%- _.camelCase(database.name) %>snapshot: ''<% }} %>
