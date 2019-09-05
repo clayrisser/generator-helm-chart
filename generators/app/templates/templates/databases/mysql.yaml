@@ -17,7 +17,7 @@ spec:
   configSource:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
-  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  {{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
   databaseSecret:
     secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql-auth
   {{- end }}

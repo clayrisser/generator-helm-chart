@@ -14,7 +14,7 @@ metadata:
   {{- end }}
 spec:
   version: {{ .Values.config.mongodb.version | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.snapshot)) }}
+  {{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
   databaseSecret:
     secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
   {{- end }}
