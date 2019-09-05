@@ -25,6 +25,6 @@ spec:
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   retentionPolicy:
     name: retention-policy
-    keepLast: {{ .Values.persistence.backup.keepLast | quote }}
+    keepLast: {{ .Values.persistence.backup.keepLast }}
     prune: true
 {{- end }}
