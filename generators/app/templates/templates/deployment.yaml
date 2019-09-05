@@ -86,9 +86,7 @@ spec:
   repository:
     name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-<%- _.kebabCase(workload.name) %>
   rules:
-    - paths:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
-        - '<%- volume.mountPath %>'<% } %>
-      snapshots:
+    - snapshots:
         - {{ $restore.<%- _.camelCase(workload.name) %>Snapshot }}
   target:
     ref:
