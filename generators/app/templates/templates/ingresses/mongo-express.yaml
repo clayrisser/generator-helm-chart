@@ -1,4 +1,4 @@
-{{- if .Values.ingress.mongoExpress.enabled }}
+{{- if (and .Values.config.mongodb.internal (and .Values.config.mongoExpress.enabled .Values.ingress.mongoExpress.enabled)) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

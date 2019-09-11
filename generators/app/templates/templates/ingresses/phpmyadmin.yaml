@@ -1,4 +1,4 @@
-{{- if .Values.ingress.phpmyadmin.enabled }}
+{{- if (and .Values.config.mysql.internal (and .Values.config.phpmyadmin.enabled .Values.ingress.phpmyadmin.enabled)) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

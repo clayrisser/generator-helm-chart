@@ -1,4 +1,4 @@
-{{- if .Values.ingress.pgadmin.enabled }}
+{{- if (and .Values.config.postgres.internal (and .Values.config.pgadmin.enabled .Values.ingress.pgadmin.enabled)) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

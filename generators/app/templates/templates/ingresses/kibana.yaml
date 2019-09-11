@@ -1,4 +1,4 @@
-{{- if .Values.ingress.kibana.enabled }}
+{{- if (and .Values.config.elasticsearch.internal (and .Values.config.kibana.enabled .Values.ingress.kibana.enabled)) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

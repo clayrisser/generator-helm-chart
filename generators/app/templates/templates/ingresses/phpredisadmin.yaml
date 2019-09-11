@@ -1,4 +1,4 @@
-{{- if .Values.ingress.phpredisadmin.enabled }}
+{{- if (and .Values.config.redis.internal (and .Values.config.phpredisadmin.enabled .Values.ingress.phpredisadmin.enabled)) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
