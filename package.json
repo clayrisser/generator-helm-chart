@@ -1,6 +1,6 @@
 {
   "name": "generator-helm-chart",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "description": "yeoman generator rancher 2 helm charts",
   "keywords": [
     "yeoman-generator",

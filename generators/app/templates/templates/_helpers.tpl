@@ -56,7 +56,7 @@ Calculate <%- spaceCase(workload.name) %> hostname
 {{- printf .Values.config.<%- _.camelCase(workload.name) %>.hostname }}
 {{- else }}<% if (workload.public) { %>
 {{- if .Values.ingress.<%- _.camelCase(workload.name) %>.enabled }}
-{{- printf .Values.ingress.<%- _.camelCase(workload.name) %>.hostsname }}
+{{- printf .Values.ingress.<%- _.camelCase(workload.name) %>.hostname }}
 {{- else }}<% } %>
 {{- printf "%s-<%- _.kebabCase(workload.name) %>" (include "<%- _.kebabCase(name) %>.fullname" .) }}<% if (workload.public) { %>
 {{- end }}
@@ -79,5 +79,4 @@ Calculate <%- spaceCase(workload.name) %> base url
 {{- printf "http://%s" (include "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" .) }}
 {{- end }}<% } %>
 {{- end }}
-{{- end }}<% } %>
-<%- include('./helpers/databases'); %>
+{{- end }}<% } %><%- include('./helpers/databases'); %>
