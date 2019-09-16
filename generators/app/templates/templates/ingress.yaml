@@ -28,7 +28,7 @@ spec:
               servicePort: http
   {{- if .Values.ingress.<%- workload.name %>.tls }}
   tls:
-    - secretName: {{ template "<%- _.kebabCase(name) %>.<%- workload.name %>_certificate" . }}
+    - secretName: {{ template "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-certificate" . }}
       hosts:
         - {{ .Values.ingress.<%- workload.name %>.hostname }}
   {{- end }}

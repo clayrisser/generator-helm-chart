@@ -11,8 +11,8 @@ metadata:
   annotations:
     stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
     stash.appscode.com/target-paths: '<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %><%- volume.mountPath %><% if (i < workload.volumes.length - 1) { %>,<% }} %>'
-    stash.appscode.com/volume-mounts: '<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %><%- volume.name %>:<%- volume.mountPath %><% if (i < workload.volumes.length - 1) { %>,<% }}} %>'
-  {{- end }}
+    stash.appscode.com/volume-mounts: '<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %><%- volume.name %>:<%- volume.mountPath %><% if (i < workload.volumes.length - 1) { %>,<% }} %>'
+  {{- end }}<% } %>
 spec:
   strategy:
     type: {{ .Values.config.updateStrategy }}
