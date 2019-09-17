@@ -3,7 +3,7 @@
 {{/*
 Calculate mysql url
 */}}
-{{- define "<%- _.kebabCase(name) %>.mysql_url" }}
+{{- define "<%- _.kebabCase(name) %>.mysql-url" }}
 {{- $mysql := .Values.config.mysql }}
 {{- if $mysql.internal }}
 {{- $credentials := (printf "%s:%s" $mysql.username $mysql.password) }}

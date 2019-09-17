@@ -10,7 +10,6 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   mongodbd.conf: {{ .Values.config.mongodb.customConfig | quote }}
-{{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -23,3 +22,4 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   data.js: ''
+{{- end }}

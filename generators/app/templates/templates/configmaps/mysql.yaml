@@ -10,7 +10,6 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   my-config.cnf: {{ .Values.config.mysql.customConfig | quote }}
-{{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -24,3 +23,4 @@ metadata:
 data:
   init.sql: |
     CREATE DATABASE IF NOT EXISTS {{ .Values.config.mysql.database }};
+{{- end }}

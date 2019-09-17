@@ -3,7 +3,7 @@
 {{/*
 Calculate postgres url
 */}}
-{{- define "<%- _.kebabCase(name) %>.postgres_url" }}
+{{- define "<%- _.kebabCase(name) %>.postgres-url" }}
 {{- $postgres := .Values.config.postgres }}
 {{- if $postgres.internal }}
 {{- $credentials := (printf "%s:%s" $postgres.username $postgres.password) }}

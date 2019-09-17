@@ -10,7 +10,6 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   user.conf: {{ .Values.config.postgres.customConfig | quote }}
-{{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -25,3 +24,4 @@ data:
   data.sql: |
     DROP DATABASE IF EXISTS {{ .Values.config.postgres.database }};
     CREATE DATABASE {{ .Values.config.postgres.database }};
+{{- end }}

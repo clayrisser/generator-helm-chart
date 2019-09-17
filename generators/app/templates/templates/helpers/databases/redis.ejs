@@ -3,7 +3,7 @@
 {{/*
 Calculate redis url
 */}}
-{{- define "<%- _.kebabCase(name) %>.redis_url" }}
+{{- define "<%- _.kebabCase(name) %>.redis-url" }}
 {{- $redis := .Values.config.redis }}
 {{- if $redis.internal }}
 {{- $credentials := (printf "%s:%s" $redis.username $redis.password) }}

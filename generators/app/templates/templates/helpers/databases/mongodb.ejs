@@ -3,7 +3,7 @@
 {{/*
 Calculate mongodb url
 */}}
-{{- define "<%- _.kebabCase(name) %>.mongodb_url" }}
+{{- define "<%- _.kebabCase(name) %>.mongodb-url" }}
 {{- $mongodb := .Values.config.mongodb }}
 {{- if $mongodb.internal }}
 {{- printf "mongodb://%s-mongodb:27017/%s" (include "<%- _.kebabCase(name) %>.fullname" .) $mongodb.database }}
