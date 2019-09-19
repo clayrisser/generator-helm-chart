@@ -1,4 +1,4 @@
-{{- if .Values.ingress.<%- workload.name %>.enabled }}
+{{- if .Values.ingress.<%- _.camelCase(workload.name) %>.enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -26,10 +26,10 @@ spec:
             backend:
               serviceName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
               servicePort: http
-  {{- if .Values.ingress.<%- workload.name %>.tls }}
+  {{- if .Values.ingress.<%- _.camelCase(workload.name) %>.tls }}
   tls:
     - secretName: {{ template "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-certificate" . }}
       hosts:
-        - {{ .Values.ingress.<%- workload.name %>.hostname }}
+        - {{ .Values.ingress.<%- _.camelCase(workload.name) %>.hostname }}
   {{- end }}
 {{- end }}
