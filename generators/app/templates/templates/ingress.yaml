@@ -5,9 +5,9 @@ metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   annotations:
     kubernetes.io/ingress.class: nginx
-    {{- if .Values.ingress.<%- workload.name %>.tls }}
-    {{- if (empty .Values.ingress.<%- workload.name %>.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.<%- workload.name %>.issuer.name }}
+    {{- if .Values.ingress.<%- _.camelCase(workload.name) %>.tls }}
+    {{- if (empty .Values.ingress.<%- _.camelCase(workload.name) %>.certificate) }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.<%- _.camelCase(workload.name) %>.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
@@ -19,10 +19,10 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   rules:
-    - host: {{ .Values.ingress.<%- workload.name %>.hostname }}
+    - host: {{ .Values.ingress.<%- _.camelCase(workload.name) %>.hostname }}
       http:
         paths:
-          - path: {{ .Values.ingress.<%- workload.name %>.path }}
+          - path: {{ .Values.ingress.<%- _.camelCase(workload.name) %>.path }}
             backend:
               serviceName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
               servicePort: http
