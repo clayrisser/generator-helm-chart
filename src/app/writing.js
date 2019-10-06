@@ -70,19 +70,8 @@ export default async function writing(yo) {
     )
   ) {
     yo.fs.copyTpl(
-      yo.templatePath('templates/backups/deployment.yaml'),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/backups/deployment.yaml`
-      ),
-      yo.context
-    );
-  }
-  if (yo.context.databases?.length) {
-    yo.fs.copyTpl(
-      yo.templatePath('templates/backups/kubedb.yaml'),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/backups/kubedb.yaml`
-      ),
+      yo.templatePath('templates/backups/data.yaml'),
+      yo.destinationPath(`v${yo.context.version}/templates/backups/data.yaml`),
       yo.context
     );
   }
@@ -183,5 +172,18 @@ export default async function writing(yo) {
       ),
       context
     );
+    if (
+      database.name === 'mysql' ||
+      database.name === 'mongodb' ||
+      database.name === 'postgres'
+    ) {
+      yo.fs.copyTpl(
+        yo.templatePath(`templates/backups/${database.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/backups/${database.name}.yaml`
+        ),
+        yo.context
+      );
+    }
   });
 }

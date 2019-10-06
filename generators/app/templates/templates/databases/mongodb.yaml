@@ -10,7 +10,7 @@ metadata:
     heritage: {{ .Release.Service }}
   {{- if .Values.persistence.backup.enabled }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   {{- end }}
 spec:
   version: {{ .Values.config.mongodb.version | quote }}
@@ -159,42 +159,16 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb
 spec:
   clientConfig:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
-      path: /
       port: 27017
-      query: sslmode=disable
       scheme: mongodb
   type: kubedb.com/mongodb
 {{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
----
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mongodb
-  labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-mongodb
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mongodb'
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -211,7 +185,7 @@ spec:
   task:
     name: mongodb-restore-{{ .Values.config.mongodb.version }}
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mongodb
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-mongodb
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

@@ -103,42 +103,18 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql
 spec:
   clientConfig:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
       path: /
       port: 3306
-      query: sslmode=disable
       scheme: mysql
+    url: tcp({{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql:3306)/
   type: kubedb.com/mysql
 {{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
----
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mysql
-  labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-mysql
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql'
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -155,7 +131,7 @@ spec:
   task:
     name: mysql-restore-{{ .Values.config.mysql.version }}
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-mysql
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

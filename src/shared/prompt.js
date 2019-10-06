@@ -108,7 +108,6 @@ export default class Prompt {
         }
       ]))
     };
-
     workload.volumes = await this.getVolumes();
     return workload;
   }
@@ -118,12 +117,12 @@ export default class Prompt {
     for (;;) {
       let volume = await this.yo.prompt([
         {
-          message: 'Volume Name:',
-          name: 'name',
+          message: 'Volume Sub Path:',
+          name: 'subPath',
           type: 'input'
         }
       ]);
-      if (!volume.name.length) break;
+      if (!volume.subPath.length) break;
       volume = await this.getVolume(volume);
       volumes.push(volume);
     }
@@ -134,9 +133,8 @@ export default class Prompt {
     if (!volume) {
       volume = await this.yo.prompt([
         {
-          default: 'data',
-          message: 'Volume Name:',
-          name: 'name',
+          message: 'Volume Sub Path:',
+          name: 'subPath',
           type: 'input'
         }
       ]);
@@ -145,14 +143,9 @@ export default class Prompt {
       ...volume,
       ...(await this.yo.prompt([
         {
-          default: '/data',
+          default: `/${volume.subPath}`,
           message: 'Volume Mount Path:',
           name: 'mountPath',
-          type: 'input'
-        },
-        {
-          message: 'Volume Sub Path:',
-          name: 'subPath',
           type: 'input'
         },
         {

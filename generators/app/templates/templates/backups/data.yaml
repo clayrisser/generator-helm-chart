@@ -2,9 +2,9 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "<%- name %>.fullname" . }}
+  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-data
   labels:
-    app: {{ template "<%- name %>.name" . }}
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,11 +20,16 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/deployment'
-    storageSecretName: {{ template "<%- name %>.fullname" . }}-backup
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/data'
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   retentionPolicy:
     name: retention-policy
     keepLast: {{ .Values.persistence.backup.keepLast }}
     prune: true
+  runtimeSettings:
+    container:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
 {{- end }}

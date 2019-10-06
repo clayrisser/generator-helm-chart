@@ -9,9 +9,9 @@ metadata:
     heritage: {{ .Release.Service }}<% if (workload.volumes.length) { %>
   {{- if .Values.persistence.backup.enabled }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
-    stash.appscode.com/target-paths: '<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %><%- volume.mountPath %><% if (i < workload.volumes.length - 1) { %>,<% }} %>'
-    stash.appscode.com/volume-mounts: '<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %><%- volume.name %>:<%- volume.mountPath %><% if (i < workload.volumes.length - 1) { %>,<% }} %>'
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-data
+    stash.appscode.com/target-paths: /_data
+    stash.appscode.com/volume-mounts: 'data:/_data'
   {{- end }}<% } %>
 spec:
   strategy:
@@ -29,11 +29,13 @@ spec:
           ports:
             - name: container
               containerPort: <%- workload.port %><% if (workload.volumes.length) { %>
-          volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
-            - name: <%- volume.name %>
-              mountPath: '<%- volume.mountPath %>'<% if (volume.subPath) { %>
+          volumeMounts:
+            - name: data
+              mountPath: /_data<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
+            - name: data
+              mountPath: '<%- volume.mountPath %>'
               subPath: <%- volume.subPath %><% } if (volume.readOnly) { %>
-              readOnly: true<% }}} %>
+              readOnly: true<% }} %>
           env: []<% if (workload.healthcheck !== 'none') { %>
           livenessProbe:
             <%- workload.healthcheck %>:<% if (workload.healthcheckPath) { %>
@@ -48,30 +50,6 @@ spec:
 {{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.<%- _.camelCase(workload.name) %>Snapshot))) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-<%- _.kebabCase(workload.name) %>
-  labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-<%- _.kebabCase(workload.name) %>
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/{{ .Release.Namespace }}/deployment'
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
----
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
@@ -84,16 +62,18 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-<%- _.kebabCase(workload.name) %>
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
   rules:
     - snapshots:
         - {{ $restore.<%- _.camelCase(workload.name) %>Snapshot }}
   target:
+    paths:
+      /_data
     ref:
-      apiVersion: apps/v1beta1
+      apiVersion: apps/v1
       kind: Deployment
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
-    volumeMounts:<% for (var i = 0; i < workload.volumes.length; i++) { var volume = workload.volumes[i]; %>
-      - name: <%- volume.name %>
-        mountPath: '<%- volume.mountPath %>'<% } %>
+    volumeMounts:
+      - name: data
+        mountPath: /_data
 {{- end }}<% } %>

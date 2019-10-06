@@ -104,7 +104,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres
 spec:
   clientConfig:
     service:
@@ -124,30 +124,6 @@ spec:
 {{- if (not (empty .Values.persistence.backup.restore.postgresSnapshot)) }}
 {{- $restore := .Values.persistence.backup.restore }}
 ---
-apiVersion: stash.appscode.com/v1alpha1
-kind: Repository
-metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-postgres
-  labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-restore-postgres
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  backend:
-    {{ .Values.persistence.backup.type }}:
-      {{- if (or (eq "gcs" .Values.persistence.backup.type) (eq "s3" .Values.persistence.backup.type)) }}
-      bucket: {{ .Values.persistence.backup.bucket | quote }}
-      {{- end }}
-      {{- if (eq "s3" .Values.persistence.backup.type) }}
-      endpoint: {{ .Values.persistence.backup.endpoint | quote }}
-      {{- end }}
-      {{- if (eq "azure" .Values.persistence.backup.type) }}
-      container: {{ .Values.persistence.backup.container | quote }}
-      {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/postgres'
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
----
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
@@ -163,7 +139,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.postgres.version }}
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-restore-postgres
+    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
