@@ -175,7 +175,8 @@ export default async function writing(yo) {
     if (
       database.name === 'mysql' ||
       database.name === 'mongodb' ||
-      database.name === 'postgres'
+      database.name === 'postgres' ||
+      database.name === 'elasticsearch'
     ) {
       yo.fs.copyTpl(
         yo.templatePath(`templates/backups/${database.name}.yaml`),

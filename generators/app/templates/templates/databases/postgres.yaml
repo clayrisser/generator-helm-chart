@@ -8,10 +8,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.backup.enabled }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
-  {{- end }}
 spec:
   version: {{ .Values.config.postgres.version | quote }}
   configSource:
@@ -86,11 +82,7 @@ spec:
           {{- end }}
   updateStrategy:
     type: RollingUpdate
-  {{- if .Values.persistence.enabled }}
-  terminationPolicy: Pause
-  {{- else }}
   terminationPolicy: Delete
-  {{- end }}
 {{- end }}
 {{- if .Values.persistence.backup.enabled }}
 ---
@@ -104,7 +96,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
 spec:
   clientConfig:
     service:
@@ -139,7 +131,7 @@ spec:
   task:
     name: postgres-restore-{{ .Values.config.postgres.version }}
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres
+    name: postgres-{{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -147,6 +139,6 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ $restore.postgresSnapshot }}
+      - {{ $restore.postgresSnapshot | quote }}
 {{- end }}
 {{- end }}

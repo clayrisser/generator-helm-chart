@@ -8,10 +8,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- if .Values.persistence.backup.enabled }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kubedb
-  {{- end }}
 spec:
   version: {{ .Values.config.mysql.version | quote }}
   configSource:
@@ -85,11 +81,7 @@ spec:
           {{- end }}
   updateStrategy:
     type: RollingUpdate
-  {{- if .Values.persistence.enabled }}
-  terminationPolicy: Pause
-  {{- else }}
   terminationPolicy: Delete
-  {{- end }}
 {{- end }}
 {{- if .Values.persistence.backup.enabled }}
 ---
@@ -103,7 +95,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
 spec:
   clientConfig:
     service:
@@ -131,7 +123,7 @@ spec:
   task:
     name: mysql-restore-{{ .Values.config.mysql.version }}
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql
+    name: mysql-{{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
@@ -139,6 +131,6 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   rules:
     - snapshots:
-      - {{ $restore.mysqlSnapshot }}
+      - {{ $restore.mysqlSnapshot | quote }}
 {{- end }}
 {{- end }}

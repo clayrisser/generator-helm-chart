@@ -2,9 +2,9 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mysql
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-elasticsearch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,7 +20,7 @@ spec:
       {{- if (eq "azure" .Values.persistence.backup.type) }}
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
-      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mysql'
+      prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/elasticsearch'
     storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}

@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-postgres
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   labels:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}-postgres
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}

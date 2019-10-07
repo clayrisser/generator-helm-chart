@@ -2,7 +2,7 @@
 apiVersion: stash.appscode.com/v1beta1
 kind: BackupBlueprint
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   labels:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
