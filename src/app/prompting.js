@@ -40,21 +40,23 @@ export default async function prompting(yo) {
   ]);
   const workloads = await prompt.getWorkloads();
   const databases = _.map(
-    (await yo.optionOrPrompt([
-      {
-        type: 'checkbox',
-        name: 'databases',
-        message: 'Databases:',
-        default: [],
-        choices: [
-          { name: 'Elasticsearch', value: 'elasticsearch' },
-          { name: 'MongoDB', value: 'mongodb' },
-          { name: 'MySQL', value: 'mysql' },
-          { name: 'Postgres', value: 'postgres' },
-          { name: 'Redis', value: 'redis' }
-        ]
-      }
-    ])).databases,
+    (
+      await yo.optionOrPrompt([
+        {
+          type: 'checkbox',
+          name: 'databases',
+          message: 'Databases:',
+          default: [],
+          choices: [
+            { name: 'Elasticsearch', value: 'elasticsearch' },
+            { name: 'MongoDB', value: 'mongodb' },
+            { name: 'MySQL', value: 'mysql' },
+            { name: 'Postgres', value: 'postgres' },
+            { name: 'Redis', value: 'redis' }
+          ]
+        }
+      ])
+    ).databases,
     database => {
       return {
         elasticsearch: {

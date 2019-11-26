@@ -105,7 +105,7 @@ export default async function writing(yo) {
       yo.destinationPath(
         `v${yo.context.version}/templates/deployments/${workload.name}.yaml`
       ),
-      yo.context
+      context
     );
     if (workload.public) {
       yo.fs.copyTpl(
