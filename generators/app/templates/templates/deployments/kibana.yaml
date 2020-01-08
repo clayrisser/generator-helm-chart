@@ -1,5 +1,5 @@
 {{- if (and .Values.config.elasticsearch.internal .Values.config.elasticsearch.kibana) }}
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-kibana
@@ -9,6 +9,10 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "<%- _.kebabCase(name) %>.name" . }}-kibana
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
