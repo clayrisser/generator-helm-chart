@@ -50,7 +50,7 @@ spec:
     name: retention-policy
     keepLast: {{ .Values.persistence.stash.keepLast }}
     prune: true
-  members:<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+  members:<% for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
     - target:
         ref:
           apiVersion: apps/v1
