@@ -45,12 +45,14 @@ spec:
       configMap:
         name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql-init
   {{- end }}
-  {{- if .Values.persistence.velero.enabled }}
   podTemplate:
+    {{- if .Values.persistence.velero.enabled }}
     metadata:
       annotations:
         backup.velero.io/backup-volumes: data
-  {{- end }}
+    {{- end }}
+    spec:
+      {{ toYaml .Values.config.resources | indent 6 }}
   serviceTemplate:
     metadata:
       annotations:

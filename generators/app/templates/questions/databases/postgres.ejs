@@ -23,6 +23,38 @@
     label: version
     show_if: config.postgres.internal=true
     group: 'Postgres Config'
+  - variable: config.postgres.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.resources.limit.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'resources limit cpu'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
+  - variable: config.postgres.resources.limit.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources limit memory'
+    show_if: config.postgres.internal=true
+    group: 'Postgres Config'
   - variable: config.postgres.terminationPolicy
     default: Delete
     description: ''

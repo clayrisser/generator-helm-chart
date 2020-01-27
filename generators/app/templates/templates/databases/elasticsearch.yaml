@@ -29,8 +29,8 @@ spec:
   {{- if .Values.config.elasticsearch.topology.enabled }}
   topology:
     master:
-      {{- if (gt (.Values.config.elasticsearch.topology.masterReplicas | int64) 1) }}
-      replicas: {{ .Values.config.elasticsearch.topology.masterReplicas }}
+      {{- if (gt (.Values.config.elasticsearch.topology.master.replicas | int64) 1) }}
+      replicas: {{ .Values.config.elasticsearch.topology.master.replicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -49,16 +49,10 @@ spec:
       {{- end }}
       prefix: master
       maxUnavailable: 0
-      resources:
-        requests:
-          memory: "64Mi"
-          cpu: "250m"
-        limits:
-          memory: "128Mi"
-          cpu: "500m"
+      {{ toYaml .Values.config.elasticsearch.topology.master.resources | indent 6 }}
     data:
-      {{- if (gt (.Values.config.elasticsearch.topology.dataReplicas | int64) 1) }}
-      replicas: {{ .Values.config.elasticsearch.topology.dataReplicas }}
+      {{- if (gt (.Values.config.elasticsearch.topology.data.replicas | int64) 1) }}
+      replicas: {{ .Values.config.elasticsearch.topology.data.replicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -77,16 +71,10 @@ spec:
       {{- end }}
       prefix: data
       maxUnavailable: 0
-      resources:
-        requests:
-          memory: "512Mi"
-          cpu: "250m"
-        limits:
-          memory: "1Gi"
-          cpu: "500m"
+      {{ toYaml .Values.config.elasticsearch.topology.data.resources | indent 6 }}
     client:
-      {{- if (gt (.Values.config.elasticsearch.topology.clientReplicas | int64) 1) }}
-      replicas: {{ .Values.config.elasticsearch.topology.clientReplicas }}
+      {{- if (gt (.Values.config.elasticsearch.topology.client.replicas | int64) 1) }}
+      replicas: {{ .Values.config.elasticsearch.topology.client.replicas }}
       {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -105,13 +93,7 @@ spec:
       {{- end }}
       prefix: client
       maxUnavailable: 0
-      resources:
-        requests:
-          memory: "64Mi"
-          cpu: "250m"
-        limits:
-          memory: "128Mi"
-          cpu: "500m"
+      {{ toYaml .Values.config.elasticsearch.topology.client.resources | indent 6 }}
   {{- else }}
   {{- if (gt (.Values.config.elasticsearch.replicas | int64) 1) }}
   replicas: {{ .Values.config.elasticsearch.replicas }}
@@ -133,20 +115,16 @@ spec:
   {{- end }}
   maxUnavailable: 0
   {{- end }}
-  {{- if .Values.persistence.velero.enabled }}
+  {{- if (or .Values.persistence.velero.enabled (not .Values.config.elasticsearch.topology.enabled)) }}
   podTemplate:
+    {{- if .Values.persistence.velero.enabled }}
     metadata:
       annotations:
         backup.velero.io/backup-volumes: data
+    {{- end }}
     {{- if (not .Values.config.elasticsearch.topology.enabled) }}
     spec:
-      resources:
-        requests:
-          memory: "512Mi"
-          cpu: "250m"
-        limits:
-          memory: "1Gi"
-          cpu: "500m"
+      {{ toYaml .Values.config.elasticsearch.resources | indent 6 }}
     {{- end }}
   {{- end }}
   serviceTemplate:

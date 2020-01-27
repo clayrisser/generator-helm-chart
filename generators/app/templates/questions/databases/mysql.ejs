@@ -24,6 +24,38 @@
     label: version
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
+  - variable: config.mysql.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.resources.limit.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'resources limit cpu'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
+  - variable: config.mysql.resources.limit.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources limit memory'
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
   - variable: config.mysql.terminationPolicy
     default: Delete
     description: ''
@@ -54,7 +86,7 @@
     required: true
     label: 'authentication plugin'
     show_if: config.mysql.version=8.0-v1||config.mysql.version=8.0-v2||config.mysql.version=8.0.3||config.mysql.version=8.0.14
-    group: Config
+    group: 'MySQL Config'
   - variable: config.mysql.phpmyadmin
     default: false
     description: ''

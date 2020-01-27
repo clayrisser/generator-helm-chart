@@ -70,7 +70,7 @@
     label: 'topology enabled'
     show_if: config.elasticsearch.internal=true
     group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.topology.clientReplicas
+  - variable: config.elasticsearch.topology.client.replicas
     default: 1
     description: ''
     type: int
@@ -78,7 +78,7 @@
     show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
     label: 'client replicas'
     group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.topology.dataReplicas
+  - variable: config.elasticsearch.topology.data.replicas
     default: 1
     description: ''
     type: int
@@ -86,7 +86,7 @@
     show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
     label: 'data replicas'
     group: 'Elasticsearch Config'
-  - variable: config.elasticsearch.topology.masterReplicas
+  - variable: config.elasticsearch.topology.master.replicas
     default: 1
     description: ''
     type: int

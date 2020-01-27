@@ -82,7 +82,7 @@
     label: 'replica set'
     show_if: config.mongodb.internal=true
     group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.configServerReplicas
+  - variable: config.mongodb.shardTopology.configServer.replicas
     default: 3
     description: ''
     type: int
@@ -91,7 +91,7 @@
     label: 'shard topology config server replicas'
     show_if: config.mongodb.internal=true
     group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.mongosReplicas
+  - variable: config.mongodb.shardTopology.mongos.replicas
     default: 2
     description: ''
     type: int
@@ -99,7 +99,7 @@
     show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
     label: 'shard topology mongos replicas'
     group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.shards
+  - variable: config.mongodb.shardTopology.shard.shards
     default: 3
     description: ''
     type: int
