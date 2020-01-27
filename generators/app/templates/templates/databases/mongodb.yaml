@@ -38,7 +38,7 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
-          {{ toYaml .Values.config.mongodb.shardTopology.configServer.resources | indent 10 }}
+{{ toYaml .Values.config.mongodb.shardTopology.configServer.resources | indent 10 }}
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -69,7 +69,7 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
-          {{ toYaml .Values.config.mongodb.shardTopology.mongos.resources | indent 10 }}
+{{ toYaml .Values.config.mongodb.shardTopology.mongos.resources | indent 10 }}
     shard:
       prefix: shard
       replicas: {{ .Values.config.mongodb.replicas }}
@@ -84,7 +84,7 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
-          {{ toYaml .Values.config.mongodb.shardTopology.shard.resources | indent 10 }}
+{{ toYaml .Values.config.mongodb.shardTopology.shard.resources | indent 10 }}
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -131,7 +131,7 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
-      {{ toYaml .Values.config.mongodb.resources | indent 6 }}
+{{ toYaml .Values.config.mongodb.resources | indent 6 }}
   {{- end }}
   {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
