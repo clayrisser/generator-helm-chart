@@ -52,7 +52,8 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
-{{ toYaml .Values.config.resources | indent 6 }}
+      resources:
+{{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
       annotations:
