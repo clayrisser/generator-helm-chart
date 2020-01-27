@@ -11,10 +11,51 @@
   - variable: config.mongodb.version
     default: 4.1.13
     description: ''
-    type: string
+    type: enum
+    options:
+      - 3.4-v3
+      - 3.4.14
+      - 3.4.22
+      - 3.4-v4
+      - 3.6-v3
+      - 3.6.8
+      - 3.6.13
+      - 3.6-v4
+      - 4.0.5-v1
+      - 4.0-v1
+      - 4.0.3
+      - 4.0.5-v2
+      - 4.0.11
+      - 4.0-v2
+      - 4.1.7-v1
+      - 4.1.4
+      - 4.1.7-v2
+      - 4.1.13
+      - 4.1
     required: true
     label: version
     show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.terminationPolicy
+    default: Delete
+    description: ''
+    type: enum
+    options:
+      - Delete
+      - Pause
+      - WipeOut
+      - DoNotTerminate
+    required: true
+    show_if: config.mongodb.internal=true
+    label: 'termination policy'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.mongodb.internal=true&&config.mongodb.terminationPolicy=Pause
+    label: pause
     group: 'MongoDB Config'
   - variable: config.mongodb.prometheus
     default: false
@@ -24,13 +65,55 @@
     label: prometheus
     show_if: config.mongodb.internal=true
     group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'shard topology enabled'
+    show_if: config.mongodb.internal=true
+    group: Config
+  - variable: config.mongodb.replicaSet
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.mongodb.shardTopology.enabled=false
+    label: 'replica set'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.configServerReplicas
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.shardTopology.enabled=true
+    label: 'shard topology config server replicas'
+    show_if: config.mongodb.internal=true
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.mongosReplicas
+    default: 2
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    label: 'shard topology mongos replicas'
+    group: 'MongoDB Config'
+  - variable: config.mongodb.shardTopology.shards
+    default: 3
+    description: ''
+    type: int
+    required: true
+    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
+    label: 'shard topology shards'
+    group: 'MongoDB Config'
   - variable: config.mongodb.replicas
     default: 1
     description: ''
     type: int
     required: true
     label: replicas
-    show_if: config.mongodb.internal=true
+    show_if: config.mongodb.internal=true&&config.mongodb.replicaSet=true&&config.mongodb.shardTopology.enabled=false
     group: 'MongoDB Config'
   - variable: config.mongodb.customConfig
     default: ''

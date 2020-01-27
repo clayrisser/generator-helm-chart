@@ -43,7 +43,7 @@
     description: ''
     type: boolean
     required: true
-    show_if: config.elasticsearch.internal=true&&config.terminationPolicy=Pause
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.terminationPolicy=Pause
     label: pause
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.kibana
