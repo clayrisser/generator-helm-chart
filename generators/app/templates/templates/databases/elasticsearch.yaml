@@ -1,4 +1,4 @@
-{{- if .Values.config.elasticsearch.internal }}
+{{- if (and .Values.config.elasticsearch.internal (not (and (eq .Values.config.elasticsearch.terminationPolicy "Pause") .Values.config.elasticsearch.pause))) }}
 apiVersion: kubedb.com/v1alpha1
 kind: Elasticsearch
 metadata:
@@ -13,19 +13,110 @@ spec:
   configSource:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
-  {{- if (not (empty .Values.persistence.backup.restore.elasticsearchSnapshot)) }}
   databaseSecret:
     secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
-  {{- end }}
   {{- if .Values.config.elasticsearch.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
+  authPlugin: SearchGuard
+  enableSSL: false
+  {{- if .Values.persistence.enabled }}
+  storageType: Durable
+  {{- else }}
+  storageType: Ephemeral
+  {{- end }}
+  {{- if .Values.config.elasticsearch.topology.enabled }}
+  topology:
+    master:
+      {{- if (gt (.Values.config.elasticsearch.topology.masterReplicas | int64) 1) }}
+      replicas: {{ .Values.config.elasticsearch.topology.masterReplicas }}
+      {{- end }}
+      {{- if .Values.persistence.enabled }}
+      storage:
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
+        {{- end }}
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+      {{- end }}
+      prefix: master
+      maxUnavailable: 0
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+    data:
+      {{- if (gt (.Values.config.elasticsearch.topology.dataReplicas | int64) 1) }}
+      replicas: {{ .Values.config.elasticsearch.topology.dataReplicas }}
+      {{- end }}
+      {{- if .Values.persistence.enabled }}
+      storage:
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
+        {{- end }}
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+      {{- end }}
+      prefix: data
+      maxUnavailable: 0
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "250m"
+        limits:
+          memory: "1Gi"
+          cpu: "500m"
+    client:
+      {{- if (gt (.Values.config.elasticsearch.topology.clientReplicas | int64) 1) }}
+      replicas: {{ .Values.config.elasticsearch.topology.clientReplicas }}
+      {{- end }}
+      {{- if .Values.persistence.enabled }}
+      storage:
+        {{- if .Values.persistence.storageClass }}
+        {{- if (eq "-" .Values.persistence.storageClass) }}
+        storageClassName: ''
+        {{- else }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
+        {{- end }}
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+      {{- end }}
+      prefix: client
+      maxUnavailable: 0
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+  {{- else }}
   {{- if (gt (.Values.config.elasticsearch.replicas | int64) 1) }}
   replicas: {{ .Values.config.elasticsearch.replicas }}
   {{- end }}
   {{- if .Values.persistence.enabled }}
-  storageType: Durable
   storage:
     {{- if .Values.persistence.storageClass }}
     {{- if (eq "-" .Values.persistence.storageClass) }}
@@ -39,8 +130,24 @@ spec:
     resources:
       requests:
         storage: {{ .Values.persistence.size }}
-  {{- else }}
-  storageType: Ephemeral
+  {{- end }}
+  maxUnavailable: 0
+  {{- end }}
+  {{- if .Values.persistence.velero.enabled }}
+  podTemplate:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: data
+    {{- if (not .Values.config.elasticsearch.topology.enabled) }}
+    spec:
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "250m"
+        limits:
+          memory: "1Gi"
+          cpu: "500m"
+    {{- end }}
   {{- end }}
   serviceTemplate:
     metadata:
@@ -58,26 +165,10 @@ spec:
           {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch))) }}
           nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
           {{- end }}
-  replicaServiceTemplate:
-    annotations:
-      passMe: ToReplicaService
-    spec:
-      type: {{ .Values.service.elasticsearch.type }}
-      {{- if (or (eq .Values.service.elasticsearch.type "LoadBalancer") (eq .Values.service.elasticsearch.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.elasticsearch.externalTrafficPolicy }}
-      {{- end }}
-      ports:
-        - name: elasticsearch
-          port: 9200
-          targetPort: elasticsearch
-          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch))) }}
-          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
-          {{- end }}
   updateStrategy:
-    type: RollingUpdate
-  terminationPolicy: Delete
-{{- end }}
-{{- if .Values.persistence.backup.enabled }}
+    type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
+  terminationPolicy: {{ .Values.config.elasticsearch.terminationPolicy }}
+{{- if .Values.persistence.stash.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
@@ -88,8 +179,6 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
 spec:
   clientConfig:
     service:
@@ -104,8 +193,7 @@ spec:
         from: ADMIN_PASSWORD
         to: password
   type: kubedb.com/elasticsearch
-{{- if (not (empty .Values.persistence.backup.restore.elasticsearchSnapshot)) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -120,7 +208,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: elasticsearch-restore-{{ .Values.config.elasticsearch.version }}
+    name: elasticsearch-restore-{{ index .Values.config.elasticsearch.versionMap .Values.config.elasticsearch.version }}
   repository:
     name: elasticsearch-{{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   target:
@@ -130,6 +218,7 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   rules:
     - snapshots:
-      - {{ $restore.elasticsearchSnapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+{{- end }}
 {{- end }}
 {{- end }}

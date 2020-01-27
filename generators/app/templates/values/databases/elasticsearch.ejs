@@ -8,9 +8,25 @@
     kibana: false
     masterConfig: ''
     password: elastic
+    pause: true
     port: 9200
     prometheus: false
     replicas: 1
+    terminationPolicy: Delete
     url: ''
     username: elastic
-    version: 6.4.0<% } %>
+    version: 6.4.0
+    versionMap:
+      5.6-v1: 5.6
+      5.6.4-v1: 5.6.4
+      6.2-v1: 6.2
+      6.2.4-v1: 6.2.4
+      6.3-v1: 6.3
+      6.3.0-v1: 6.3.0
+      6.4: 6.4
+      6.4.0: 6.4.0
+    topology:
+      clientReplicas: 1
+      dataReplicas: 1
+      enabled: false
+      masterReplicas: 1<% } %>

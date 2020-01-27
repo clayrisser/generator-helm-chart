@@ -1,35 +1,42 @@
-{{- if .Values.config.mongodb.internal }}
+{{- if (and .Values.config.mongodb.internal (not (and (eq .Values.config.mongodb.terminationPolicy "Pause") .Values.config.mongodb.pause))) }}
 apiVersion: kubedb.com/v1alpha1
 kind: MongoDB
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+  name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
+    app: {{ template "<%- _kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   version: {{ .Values.config.mongodb.version | quote }}
-  {{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
   databaseSecret:
-    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mongodb-auth
-  {{- end }}
+    secretName: {{ template "<%- _kebabCase(name) %>.sharedname" . }}-mongodb-auth
   {{- if .Values.config.mongodb.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
+  sslMode: disabled
+  # clusterAuthMode: x509
   {{- if .Values.persistence.enabled }}
   storageType: Durable
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if .Values.config.mongodb.sharding.enabled }}
+  {{- if .Values.config.mongodb.shardTopology.enabled }}
   shardTopology:
     configServer:
-      replicas: {{ .Values.config.mongodb.sharding.configServerReplicas }}
+      prefix: configServer
+      replicas: {{ .Values.config.mongodb.sharedTopology.configServerReplicas }}
       configSource:
         configMap:
-          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+          name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+      {{- if .Values.persistence.velero.enabled }}
+      podTemplate:
+        metadata:
+          annotations:
+            backup.velero.io/backup-volumes: data
+      {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -46,18 +53,32 @@ spec:
             storage: {{ .Values.persistence.size }}
       {{- end }}
     mongos:
-      replicas: {{ .Values.config.mongodb.sharding.mongosReplicas }}
+      prefix: mongos
+      replicas: {{ .Values.config.mongodb.sharedTopology.mongosReplicas }}
       strategy:
-        type: RollingUpdate
+        type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
       configSource:
         configMap:
-          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+          name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+      {{- if .Values.persistence.velero.enabled }}
+      podTemplate:
+        metadata:
+          annotations:
+            backup.velero.io/backup-volumes: data
+      {{- end }}
     shard:
+      prefix: shard
       replicas: {{ .Values.config.mongodb.replicas }}
-      shards: {{ .Values.config.mongodb.sharding.shards }}
+      shards: {{ .Values.config.mongodb.sharedTopology.shards }}
       configSource:
         configMap:
-          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+          name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+      {{- if .Values.persistence.velero.enabled }}
+      podTemplate:
+        metadata:
+          annotations:
+            backup.velero.io/backup-volumes: data
+      {{- end }}
       {{- if .Values.persistence.enabled }}
       storage:
         {{- if .Values.persistence.storageClass }}
@@ -76,8 +97,8 @@ spec:
   {{- else }}
   configSource:
     configMap:
-      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
-  {{- if (gt (.Values.config.mongodb.replicas | int64) 1) }}
+      name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+  {{- if .Values.config.mongodb.replicaSet }}
   replicas: {{ .Values.config.mongodb.replicas }}
   replicaSet:
     name: rs0
@@ -97,12 +118,18 @@ spec:
       requests:
         storage: {{ .Values.persistence.size }}
   {{- end }}
+  {{- if .Values.persistence.velero.enabled }}
+  podTemplate:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: data
   {{- end }}
-  {{- if (empty .Values.persistence.backup.restore.mongodbSnapshot) }}
+  {{- end }}
+  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
-        name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb-init
+        name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb-init
   {{- end }}
   serviceTemplate:
     metadata:
@@ -120,54 +147,35 @@ spec:
           {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb))) }}
           nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
           {{- end }}
-  replicaServiceTemplate:
-    annotations:
-      passMe: ToReplicaService
-    spec:
-      type: {{ .Values.service.mongodb.type }}
-      {{- if (or (eq .Values.service.mongodb.type "LoadBalancer") (eq .Values.service.mongodb.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.mongodb.externalTrafficPolicy }}
-      {{- end }}
-      ports:
-        - name: mongodb
-          port: 27017
-          targetPort: mongodb
-          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb))) }}
-          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
-          {{- end }}
   updateStrategy:
-    type: RollingUpdate
-  terminationPolicy: Delete
-{{- end }}
-{{- if .Values.persistence.backup.enabled }}
+    type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
+  terminationPolicy: {{ .Values.config.mongodb.terminationPolicy }}
+{{- if .Values.persistence.stash.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+  name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
+    app: {{ template "<%- _kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
 spec:
   clientConfig:
     service:
-      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+      name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
       port: 27017
       scheme: mongodb
   type: kubedb.com/mongodb
-{{- if (not (empty .Values.persistence.backup.restore.mongodbSnapshot)) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+  name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
+    app: {{ template "<%- _kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -175,16 +183,17 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mongodb-restore-{{ .Values.config.mongodb.version }}
+    name: mongodb-restore-{{ index .Values.config.mongodb.versionMap .Values.config.mongodb.version }}
   repository:
-    name: mongodb-{{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+    name: mongodb-{{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+      name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
   rules:
     - snapshots:
-      - {{ $restore.mongodbSnapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+{{- end }}
 {{- end }}
 {{- end }}

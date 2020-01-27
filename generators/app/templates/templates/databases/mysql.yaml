@@ -1,4 +1,4 @@
-{{- if .Values.config.mysql.internal }}
+{{- if (and .Values.config.mysql.internal (not (and (eq .Values.config.mysql.terminationPolicy "Pause") .Values.config.mysql.pause))) }}
 apiVersion: kubedb.com/v1alpha1
 kind: MySQL
 metadata:
@@ -13,17 +13,14 @@ spec:
   configSource:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
-  {{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
   databaseSecret:
     secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql-auth
-  {{- end }}
   {{- if .Values.config.mysql.prometheus }}
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  {{- if (gt (.Values.config.mysql.replicas | int64) 1) }}
-  replicas: {{ .Values.config.mysql.replicas }}
-  {{- end }}
+  # topology:
+  #   mode: GroupReplication
   {{- if .Values.persistence.enabled }}
   storageType: Durable
   storage:
@@ -42,11 +39,17 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.backup.restore.mysqlSnapshot) }}
+  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql-init
+  {{- end }}
+  {{- if .Values.persistence.velero.enabled }}
+  podTemplate:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: data
   {{- end }}
   serviceTemplate:
     metadata:
@@ -64,26 +67,10 @@ spec:
           {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql))) }}
           nodePort: {{ .Values.service.mysql.nodePorts.mysql }}
           {{- end }}
-  replicaServiceTemplate:
-    annotations:
-      passMe: ToReplicaService
-    spec:
-      type: {{ .Values.service.mysql.type }}
-      {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
-      externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
-      {{- end }}
-      ports:
-        - name: mysql
-          port: 3306
-          targetPort: mysql
-          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql))) }}
-          nodePort: {{ .Values.service.mysql.nodePorts.mysql }}
-          {{- end }}
   updateStrategy:
-    type: RollingUpdate
-  terminationPolicy: Delete
-{{- end }}
-{{- if .Values.persistence.backup.enabled }}
+    type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
+  terminationPolicy: {{ .Values.config.mysql.terminationPolicy }}
+{{- if .Values.persistence.stash.enabled }}
 ---
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
@@ -105,8 +92,7 @@ spec:
       scheme: mysql
     url: tcp({{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql:3306)/
   type: kubedb.com/mysql
-{{- if (not (empty .Values.persistence.backup.restore.mysqlSnapshot)) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -121,7 +107,7 @@ metadata:
 spec:
   driver: Restic
   task:
-    name: mysql-restore-{{ .Values.config.mysql.version }}
+    name: mysql-restore-{{ index .Values.config.mysql.versionMap .Values.config.mysql.version }}
   repository:
     name: mysql-{{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   target:
@@ -131,6 +117,7 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   rules:
     - snapshots:
-      - {{ $restore.mysqlSnapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+{{- end }}
 {{- end }}
 {{- end }}

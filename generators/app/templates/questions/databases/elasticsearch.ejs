@@ -11,10 +11,40 @@
   - variable: config.elasticsearch.version
     default: 6.4.0
     description: ''
-    type: string
+    type: enum
+    options:
+      - 5.6-v1
+      - 5.6.4-v1
+      - 6.2-v1
+      - 6.2.4-v1
+      - 6.3-v1
+      - 6.3.0-v1
+      - 6.4
+      - 6.4.0
     required: true
     label: version
     show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.terminationPolicy
+    default: Delete
+    description: ''
+    type: enum
+    options:
+      - Delete
+      - Pause
+      - WipeOut
+      - DoNotTerminate
+    required: true
+    show_if: config.elasticsearch.internal=true
+    label: 'termination policy'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.pause
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    show_if: config.elasticsearch.internal=true&&config.terminationPolicy=Pause
+    label: pause
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.kibana
     default: false
@@ -32,13 +62,45 @@
     label: prometheus
     show_if: config.elasticsearch.internal=true
     group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: 'topology enabled'
+    show_if: config.elasticsearch.internal=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.clientReplicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    label: 'client replicas'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.dataReplicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    label: 'data replicas'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.masterReplicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    label: 'master replicas'
+    group: 'Elasticsearch Config'
   - variable: config.elasticsearch.replicas
     default: 1
     description: ''
     type: int
     required: true
     label: replicas
-    show_if: config.elasticsearch.internal=true
+    show_if: config.elasticsearch.internal=true&&config.topology.enabled=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.commonConfig
     default: ''

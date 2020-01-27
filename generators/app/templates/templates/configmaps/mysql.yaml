@@ -9,6 +9,11 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  {{- if (eq (substr 0 1 .Values.config.mysql.version) "8") }}
+  default-authentication-plugin.cnf: |
+    [mysqld]
+    default_authentication_plugin = {{ .Values.config.mysql.authenticationPlugin }}
+  {{- end }}
   my-config.cnf: {{ .Values.config.mysql.customConfig | quote }}
 ---
 apiVersion: v1

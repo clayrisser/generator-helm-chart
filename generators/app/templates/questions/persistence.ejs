@@ -35,128 +35,46 @@
       - variable: persistence.existingClaim
         default: ''
         description: ''
-        type: pvc
+        type: string
         required: false
         label: 'existing claim'
-      - variable: persistence.backup.enabled
+      - variable: persistence.velero.enabled
         default: false
         description: ''
         type: boolean
         required: true
-        label: 'backup enabled'
-      - variable: persistence.backup.resticPassword
-        default: pass
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
         description: ''
-        type: password
+        type: boolean
         required: true
-        show_if: persistence.backup.enabled=true
-        label: 'backup restic password'
-      - variable: persistence.backup.schedule
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.schedule
         default: '0 0 * * *'
         description: ''
         type: string
         required: true
-        show_if: persistence.backup.enabled=true
-        label: 'backup schedule'
-      - variable: persistence.backup.keepLast
-        default: 5
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
         description: ''
         type: int
         required: true
-        show_if: persistence.backup.enabled=true
-        label: 'backup keep last'
-      - variable: persistence.backup.type
-        default: s3
-        description: ''
-        type: enum
-        options:
-          - gcs
-          - s3
-          - azure
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup type'
-      - variable: persistence.backup.awsAccessKey
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot
         default: ''
         description: ''
         type: string
         required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
-        label: 'aws access key'
-      - variable: persistence.backup.awsSecretKey
-        default: ''
-        description: ''
-        type: password
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
-        label: 'aws secret key'
-      - variable: persistence.backup.googleProjectId
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
-        label: 'google project id'
-      - variable: persistence.backup.googleServiceKey
-        default: ''
-        description: ''
-        type: password
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=gcs
-        label: 'google service key'
-      - variable: persistence.backup.azureAccountName
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
-        label: 'azure account name'
-      - variable: persistence.backup.azureAccountKey
-        default: ''
-        description: ''
-        type: password
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
-        label: 'azure account key'
-      - variable: persistence.backup.container
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=azure
-        label: 'backup container'
-      - variable: persistence.backup.bucket
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup bucket'
-      - variable: persistence.backup.endpoint
-        default: s3.amazonaws.com
-        description: ''
-        type: string
-        required: true
-        show_if: persistence.backup.enabled=true&&persistence.backup.type=s3
-        label: 'backup endpoint'
-      - variable: persistence.backup.prefix
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup prefix'
-      - variable: persistence.backup.restore.<%- _.camelCase(name) %>Snapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore <%- spaceCase(name) %> snapshot'<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
-      - variable: persistence.backup.restore.<%- _.camelCase(database.name) %>Snapshot
-        default: ''
-        description: ''
-        type: string
-        required: false
-        show_if: persistence.backup.enabled=true
-        label: 'backup restore <%- spaceCase(database.name) %> snapshot'<% }} %>
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot'

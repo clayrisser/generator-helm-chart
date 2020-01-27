@@ -1,0 +1,61 @@
+{{- if .Values.persistence.stash.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup-init
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-backup-init
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: '3'
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  strategy:
+    type: {{ .Values.config.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%- _.kebabCase(name) %>.name" . }}-backup-init
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: kubectl
+          image: codejamninja/stash-cli:0.0.1
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupBatch
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: {{ .Values.persistence.stash.repository | quote }}
+  paused: {{ .Values.persistence.stash.paused }}
+  schedule: {{ .Values.persistence.stash.schedule | quote }}
+  retentionPolicy:
+    name: retention-policy
+    keepLast: {{ .Values.persistence.stash.keepLast }}
+    prune: true
+  members:
+    - target:
+        ref:
+          apiVersion: apps/v1
+          kind: AppBinding
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+      task:
+        name: elasticsearch-backup-{{ .Values.config.version }}
+{{- end }}

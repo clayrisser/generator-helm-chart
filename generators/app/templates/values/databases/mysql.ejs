@@ -1,16 +1,28 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   mysql:
+    authenticationPlugin: mysql_native_password
     customConfig: ''
     database: <%- name %>
     host: ''
     internal: true
-    password: root
+    password: password
+    password: password
+    pause: true
     phpmyadmin: false
     port: 3306
     prometheus: false
     replicas: 3
     standbyMode: hot
+    terminationPolicy: Delete
     topologyMode: GroupReplication
     url: ''
     username: root
-    version: 8.0.14<% } %>
+    version: 8.0.14
+    versionMap:
+      5.7-v1: 5.7.25
+      5.7-v2: 5.7.25
+      5.7.25: 5.7.25
+      8.0-v1: 8.0.3
+      8.0-v2: 8.0.14
+      8.0.14: 8.0.14
+      8.0.3: 8.0.3<% } %>

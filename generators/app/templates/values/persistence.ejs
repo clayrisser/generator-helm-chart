@@ -6,22 +6,13 @@ persistence:
   existingClaim: ''
   size: 1Gi
   storageClass: ''
-  backup:
-    awsAccessKey: ''
-    awsSecretKey: ''
-    azureAccountKey: ''
-    azureAccountName: ''
-    bucket: ''
-    container: ''
+  velero:
     enabled: false
-    endpoint: s3.amazonaws.com
-    googleProjectId: ''
-    googleServiceKey: ''
-    keepLast: 5
-    prefix: ''
-    resticPassword: pass
+  stash:
+    enabled: false
+    keepLast: 30
+    paused: false
+    repository: stash-stash
     schedule: '0 0 * * *'
-    type: s3
     restore:
-      <%- _.camelCase(name) %>Snapshot: ''<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.backup) { %>
-      <%- _.camelCase(database.name) %>Snapshot: ''<% }} %>
+      snapshot: ''
