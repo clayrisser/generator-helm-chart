@@ -14,16 +14,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- define "<%- _.kebabCase(name) %>.fullname" }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Create a name shared accross all apps in namespace.
-We truncate at 63 chars because some Kubernetes name fields are limited to this
-(by the DNS naming spec).
-*/}}
-{{- define "<%- _.kebabCase(name) %>.sharedname" }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- printf "%s-%s" .Release.Namespace $name | trunc 63 | trimSuffix "-" }}
 {{- end }}<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicWorkloads[i]; %>
 
 {{/*

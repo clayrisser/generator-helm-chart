@@ -14,7 +14,7 @@ spec:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   databaseSecret:
-    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-mysql-auth
+    secretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql-auth
   {{- if .Values.config.mysql.prometheus }}
   monitor:
     agent: prometheus.io/builtin

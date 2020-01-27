@@ -58,11 +58,6 @@ export default async function writing(yo) {
     yo.destinationPath(`v${yo.context.version}/templates/pvc.yaml`),
     yo.context
   );
-  yo.fs.copyTpl(
-    yo.templatePath('templates/secrets/backup.yaml'),
-    yo.destinationPath(`v${yo.context.version}/templates/secrets/backup.yaml`),
-    yo.context
-  );
   if (
     _.includes(
       _.map(yo.context.workloads, workload => !!workload.volumes.length),
@@ -182,6 +177,22 @@ export default async function writing(yo) {
         yo.templatePath(`templates/backups/${database.name}.yaml`),
         yo.destinationPath(
           `v${yo.context.version}/templates/backups/${database.name}.yaml`
+        ),
+        yo.context
+      );
+      yo.fs.copyTpl(
+        yo.templatePath(`templates/secrets/${database.name}.yaml`),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/secrets/${database.name}.yaml`
+        ),
+        yo.context
+      );
+    }
+    if (database.name === 'mysql') {
+      yo.fs.copyTpl(
+        yo.templatePath('templates/configmaps/pgadmin.yaml'),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/configmaps/pgadmin.yaml`
         ),
         yo.context
       );

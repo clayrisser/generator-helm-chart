@@ -2,16 +2,16 @@
 apiVersion: kubedb.com/v1alpha1
 kind: MongoDB
 metadata:
-  name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- _kebabCase(name) %>.name" . }}-mongodb
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   version: {{ .Values.config.mongodb.version | quote }}
   databaseSecret:
-    secretName: {{ template "<%- _kebabCase(name) %>.sharedname" . }}-mongodb-auth
+    secretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb-auth
   {{- if .Values.config.mongodb.prometheus }}
   monitor:
     agent: prometheus.io/builtin
@@ -30,7 +30,7 @@ spec:
       replicas: {{ .Values.config.mongodb.sharedTopology.configServerReplicas }}
       configSource:
         configMap:
-          name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
       {{- if .Values.persistence.velero.enabled }}
       podTemplate:
         metadata:
@@ -59,7 +59,7 @@ spec:
         type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
       configSource:
         configMap:
-          name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
       {{- if .Values.persistence.velero.enabled }}
       podTemplate:
         metadata:
@@ -72,7 +72,7 @@ spec:
       shards: {{ .Values.config.mongodb.sharedTopology.shards }}
       configSource:
         configMap:
-          name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
       {{- if .Values.persistence.velero.enabled }}
       podTemplate:
         metadata:
@@ -97,7 +97,7 @@ spec:
   {{- else }}
   configSource:
     configMap:
-      name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   {{- if .Values.config.mongodb.replicaSet }}
   replicas: {{ .Values.config.mongodb.replicas }}
   replicaSet:
@@ -129,7 +129,7 @@ spec:
   init:
     scriptSource:
       configMap:
-        name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb-init
+        name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb-init
   {{- end }}
   serviceTemplate:
     metadata:
@@ -155,16 +155,16 @@ spec:
 apiVersion: appcatalog.appscode.com/v1alpha1
 kind: AppBinding
 metadata:
-  name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- _kebabCase(name) %>.name" . }}-mongodb
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   clientConfig:
     service:
-      name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
       port: 27017
       scheme: mongodb
   type: kubedb.com/mongodb
@@ -173,9 +173,9 @@ spec:
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
 metadata:
-  name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   labels:
-    app: {{ template "<%- _kebabCase(name) %>.name" . }}-mongodb
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongodb
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -185,12 +185,12 @@ spec:
   task:
     name: mongodb-restore-{{ index .Values.config.mongodb.versionMap .Values.config.mongodb.version }}
   repository:
-    name: mongodb-{{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+    name: mongodb-{{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
       kind: AppBinding
-      name: {{ template "<%- _kebabCase(name) %>.fullname" . }}-mongodb
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   rules:
     - snapshots:
       - {{ .Values.persistence.stash.restore.snapshot | quote }}

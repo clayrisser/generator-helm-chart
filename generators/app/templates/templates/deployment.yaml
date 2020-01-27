@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}<% if (workload.volumes.length) { %>
   {{- if .Values.persistence.backup.enabled }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-data
+    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
     stash.appscode.com/target-paths: /_data
     stash.appscode.com/volume-mounts: 'data:/_data'
   {{- end }}<% } %>
@@ -66,7 +66,7 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-<%- _.kebabCase(workload.name) %>
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   rules:
     - snapshots:
         - {{ $restore.<%- _.camelCase(workload.name) %>Snapshot }}

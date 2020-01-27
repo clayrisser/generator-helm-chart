@@ -14,7 +14,7 @@ spec:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   databaseSecret:
-    secretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
+    secretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch-auth
   {{- if .Values.config.elasticsearch.prometheus }}
   monitor:
     agent: prometheus.io/builtin

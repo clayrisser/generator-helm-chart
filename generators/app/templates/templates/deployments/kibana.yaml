@@ -32,12 +32,12 @@ spec:
             - name: ELASTICSEARCH_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch-auth
                   key: username
             - name: ELASTICSEARCH_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-elasticsearch-auth
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch-auth
                   key: password
           livenessProbe:
             httpGet:

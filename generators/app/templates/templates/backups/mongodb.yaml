@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/mongodb'
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
   task:
     name: ${TARGET_APP_RESOURCE}-backup-${TARGET_APP_VERSION}
   schedule: {{ .Values.persistence.backup.schedule | quote }}

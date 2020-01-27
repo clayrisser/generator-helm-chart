@@ -21,7 +21,7 @@ spec:
       container: {{ .Values.persistence.backup.container | quote }}
       {{- end }}
       prefix: '{{ .Values.persistence.backup.prefix }}/${TARGET_NAMESPACE}/data'
-    storageSecretName: {{ template "<%- _.kebabCase(name) %>.sharedname" . }}-backup
+    storageSecretName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup
   schedule: {{ .Values.persistence.backup.schedule | quote }}
   retentionPolicy:
     name: retention-policy
