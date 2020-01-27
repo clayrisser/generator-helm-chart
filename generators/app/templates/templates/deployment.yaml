@@ -7,11 +7,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}<% if (workload.volumes.length) { %>
-  {{- if .Values.persistence.backup.enabled }}
+  {{- if .Values.persistence.velero.enabled }}
   annotations:
-    stash.appscode.com/backup-blueprint: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
-    stash.appscode.com/target-paths: /_data
-    stash.appscode.com/volume-mounts: 'data:/_data'
+    backup.velero.io/backup-volumes: data
   {{- end }}<% } %>
 spec:
   selector:
@@ -51,8 +49,7 @@ spec:
               path: <%- workload.healthcheckPath %><% } %>
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}<% } %><%- include('./volumes'); %><% if (workload.volumes.length) { %>
-{{- if (and .Values.persistence.backup.enabled (not (empty .Values.persistence.backup.restore.<%- _.camelCase(workload.name) %>Snapshot))) }}
-{{- $restore := .Values.persistence.backup.restore }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -69,7 +66,7 @@ spec:
     name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   rules:
     - snapshots:
-        - {{ $restore.<%- _.camelCase(workload.name) %>Snapshot }}
+        - {{ .Values.persistence.stash.restore.snapshot | quote }}
   target:
     paths:
       /_data

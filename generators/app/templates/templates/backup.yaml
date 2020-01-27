@@ -50,12 +50,22 @@ spec:
     name: retention-policy
     keepLast: {{ .Values.persistence.stash.keepLast }}
     prune: true
-  members:
+  members:<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
     - target:
         ref:
           apiVersion: apps/v1
           kind: AppBinding
-          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<% _.kebabCase(database.name) %>
       task:
-        name: elasticsearch-backup-{{ .Values.config.version }}
+        name: <% _.kebabCase(database.name) %>-backup-{{ .Values.config.version }}<% } if (workload && workload.volumes.length) { %>
+    - target:
+        ref:
+          apiVersion: apps/v1
+          kind: AppBinding
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<% _.kebabCase(database.name) %>
+      volumeMounts:
+        - name: data
+          mountPath: /data
+      paths:
+        - /data<% } %>
 {{- end }}

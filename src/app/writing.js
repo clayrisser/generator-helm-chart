@@ -65,8 +65,8 @@ export default async function writing(yo) {
     )
   ) {
     yo.fs.copyTpl(
-      yo.templatePath('templates/backups/data.yaml'),
-      yo.destinationPath(`v${yo.context.version}/templates/backups/data.yaml`),
+      yo.templatePath('templates/backup.yaml'),
+      yo.destinationPath(`v${yo.context.version}/templates/backup.yaml`),
       yo.context
     );
   }
@@ -173,13 +173,6 @@ export default async function writing(yo) {
       database.name === 'postgres' ||
       database.name === 'elasticsearch'
     ) {
-      yo.fs.copyTpl(
-        yo.templatePath(`templates/backups/${database.name}.yaml`),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/backups/${database.name}.yaml`
-        ),
-        yo.context
-      );
       yo.fs.copyTpl(
         yo.templatePath(`templates/secrets/${database.name}.yaml`),
         yo.destinationPath(
