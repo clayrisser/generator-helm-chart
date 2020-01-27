@@ -63,7 +63,7 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
+    name: {{ .Values.persistence.stash.repository | quote }}
   rules:
     - snapshots:
         - {{ .Values.persistence.stash.restore.snapshot | quote }}

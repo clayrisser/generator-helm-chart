@@ -112,7 +112,7 @@ spec:
   task:
     name: mysql-restore-{{ index .Values.config.mysql.versionMap .Values.config.mysql.version }}
   repository:
-    name: mysql-{{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
+    name: {{ .Values.persistence.stash.repository | quote }}
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1
