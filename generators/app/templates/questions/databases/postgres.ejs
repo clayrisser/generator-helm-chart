@@ -77,12 +77,12 @@
     label: pause
     group: 'Postgres Config'
   - variable: config.postgres.standbyMode
-    default: hot
+    default: Hot
     description: ''
     type: enum
     options:
-      - hot
-      - warm
+      - Hot
+      - Warm
     required: true
     label: 'standby mode'
     show_if: config.postgres.internal=true
