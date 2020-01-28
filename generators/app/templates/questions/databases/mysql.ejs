@@ -102,6 +102,14 @@
     label: prometheus
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
+  - variable: config.mysql.replicas
+    default: 1
+    description: ''
+    type: int
+    required: true
+    label: replicas
+    show_if: config.mysql.internal=true
+    group: 'MySQL Config'
   - variable: config.mysql.customConfig
     default: ''
     description: ''
