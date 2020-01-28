@@ -107,6 +107,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  type: kubedb.com/postgres
+  version: {{ .Values.config.postgres.version | quote }}
   clientConfig:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
@@ -121,7 +123,6 @@ spec:
     - renameKey:
         from: POSTGRES_PASSWORD
         to: password
-  type: kubedb.com/postgres
 {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1

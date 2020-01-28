@@ -162,6 +162,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  type: kubedb.com/elasticsearch
+  version: {{ .Values.config.elasticsearch.version | quote }}
   clientConfig:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
@@ -174,7 +176,6 @@ spec:
     - renameKey:
         from: ADMIN_PASSWORD
         to: password
-  type: kubedb.com/elasticsearch
 {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1

@@ -175,7 +175,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   type: kubedb.com/mongodb
-  version: {{ .Values.config.version | quote }}
+  version: {{ .Values.config.mongodb.version | quote }}
   clientConfig:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
