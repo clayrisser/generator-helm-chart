@@ -1,1 +1,12 @@
-<% if (_.find(databases, { name: 'elasticsearch'})) { %><% } %>
+<% if (_.find(databases, { name: 'elasticsearch'})) { %>
+
+{{/*
+Calculate kibana certificate
+*/}}
+{{- define "<%- _.kebabCase(name) %>.kibana-certificate" }}
+{{- if (not (empty .Values.ingress.kibana.certificate)) }}
+{{- printf .Values.ingress.kibana.certificate }}
+{{- else }}
+{{- printf "%s-kibana-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
+{{- end }}
+{{- end }}<% } %>

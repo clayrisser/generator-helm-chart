@@ -15,4 +15,15 @@ Calculate mysql url
 {{- printf "jdbc:mysql://%s@%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{/*
+Calculate phpmyadmin certificate
+*/}}
+{{- define "<%- _.kebabCase(name) %>.phpmyadmin-certificate" }}
+{{- if (not (empty .Values.ingress.phpmyadmin.certificate)) }}
+{{- printf .Values.ingress.phpmyadmin.certificate }}
+{{- else }}
+{{- printf "%s-phpmyadmin-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
+{{- end }}
 {{- end }}<% } %>

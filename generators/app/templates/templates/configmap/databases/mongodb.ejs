@@ -10,4 +10,5 @@
   mongodb_username: {{ $mongodb.username | quote }}
   {{- if .Values.config.mongoExpress.enabled }}
   mongo_express_username: {{ .Values.config.mongoExpress.username | quote }}
+  mongodb_server: {{ template "<%- _.kebabCase(name) %>.mongodb-server" . }}
   {{- end }}<% } %>

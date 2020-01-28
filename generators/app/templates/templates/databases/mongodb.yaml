@@ -174,12 +174,20 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  type: kubedb.com/mongodb
+  version: {{ .Values.config.version | quote }}
   clientConfig:
     service:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
       port: 27017
       scheme: mongodb
-  type: kubedb.com/mongodb
+  parameters:
+    kind: MongoDB
+    apiVersion: kubedb.com/v1alpha1
+    {{- if .Values.config.replicaSet.enabled }}
+    replicaSets:
+      host-0: rs0/{{ template "<%- _.kebabCase(name) %>.mongodb-server" . }}
+    {{- end }}
 {{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
 ---
 apiVersion: stash.appscode.com/v1beta1

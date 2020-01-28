@@ -28,7 +28,10 @@ spec:
               containerPort: 8081
           env:
             - name: ME_CONFIG_MONGODB_SERVER
-              value: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
+                  key: mongodb_server
             - name: ME_CONFIG_MONGODB_AUTH_DATABASE
               value: admin
             - name: ME_CONFIG_BASICAUTH_USERNAME
