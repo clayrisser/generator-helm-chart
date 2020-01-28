@@ -40,20 +40,20 @@
     label: 'resources requests cpu'
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
-  - variable: config.mysql.resources.limit.cpu
+  - variable: config.mysql.resources.limits.cpu
     default: 500m
     description: ''
     type: string
     required: true
-    label: 'resources limit cpu'
+    label: 'resources limits cpu'
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
-  - variable: config.mysql.resources.limit.memory
+  - variable: config.mysql.resources.limits.memory
     default: 256Mi
     description: ''
     type: string
     required: true
-    label: 'resources limit memory'
+    label: 'resources limits memory'
     show_if: config.mysql.internal=true
     group: 'MySQL Config'
   - variable: config.mysql.terminationPolicy

@@ -76,7 +76,39 @@
     type: int
     required: true
     show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
-    label: 'client replicas'
+    label: 'topology client replicas'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.client.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'topology client resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.client.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'topology client resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.client.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'topology client resources limits cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.client.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'topology client resources limits memory'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.topology.data.replicas
     default: 1
@@ -84,7 +116,39 @@
     type: int
     required: true
     show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
-    label: 'data replicas'
+    label: 'topology data replicas'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.data.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'topology data resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.data.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'topology data resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.data.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'topology data resources limits cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.data.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'topology data resources limits memory'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.topology.master.replicas
     default: 1
@@ -92,7 +156,71 @@
     type: int
     required: true
     show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
-    label: 'master replicas'
+    label: 'topology master replicas'
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.master.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'topology master resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.master.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'topology master resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.master.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'topology master resources limits cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.topology.master.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'topology master resources limits memory'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=true
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.resources.requests.cpu
+    default: 100m
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.resources.requests.memory
+    default: 128Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources requests cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.resources.limits.cpu
+    default: 500m
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits cpu'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=false
+    group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.resources.limits.memory
+    default: 256Mi
+    description: ''
+    type: string
+    required: true
+    label: 'resources limits memory'
+    show_if: config.elasticsearch.internal=true&&config.elasticsearch.topology.enabled=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.replicas
     default: 1

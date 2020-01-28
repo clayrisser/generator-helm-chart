@@ -74,7 +74,7 @@ spec:
 {{ toYaml .Values.config.mongodb.shardTopology.mongos.resources | indent 12 }}
     shard:
       prefix: shard
-      replicas: {{ .Values.config.mongodb.replicas }}
+      replicas: {{ .Values.config.mongodb.shardTopology.shard.replicas }}
       shards: {{ .Values.config.mongodb.shardTopology.shard.shards }}
       configSource:
         configMap:
@@ -107,7 +107,7 @@ spec:
   configSource:
     configMap:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
-  {{- if .Values.config.mongodb.replicaSet }}
+  {{- if .Values.config.mongodb.replicaSet.enabled }}
   replicas: {{ .Values.config.mongodb.replicas }}
   replicaSet:
     name: rs0

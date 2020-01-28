@@ -39,20 +39,20 @@
     label: 'resources requests cpu'
     show_if: config.postgres.internal=true
     group: 'Postgres Config'
-  - variable: config.postgres.resources.limit.cpu
+  - variable: config.postgres.resources.limits.cpu
     default: 500m
     description: ''
     type: string
     required: true
-    label: 'resources limit cpu'
+    label: 'resources limits cpu'
     show_if: config.postgres.internal=true
     group: 'Postgres Config'
-  - variable: config.postgres.resources.limit.memory
+  - variable: config.postgres.resources.limits.memory
     default: 256Mi
     description: ''
     type: string
     required: true
-    label: 'resources limit memory'
+    label: 'resources limits memory'
     show_if: config.postgres.internal=true
     group: 'Postgres Config'
   - variable: config.postgres.terminationPolicy
