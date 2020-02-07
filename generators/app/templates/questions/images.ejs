@@ -21,7 +21,7 @@
     type: string
     required: true
     label: '<%- spaceCase(database.explorer.name) %> repository'
-    show_if: config<% if (!database.explorer.config) { %>.<%- _.camelCase(database.name) %><% } %>.<%- _.camelCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
+    show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true
     group: Images
   - variable: images.<%- _.camelCase(database.explorer.name) %>.tag
     default: <%- database.explorer.image.substr(database.explorer.image.indexOf(':') + 1) %>
@@ -29,5 +29,5 @@
     type: string
     required: true
     label: '<%- spaceCase(database.explorer.name) %> tag'
-    show_if: config<% if (!database.explorer.config) { %>.<%- _.camelCase(database.name) %><% } %>.<%- _.camelCase(database.explorer.name) %><% if (database.explorer.config) { %>.enabled<% } %>=true
+    show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true
     group: Images<% }} %>
