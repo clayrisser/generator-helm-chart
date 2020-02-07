@@ -184,7 +184,7 @@ spec:
   parameters:
     kind: MongoDB
     apiVersion: kubedb.com/v1alpha1
-    {{- if .Values.config.replicaSet.enabled }}
+    {{- if .Values.config.mongodb.replicaSet.enabled }}
     replicaSets:
       host-0: rs0/{{ template "<%- _.kebabCase(name) %>.mongodb-server" . }}
     {{- end }}

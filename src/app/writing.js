@@ -62,7 +62,8 @@ export default async function writing(yo) {
     _.includes(
       _.map(yo.context.workloads, workload => !!workload.volumes.length),
       true
-    )
+    ) ||
+    yo.context.databases?.length
   ) {
     yo.fs.copyTpl(
       yo.templatePath('templates/backup.yaml'),
