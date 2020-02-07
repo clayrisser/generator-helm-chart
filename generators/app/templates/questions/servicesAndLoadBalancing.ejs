@@ -71,7 +71,7 @@
     default: true
     description: ''
     type: boolean
-    show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true
+    show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
     label: '<%- spaceCase(database.explorer.name) %> ingress enabled'
     show_subquestion_if: true
     group: 'Services and Load Balancing'
@@ -80,28 +80,28 @@
         default: false
         description: ''
         type: boolean
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true
+        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
         required: true
         label: '<%- spaceCase(database.explorer.name) %> ingress tls'
       - variable: ingress.<%- _.camelCase(database.explorer.name) %>.hostname
         default: xip.io
         description: ''
         type: hostname
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true
+        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
         required: true
         label: '<%- spaceCase(database.explorer.name) %> ingress hostname'
       - variable: ingress.<%- _.camelCase(database.explorer.name) %>.path
         default: /
         description: ''
         type: string
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true
+        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
         required: true
         label: '<%- spaceCase(database.explorer.name) %> ingress path'
       - variable: ingress.<%- _.camelCase(database.explorer.name) %>.issuer.name
         default: letsencrypt-staging
         description: ''
         type: enum
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&ingress.<%- _.camelCase(database.explorer.name) %>.tls=true
+        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true&&ingress.<%- _.camelCase(database.explorer.name) %>.tls=true
         options:
           - none
           - letsencrypt-staging
@@ -112,7 +112,7 @@
         default: ''
         description: ''
         type: string
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&ingress.<%- _.camelCase(database.explorer.name) %>.tls=true&&ingress.<%- _.camelCase(database.explorer.name) %>.issuer.name=none
+        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true&&ingress.<%- _.camelCase(database.explorer.name) %>.tls=true&&ingress.<%- _.camelCase(database.explorer.name) %>.issuer.name=none
         required: false
         label: '<%- spaceCase(database.explorer.name) %> ingress certificate'
   - variable: service.<%- _.camelCase(database.explorer.name) %>.type
