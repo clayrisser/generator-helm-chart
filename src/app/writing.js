@@ -70,6 +70,11 @@ export default async function writing(yo) {
       yo.destinationPath(`v${yo.context.version}/templates/backup.yaml`),
       yo.context
     );
+    yo.fs.copyTpl(
+      yo.templatePath('templates/role.yaml'),
+      yo.destinationPath(`v${yo.context.version}/templates/role.yaml`),
+      yo.context
+    );
   }
   if (configMaps.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
