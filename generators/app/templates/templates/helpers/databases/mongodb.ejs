@@ -5,9 +5,9 @@ Calculate mongodb server
 */}}
 {{- define "<%- _.kebabCase(name) %>.mongodb-server" }}
 {{- if .Values.config.replicaSet.enabled }}
-{{- printf "%s-mongodb-0.%s-mongodb-gvr.%s.svc,%s-mongodb-1.%s-mongodb-gvr.%s.svc,%s-mongodb-2.%s-mongodb-gvr.%s.svc" (include <%- _.kebabCase(name) %>.fullname" .) (include <%- _.kebabCase(name) %>.fullname" .) .Release.Namespace (include <%- _.kebabCase(name) %>.fullname" .) (include <%- _.kebabCase(name) %>.fullname" .) .Release.Namespace (include <%- _.kebabCase(name) %>.fullname" .) (include <%- _.kebabCase(name) %>.fullname" .) .Release.Namespace }}
+{{- printf "%s-mongodb-0.%s-mongodb-gvr.%s.svc,%s-mongodb-1.%s-mongodb-gvr.%s.svc,%s-mongodb-2.%s-mongodb-gvr.%s.svc" (include "<%- _.kebabCase(name) %>.fullname" .) (include "<%- _.kebabCase(name) %>.fullname" .) .Release.Namespace (include "<%- _.kebabCase(name) %>.fullname" .) (include "<%- _.kebabCase(name) %>.fullname" .) .Release.Namespace (include "<%- _.kebabCase(name) %>.fullname" .) (include "<%- _.kebabCase(name) %>.fullname" .) .Release.Namespace }}
 {{- else }}
-{{- printf "%s-mongodb" (include <%- _.kebabCase(name) %>.fullname" .) }}
+{{- printf "%s-mongodb" (include "<%- _.kebabCase(name) %>.fullname" .) }}
 {{- end }}
 {{- end }}
 
@@ -17,13 +17,13 @@ Calculate mongodb url
 {{- define "<%- _.kebabCase(name) %>.mongodb-url" }}
 {{- $mongodb := .Values.config.mongodb }}
 {{- if $mongodb.internal }}
-{{- printf <%- _.kebabCase(name) %>://%s-mongodb:27017/%s" (include "<%- _.kebabCase(name) %>.fullname" .) $mongodb.database }}
+{{- printf "mongodb://%s-mongodb:27017/%s" (include "<%- _.kebabCase(name) %>.fullname" .) $mongodb.database }}
 {{- else }}
 {{- if $mongodb.url }}
 {{- printf $mongodb.url }}
 {{- else }}
 {{- $credentials := (empty $mongodb.username | ternary "" (printf "%s:%s" $mongodb.username $mongodb.password)) }}
-{{- printf <%- _.kebabCase(name) %>://%s@%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
+{{- printf "mongodb://%s@%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
 {{- end }}
 {{- end }}
 {{- end }}<% } %>
