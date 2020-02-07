@@ -147,6 +147,7 @@
       - LoadBalancer
     required: true
     label: '<%- spaceCase(database.name) %> service type'
+    show_if: config.<%- _.camelCase(database.name) %>.internal=true
     show_subquestion_if: NodePort
     group: 'Services and Load Balancing'
     subquestions:

@@ -1,4 +1,4 @@
-{{- if (and .Values.config.elasticsearch.internal .Values.config.elasticsearch.kibana) }}
+{{- if (and .Values.config.elasticsearch.internal .Values.config.kibana.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:

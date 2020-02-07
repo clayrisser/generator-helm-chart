@@ -5,7 +5,6 @@
     database: <%- name %>
     host: ''
     internal: true
-    kibana: false
     masterConfig: ''
     password: changeme
     pause: true
@@ -60,4 +59,6 @@
             memory: 64Mi
           limits:
             cpu: 500m
-            memory: 128Mi<% } %>
+            memory: 128Mi
+  kibana:
+    enabled: false<% } %>

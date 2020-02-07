@@ -1,4 +1,4 @@
-{{- if (and .Values.config.mysql.internal .Values.config.mysql.phpmyadmin) }}
+{{- if (and .Values.config.mysql.internal .Values.config.phpmyadmin.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:
