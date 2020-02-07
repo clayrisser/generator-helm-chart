@@ -16,15 +16,4 @@ Calculate redis url
 {{- printf "redis://%s@%s:%s" $credentials $redis.host $redis.port }}
 {{- end }}
 {{- end }}
-{{- end }}
-
-{{/*
-Calculate phpredisadmin certificate
-*/}}
-{{- define "<%- _.kebabCase(name) %>.phpredisadmin-certificate" }}
-{{- if (not (empty .Values.ingress.phpredisadmin.certificate)) }}
-{{- printf .Values.ingress.phpredisadmin.certificate }}
-{{- else }}
-{{- printf "%s-phpredisadmin-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
-{{- end }}
 {{- end }}<% } %>

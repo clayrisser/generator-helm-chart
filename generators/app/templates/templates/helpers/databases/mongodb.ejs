@@ -26,15 +26,4 @@ Calculate mongodb url
 {{- printf <%- _.kebabCase(name) %>://%s@%s:%s/%s" $credentials $mongodb.host $mongodb.port $mongodb.database }}
 {{- end }}
 {{- end }}
-{{- end }}
-
-{{/*
-Calculate mongo express certificate
-*/}}
-{{- define "<%- _.kebabCase(name) %>.mongo-express-certificate" }}
-{{- if (not (empty .Values.ingress.mongoExpress.certificate)) }}
-{{- printf .Values.ingress.mongoExpress.certificate }}
-{{- else }}
-{{- printf "%s-mongo-express-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
-{{- end }}
 {{- end }}<% } %>
