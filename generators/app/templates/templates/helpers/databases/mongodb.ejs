@@ -3,7 +3,7 @@
 {{/*
 Calculate mongodb server
 */}}
-{{- define <%- _.kebabCase(name) %>.mongodb-server" }}
+{{- define "<%- _.kebabCase(name) %>.mongodb-server" }}
 {{- if .Values.config.replicaSet.enabled }}
 {{- printf "%s-mongodb-0.%s-mongodb-gvr.%s.svc,%s-mongodb-1.%s-mongodb-gvr.%s.svc,%s-mongodb-2.%s-mongodb-gvr.%s.svc" (include <%- _.kebabCase(name) %>.fullname" .) (include <%- _.kebabCase(name) %>.fullname" .) .Release.Namespace (include <%- _.kebabCase(name) %>.fullname" .) (include <%- _.kebabCase(name) %>.fullname" .) .Release.Namespace (include <%- _.kebabCase(name) %>.fullname" .) (include <%- _.kebabCase(name) %>.fullname" .) .Release.Namespace }}
 {{- else }}
