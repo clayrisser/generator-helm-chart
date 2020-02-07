@@ -317,6 +317,7 @@
     type: boolean
     required: true
     label: 'mongo express'
+    show_if: config.mongodb.internal=true
     show_subquestion_if: true
     group: MongoExpress
     subquestions:
@@ -325,6 +326,7 @@
         description: ''
         type: string
         required: true
+        show_if: config.mongodb.internal=true
         label: 'mongo express username'
         group: MongoExpress
       - variable: config.mongoExpress.password
@@ -332,5 +334,6 @@
         description: ''
         type: password
         required: true
+        show_if: config.mongodb.internal=true
         label: 'mongo express password'
         group: MongoExpress<% } %>

@@ -98,6 +98,7 @@
     type: boolean
     required: true
     label: phpredisadmin
+    show_if: config.redis.internal=true
     show_subquestion_if: true
     group: PHPRedisAdmin
     subquestions:
@@ -106,6 +107,7 @@
         description: ''
         type: string
         required: true
+        show_if: config.redis.internal=true
         label: 'phpredisadmin username'
         group: PHPRedisAdmin
       - variable: config.phpredisadmin.password
@@ -113,5 +115,6 @@
         description: ''
         type: password
         required: true
+        show_if: config.redis.internal=true
         label: 'phpredisadmin password'
         group: PHPRedisAdmin<% } %>

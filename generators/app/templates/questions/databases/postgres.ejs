@@ -168,6 +168,7 @@
     description: ''
     type: boolean
     required: true
+    show_if: config.postgres.internal=true
     label: pgadmin
     show_subquestion_if: true
     group: PGAdmin
@@ -177,6 +178,7 @@
         description: ''
         type: string
         required: true
+        show_if: config.postgres.internal=true
         label: 'pgadmin email'
         group: PGAdmin
       - variable: config.pgadmin.password
@@ -184,5 +186,6 @@
         description: ''
         type: password
         required: true
+        show_if: config.postgres.internal=true
         label: 'pgadmin password'
         group: PGAdmin<% } %>
