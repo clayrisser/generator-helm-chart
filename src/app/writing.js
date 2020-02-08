@@ -187,7 +187,7 @@ export default async function writing(yo) {
         yo.context
       );
     }
-    if (database.name === 'mysql') {
+    if (database.name === 'postgres') {
       yo.fs.copyTpl(
         yo.templatePath('templates/configmaps/pgadmin.yaml'),
         yo.destinationPath(
