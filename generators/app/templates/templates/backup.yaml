@@ -59,13 +59,9 @@ spec:
       task:
         name: <%- _.kebabCase(database.name) %>-backup-{{ .Values.config.version }}<% } if (workload && workload.volumes.length) { %>
     - target:
-        ref:
-          apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
-      volumeMounts:
-        - name: data
-          mountPath: /data
+        volumeMounts:
+          - name: data
+            mountPath: /data
       paths:
         - /data<% } %>
 {{- end }}
