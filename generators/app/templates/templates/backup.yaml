@@ -67,7 +67,7 @@ spec:
           name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
         volumeMounts:
           - name: data
-            mountPath: /data
+            mountPath: /_data
         paths:
-          - /data<% } %>
+          - /_data<% } %>
 {{- end }}
