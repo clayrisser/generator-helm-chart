@@ -51,17 +51,23 @@ spec:
     keepLast: {{ .Values.persistence.stash.keepLast }}
     prune: true
   members:<% for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+    {{- if (and .Values.config.<%- _.kebabCase(database.name) %>.internal (not (and (eq .Values.config.<%- _.kebabCase(database.name) %>.terminationPolicy "Pause") .Values.config.<%- _.kebabCase(database.name) %>.pause))) }}
     - target:
         ref:
           apiVersion: apps/v1
           kind: AppBinding
           name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
       task:
-        name: <%- _.kebabCase(database.name) %>-backup-{{ .Values.config.version }}<% } if (workload && workload.volumes.length) { %>
+        name: <%- _.kebabCase(database.name) %>-backup-{{ .Values.config.<%- _.kebabCase(database.name) %>.version }}
+    {{- end }}<% } if (workload && workload.volumes.length) { %>
     - target:
+        ref:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
         volumeMounts:
           - name: data
             mountPath: /data
-      paths:
-        - /data<% } %>
+        paths:
+          - /data<% } %>
 {{- end }}
