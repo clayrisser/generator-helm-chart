@@ -1,6 +1,7 @@
 
 
 config:
+  clusterProvider: infrastructure
   imagePullPolicy: IfNotPresent
   updateStrategy: RollingUpdate<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
   <%- _.camelCase(workload.name) %>:<% if (workload.public) { %>

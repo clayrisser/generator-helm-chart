@@ -4,7 +4,11 @@ kind: Ingress
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongo-express
   annotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
     kubernetes.io/ingress.class: nginx
+    {{- end }}
     {{- if .Values.ingress.mongoExpress.tls }}
     {{- if (empty .Values.ingress.mongoExpress.certificate) }}
     certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.mongoExpress.issuer.name }}

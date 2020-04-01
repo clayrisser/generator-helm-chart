@@ -1,6 +1,18 @@
 
 
 # Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster type'
+    group: Config
   - variable: config.imagePullPolicy
     default: IfNotPresent
     description: ''

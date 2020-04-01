@@ -4,7 +4,11 @@ kind: Ingress
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-pgadmin
   annotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
     kubernetes.io/ingress.class: nginx
+    {{- end }}
     {{- if .Values.ingress.pgadmin.tls }}
     {{- if (empty .Values.ingress.pgadmin.certificate) }}
     certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.pgadmin.issuer.name }}

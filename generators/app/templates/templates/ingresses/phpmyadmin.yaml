@@ -4,7 +4,11 @@ kind: Ingress
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpmyadmin
   annotations:
+    {{- if (eq .Values.config.clusterProvider "aks") }}
+    kubernetes.io/ingress.class: addon-http-application-routing
+    {{- else }}
     kubernetes.io/ingress.class: nginx
+    {{- end }}
     {{- if .Values.ingress.phpmyadmin.tls }}
     {{- if (empty .Values.ingress.phpmyadmin.certificate) }}
     certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.phpmyadmin.issuer.name }}
