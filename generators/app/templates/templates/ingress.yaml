@@ -11,7 +11,7 @@ metadata:
     {{- end }}
     {{- if .Values.ingress.<%- _.camelCase(workload.name) %>.tls }}
     {{- if (empty .Values.ingress.<%- _.camelCase(workload.name) %>.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.<%- _.camelCase(workload.name) %>.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.<%- _.camelCase(workload.name) %>.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'

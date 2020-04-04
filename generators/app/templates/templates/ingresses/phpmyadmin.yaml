@@ -11,7 +11,7 @@ metadata:
     {{- end }}
     {{- if .Values.ingress.phpmyadmin.tls }}
     {{- if (empty .Values.ingress.phpmyadmin.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.phpmyadmin.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.phpmyadmin.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'

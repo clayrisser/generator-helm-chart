@@ -11,7 +11,7 @@ metadata:
     {{- end }}
     {{- if .Values.ingress.mongoExpress.tls }}
     {{- if (empty .Values.ingress.mongoExpress.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.mongoExpress.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.mongoExpress.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'

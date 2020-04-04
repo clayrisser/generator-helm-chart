@@ -11,7 +11,7 @@ metadata:
     {{- end }}
     {{- if .Values.ingress.kibana.tls }}
     {{- if (empty .Values.ingress.kibana.certificate) }}
-    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.kibana.issuer.name }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.kibana.issuer.name }}
     kubernetes.io/tls-acme: 'true'
     {{- end }}
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
