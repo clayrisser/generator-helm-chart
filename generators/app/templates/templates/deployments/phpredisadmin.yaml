@@ -19,6 +19,16 @@ spec:
         app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpredisadmin
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpredisadmin
           image: {{ .Values.images.phpredisadmin.repository }}:{{ .Values.images.phpredisadmin.tag }}

@@ -19,6 +19,16 @@ spec:
         app: {{ template "<%- _.kebabCase(name) %>.name" . }}-mongo-express
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongo-express
           image: {{ .Values.images.mongoExpress.repository }}:{{ .Values.images.mongoExpress.tag }}

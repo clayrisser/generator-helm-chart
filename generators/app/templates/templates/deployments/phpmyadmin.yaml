@@ -19,6 +19,16 @@ spec:
         app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpmyadmin
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpmyadmin
           image: {{ .Values.images.phpmyadmin.repository }}:{{ .Values.images.phpmyadmin.tag }}

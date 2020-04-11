@@ -24,6 +24,16 @@ spec:
         backup.velero.io/backup-volumes: data
       {{- end }}<% } %>
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: lifecycle
+                    operator: In
+                    values:
+                      - spot
       containers:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
           image: {{ .Values.images.<%- _.camelCase(workload.name) %>.repository }}:{{ .Values.images.<%- _.camelCase(workload.name) %>.tag }}
