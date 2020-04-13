@@ -33,7 +33,7 @@ spec:
                   - key: lifecycle
                     operator: In
                     values:
-                      - spot
+                      - <%- workload.volumes.length ? 'dedicated' : 'spot' %>
       containers:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
           image: {{ .Values.images.<%- _.camelCase(workload.name) %>.repository }}:{{ .Values.images.<%- _.camelCase(workload.name) %>.tag }}
@@ -73,7 +73,7 @@ metadata:
 spec:
   driver: Restic
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
   rules:
     - snapshots:
         - {{ .Values.persistence.stash.restore.snapshot | quote }}

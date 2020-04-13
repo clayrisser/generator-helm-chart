@@ -205,7 +205,7 @@ spec:
   task:
     name: mongodb-restore-{{ index .Values.config.mongodb.versionMap .Values.config.mongodb.version }}
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

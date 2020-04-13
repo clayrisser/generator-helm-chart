@@ -140,7 +140,7 @@ spec:
   task:
     name: postgres-restore-{{ index .Values.config.postgres.versionMap .Values.config.postgres.version }}
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

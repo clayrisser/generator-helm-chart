@@ -1,73 +1,109 @@
 {{- if .Values.persistence.stash.enabled }}
-apiVersion: batch/v1
-kind: Job
+<% if (workload && workload.volumes.length) { %>
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-backup-init
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-backup-init
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '3'
-    helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  strategy:
-    type: {{ .Values.config.updateStrategy }}
-  template:
-    metadata:
-      labels:
-        app: {{ template "<%- _.kebabCase(name) %>.name" . }}-backup-init
-        release: {{ .Release.Name }}
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: kubectl
-          image: codejamninja/stash-cli:0.0.1
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-            - |
-              kubectl stash cp repository {{ .Values.persistence.stash.repository }} --namespace=kube-system --to-namespace={{ .Release.Namespace }}
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/data'
 ---
 apiVersion: stash.appscode.com/v1beta1
-kind: BackupBatch
+kind: BackupConfiguration
 metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-data
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
   paused: {{ .Values.persistence.stash.paused }}
   schedule: {{ .Values.persistence.stash.schedule | quote }}
   retentionPolicy:
     name: retention-policy
     keepLast: {{ .Values.persistence.stash.keepLast }}
     prune: true
-  members:<% for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-    {{- if (and .Values.config.<%- _.kebabCase(database.name) %>.internal (not (and (eq .Values.config.<%- _.kebabCase(database.name) %>.terminationPolicy "Pause") .Values.config.<%- _.kebabCase(database.name) %>.pause))) }}
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: AppBinding
-          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
-      task:
-        name: <%- _.kebabCase(database.name) %>-backup-{{ .Values.config.<%- _.kebabCase(database.name) %>.version }}
-    {{- end }}<% } if (workload && workload.volumes.length) { %>
-    - target:
-        ref:
-          apiVersion: apps/v1
-          kind: Deployment
-          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
-        volumeMounts:
-          - name: data
-            mountPath: /_data
-        paths:
-          - /_data<% } %>
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(name) %>
+    volumeMounts:
+      - name: data
+        mountPath: /_data
+    paths:
+      - /_data<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
+{{- if (and .Values.config.<%- _.kebabCase(database.name) %>.internal (not (and (eq .Values.config.<%- _.kebabCase(database.name) %>.terminationPolicy "Pause") .Values.config.<%- _.kebabCase(database.name) %>.pause))) }}
+---
+apiVersion: stash.appscode.com/v1alpha1
+kind: Repository
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(database.name) %>
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  wipeOut: false
+  backend:
+    storageSecretName: {{ .Values.persistence.stash.secret | quote }}
+    {{ .Values.persistence.stash.type }}:
+      {{- if (or (eq "gcs" .Values.persistence.stash.type) (eq "s3" .Values.persistence.stash.type)) }}
+      bucket: {{ .Values.persistence.stash.bucket | quote }}
+      {{- end }}
+      {{- if (eq "s3" .Values.persistence.stash.type) }}
+      endpoint: {{ .Values.persistence.stash.endpoint | quote }}
+      {{- end }}
+      {{- if (eq "azure" .Values.persistence.stash.type) }}
+      container: {{ .Values.persistence.stash.container | quote }}
+      {{- end }}
+      prefix: '{{ .Values.persistence.stash.prefix }}/{{ .Release.Namespace }}/<%- _.kebabCase(database.name) %>-{{ index .Values.config.<%- _.kebabCase(database.name) %>.versionMap .Values.config.<%- _.kebabCase(database.name) %>.version }}'
+---
+apiVersion: stash.appscode.com/v1beta1
+kind: BackupConfiguration
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(database.name) %>
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  repository:
+    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
+  paused: {{ .Values.persistence.stash.paused }}
+  schedule: {{ .Values.persistence.stash.schedule | quote }}
+  retentionPolicy:
+    name: retention-policy
+    keepLast: {{ .Values.persistence.stash.keepLast }}
+    prune: true
+  target:
+    ref:
+      apiVersion: apps/v1
+      kind: AppBinding
+      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
+  task:
+    name: '<%- _.kebabCase(database.name) %>-backup-{{ index .Values.config.<%- _.kebabCase(database.name) %>.versionMap .Values.config.<%- _.kebabCase(database.name) %>.version }}'
+{{- end }}<% } %>
 {{- end }}
