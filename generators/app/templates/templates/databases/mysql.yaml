@@ -42,12 +42,10 @@ spec:
   {{- else }}
   storageType: Ephemeral
   {{- end }}
-  {{- if (empty .Values.persistence.stash.restore.snapshot) }}
   init:
     scriptSource:
       configMap:
         name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql-init
-  {{- end }}
   podTemplate:
     {{- if .Values.persistence.velero.enabled }}
     metadata:
@@ -55,7 +53,16 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
-      resources:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
 {{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
