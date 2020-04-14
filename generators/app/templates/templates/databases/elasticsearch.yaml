@@ -127,7 +127,18 @@ spec:
     {{- end }}
     {{- if (not .Values.config.elasticsearch.topology.enabled) }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
       resources:
+{{ toYaml .Values.config.elasticsearch.resources | indent 8 }}
       livenessProbe:
         exec:
           command: ['curl',  'localhost:9200']
@@ -136,7 +147,6 @@ spec:
         exec:
           command: ['curl',  'localhost:9200']
 {{ toYaml .Values.probes.readiness | indent 8 }}
-{{ toYaml .Values.config.elasticsearch.resources | indent 8 }}
     {{- end }}
   {{- end }}
   serviceTemplate:
