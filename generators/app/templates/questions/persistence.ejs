@@ -1,5 +1,3 @@
-
-
 # Persistence
   - variable: persistence.enabled
     default: false
@@ -57,6 +55,38 @@
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash paused'
+      - variable: persistence.stash.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash type'
+      - variable: persistence.stash.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
+        label: 'stash container'
+      - variable: persistence.stash.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash bucket'
+      - variable: persistence.stash.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
+        label: 'stash endpoint'
       - variable: persistence.stash.schedule
         default: '0 0 * * *'
         description: ''
@@ -71,10 +101,17 @@
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot
+      - variable: persistence.stash.restore.snapshot.data
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot'
+label: 'stash restore snapshot data'<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.name !== 'redis') { %>
+      - variable: persistence.stash.restore.snapshot.<%- _.camelCase(database.name) %>
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
+        label: 'stash restore snapshot <%- _.camelCase(database.name) %>'<% }} %>

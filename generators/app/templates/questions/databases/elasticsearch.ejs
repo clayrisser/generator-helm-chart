@@ -270,13 +270,23 @@
     label: database
     show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
+  - variable: config.elasticsearch.authPlugin
+    default: None
+    description: ''
+    type: enum
+    options:
+      - None
+      - SearchGuard
+    required: true
+    label: 'auth plugin'
+    group: 'Elasticsearch Config'
   - variable: config.elasticsearch.password
     default: changeme
     description: ''
+    show_if: config.elasticsearch.authPlugin=SearchGuard
     type: password
     required: true
     label: password
-    show_if: config.elasticsearch.internal=false
     group: 'Elasticsearch Config'
   - variable: config.elasticsearch.port
     default: 9200

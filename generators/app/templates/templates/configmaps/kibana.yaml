@@ -1,0 +1,20 @@
+{{- if (and .Values.config.elasticsearch.internal .Values.config.elasticsearch.kibana) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "elasticsearch.fullname" . }}-kibana
+  labels:
+    app: {{ template "elasticsearch.name" . }}-kibana
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  kibana.yml: |
+    elasticsearch.url: "{{ template "elasticsearch.elasticsearch-base-url" . }}"
+    elasticsearch.password: "kibana@secret"
+    elasticsearch.username: "kibanauser"
+    searchguard.auth.type: "basicauth"
+    searchguard.cookie.secure: false
+    server.host: 0.0.0.0
+    xpack.security.enabled: false
+{{- end }}

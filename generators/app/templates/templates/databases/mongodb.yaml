@@ -38,7 +38,17 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
-          resources:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: group
+                        operator: In
+                        values:
+                          - dedicated
+              resources:
 {{ toYaml .Values.config.mongodb.shardTopology.configServer.resources | indent 12 }}
       {{- if .Values.persistence.enabled }}
       storage:
@@ -70,6 +80,16 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: group
+                        operator: In
+                        values:
+                          - dedicated
           resources:
 {{ toYaml .Values.config.mongodb.shardTopology.mongos.resources | indent 12 }}
     shard:
@@ -86,6 +106,16 @@ spec:
             backup.velero.io/backup-volumes: data
         {{- end }}
         spec:
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: group
+                        operator: In
+                        values:
+                          - dedicated
           resources:
 {{ toYaml .Values.config.mongodb.shardTopology.shard.resources | indent 12 }}
       {{- if .Values.persistence.enabled }}
@@ -134,6 +164,16 @@ spec:
         backup.velero.io/backup-volumes: data
     {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: group
+                    operator: In
+                    values:
+                      - dedicated
       resources:
 {{ toYaml .Values.config.mongodb.resources | indent 8 }}
   {{- end }}
@@ -188,7 +228,7 @@ spec:
     replicaSets:
       host-0: rs0/{{ template "<%- _.kebabCase(name) %>.mongodb-server" . }}
     {{- end }}
-{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -213,7 +253,7 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
   rules:
     - snapshots:
-      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.mongodb | quote }}
 {{- end }}
 {{- end }}
 {{- end }}

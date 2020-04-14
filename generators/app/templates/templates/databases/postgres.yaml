@@ -67,6 +67,7 @@ spec:
                     operator: In
                     values:
                       - dedicated
+      resources:
 {{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
@@ -130,7 +131,7 @@ spec:
     - renameKey:
         from: POSTGRES_PASSWORD
         to: password
-{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -155,7 +156,7 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-postgres
   rules:
     - snapshots:
-      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.postgres | quote }}
 {{- end }}
 {{- end }}
 {{- end }}

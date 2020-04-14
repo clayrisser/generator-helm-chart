@@ -19,7 +19,7 @@ spec:
   monitor:
     agent: prometheus.io/builtin
   {{- end }}
-  authPlugin: SearchGuard
+  authPlugin: {{ .Values.config.elasticsearch.authPlugin }}
   enableSSL: false
   {{- if .Values.persistence.enabled }}
   storageType: Durable
@@ -128,6 +128,14 @@ spec:
     {{- if (not .Values.config.elasticsearch.topology.enabled) }}
     spec:
       resources:
+      livenessProbe:
+        exec:
+          command: ['curl',  'localhost:9200']
+{{ toYaml .Values.probes.liveness | indent 8 }}
+      readinessProbe:
+        exec:
+          command: ['curl',  'localhost:9200']
+{{ toYaml .Values.probes.readiness | indent 8 }}
 {{ toYaml .Values.config.elasticsearch.resources | indent 8 }}
     {{- end }}
   {{- end }}
@@ -141,9 +149,9 @@ spec:
       externalTrafficPolicy: {{ .Values.service.elasticsearch.externalTrafficPolicy }}
       {{- end }}
       ports:
-        - name: elasticsearch
+        - name: http
           port: 9200
-          targetPort: elasticsearch
+          targetPort: http
           {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch))) }}
           nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
           {{- end }}
@@ -193,7 +201,7 @@ spec:
   task:
     name: elasticsearch-restore-{{ index .Values.config.elasticsearch.versionMap .Values.config.elasticsearch.version }}
   repository:
-    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
+    name: {{ .Values.persistence.stash.repository | quote }}
   target:
     ref:
       apiVersion: appcatalog.appscode.com/v1alpha1

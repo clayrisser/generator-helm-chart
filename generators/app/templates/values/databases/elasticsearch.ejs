@@ -1,5 +1,6 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
   elasticsearch:
+    authPlugin: None
     commonConfig: ''
     dataConfig: ''
     database: <%- name %>

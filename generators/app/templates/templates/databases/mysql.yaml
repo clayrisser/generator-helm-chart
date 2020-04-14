@@ -63,6 +63,7 @@ spec:
                     operator: In
                     values:
                       - dedicated
+      resources:
 {{ toYaml .Values.config.resources | indent 8 }}
   serviceTemplate:
     metadata:
@@ -104,7 +105,7 @@ spec:
       port: 3306
       scheme: mysql
     url: tcp({{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql:3306)/
-{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -129,7 +130,7 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
   rules:
     - snapshots:
-      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.mysql | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
