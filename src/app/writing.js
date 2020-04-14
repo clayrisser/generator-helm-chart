@@ -58,23 +58,21 @@ export default async function writing(yo) {
     yo.destinationPath(`v${yo.context.version}/templates/pvc.yaml`),
     yo.context
   );
-  if (
-    _.includes(
-      _.map(yo.context.workloads, workload => !!workload.volumes.length),
-      true
-    ) ||
-    yo.context.databases?.length
-  ) {
+  const hasData = _.includes(
+    _.map(yo.context.workloads, workload => !!workload.volumes.length),
+    true
+  );
+  if (hasData || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/backup.yaml'),
       yo.destinationPath(`v${yo.context.version}/templates/backup.yaml`),
-      yo.context
+      { ...yo.context, hasData }
     );
-    yo.fs.copyTpl(
-      yo.templatePath('templates/role.yaml'),
-      yo.destinationPath(`v${yo.context.version}/templates/role.yaml`),
-      yo.context
-    );
+    // yo.fs.copyTpl(
+    //   yo.templatePath('templates/role.yaml'),
+    //   yo.destinationPath(`v${yo.context.version}/templates/role.yaml`),
+    //   yo.context
+    // );
   }
   if (configMaps.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
@@ -192,6 +190,14 @@ export default async function writing(yo) {
         yo.templatePath('templates/configmaps/pgadmin.yaml'),
         yo.destinationPath(
           `v${yo.context.version}/templates/configmaps/pgadmin.yaml`
+        ),
+        yo.context
+      );
+    } else if (database.name === 'elasticsearch') {
+      yo.fs.copyTpl(
+        yo.templatePath('templates/configmaps/kibana.yaml'),
+        yo.destinationPath(
+          `v${yo.context.version}/templates/configmaps/kibana.yaml`
         ),
         yo.context
       );

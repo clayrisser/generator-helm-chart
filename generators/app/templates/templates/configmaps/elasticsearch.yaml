@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "elasticsearch.fullname" . }}-elasticsearch
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   labels:
-    app: {{ template "elasticsearch.name" . }}-elasticsearch
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-elasticsearch
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -13,7 +13,7 @@ data:
     path:
       logs: /data/elasticsearch/common-logdir
     {{- if (eq .Values.config.elasticsearch.authPlugin "SearchGuard") }}
-    searchguard.restapi.roles_enabled: ["sg_all_access","sg_kibana_user"]
+    searchguard.restapi.roles_enabled: ['sg_all_access','sg_kibana_user']
     xpack.security.enabled: false
     {{- end }}
 {{- if .Values.config.elasticsearch.commonConfig }}
@@ -23,7 +23,7 @@ data:
     node:
       name: es-node-data
     path:
-      data: ["/data/elasticsearch/data-datadir"]
+      data: ['/data/elasticsearch/data-datadir']
     http:
       compression: false
 {{- if .Values.config.elasticsearch.dataConfig }}
@@ -33,7 +33,7 @@ data:
     node:
       name: es-node-master
     path:
-      data: ["/data/elasticsearch/master-datadir"]
+      data: ['/data/elasticsearch/master-datadir']
 {{- if .Values.config.elasticsearch.masterConfig }}
 {{ toYaml .Values.config.elasticsearch.masterConfig | indent 4 }}
 {{- end }}

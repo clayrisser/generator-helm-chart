@@ -1,5 +1,4 @@
-{{- if .Values.persistence.stash.enabled }}
-<% if (workload && workload.volumes.length) { %>
+{{- if .Values.persistence.stash.enabled }}<% if (hasData) { %>
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
@@ -52,9 +51,8 @@ spec:
       - name: data
         mountPath: /_data
     paths:
-      - /_data<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-{{- if (and .Values.config.<%- _.kebabCase(database.name) %>.internal (not (and (eq .Values.config.<%- _.kebabCase(database.name) %>.terminationPolicy "Pause") .Values.config.<%- _.kebabCase(database.name) %>.pause))) }}
----
+      - /_data<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.name !== 'redis') { %>
+{{- if (and .Values.config.<%- _.kebabCase(database.name) %>.internal (not (and (eq .Values.config.<%- _.kebabCase(database.name) %>.terminationPolicy "Pause") .Values.config.<%- _.kebabCase(database.name) %>.pause))) }}<% if (hasData || i > 0) { %>---<% } %>
 apiVersion: stash.appscode.com/v1alpha1
 kind: Repository
 metadata:
@@ -105,5 +103,5 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(database.name) %>
   task:
     name: '<%- _.kebabCase(database.name) %>-backup-{{ index .Values.config.<%- _.kebabCase(database.name) %>.versionMap .Values.config.<%- _.kebabCase(database.name) %>.version }}'
-{{- end }}<% } %>
+{{- end }}<% }} %>
 {{- end }}
