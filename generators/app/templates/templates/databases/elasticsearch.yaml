@@ -194,7 +194,7 @@ spec:
     - renameKey:
         from: ADMIN_PASSWORD
         to: password
-{{- if (not (empty .Values.persistence.stash.restore.snapshot)) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.elasticsearch))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -219,7 +219,7 @@ spec:
       name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-elasticsearch
   rules:
     - snapshots:
-      - {{ .Values.persistence.stash.restore.snapshot | quote }}
+      - {{ .Values.persistence.stash.restore.snapshot.elasticsearch | quote }}
 {{- end }}
 {{- end }}
 {{- end }}

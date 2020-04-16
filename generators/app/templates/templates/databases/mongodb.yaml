@@ -228,7 +228,7 @@ spec:
     replicaSets:
       host-0: rs0/{{ template "<%- _.kebabCase(name) %>.mongodb-server" . }}
     {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.mongodb))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession

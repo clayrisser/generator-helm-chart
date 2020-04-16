@@ -59,7 +59,7 @@ spec:
               path: <%- workload.healthcheckPath %><% } %>
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}<% } %><%- include('./volumes'); %><% if (workload.volumes.length) { %>
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
@@ -76,7 +76,7 @@ spec:
     name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
   rules:
     - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
+        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
   target:
     paths:
       /_data

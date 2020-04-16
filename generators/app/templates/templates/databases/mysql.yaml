@@ -105,7 +105,7 @@ spec:
       port: 3306
       scheme: mysql
     url: tcp({{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql:3306)/
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
+{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.mysql))) }}
 ---
 apiVersion: stash.appscode.com/v1beta1
 kind: RestoreSession
