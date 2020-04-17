@@ -4,6 +4,10 @@ export default async function writing(yo) {
   const configMaps = _.filter(yo.context.config, { secret: false });
   const configSecrets = _.filter(yo.context.config, { secret: true });
   const publicWorkloads = _.filter(yo.context.workloads, { public: true });
+  const hasData = _.includes(
+    _.map(yo.context.workloads, workload => !!workload.volumes.length),
+    true
+  );
   yo.fs.copyTpl(
     yo.templatePath('Chart.yaml'),
     yo.destinationPath(`v${yo.context.version}/Chart.yaml`),
@@ -29,7 +33,8 @@ export default async function writing(yo) {
     yo.destinationPath(`v${yo.context.version}/questions.yaml`),
     {
       ...yo.context,
-      publicWorkloads
+      publicWorkloads,
+      hasData
     }
   );
   yo.fs.copyTpl(
@@ -37,7 +42,8 @@ export default async function writing(yo) {
     yo.destinationPath(`v${yo.context.version}/values.yaml`),
     {
       ...yo.context,
-      publicWorkloads
+      publicWorkloads,
+      hasData
     }
   );
   yo.fs.copyTpl(
@@ -57,10 +63,6 @@ export default async function writing(yo) {
     yo.templatePath('templates/pvc.yaml'),
     yo.destinationPath(`v${yo.context.version}/templates/pvc.yaml`),
     yo.context
-  );
-  const hasData = _.includes(
-    _.map(yo.context.workloads, workload => !!workload.volumes.length),
-    true
   );
   if (hasData || yo.context.databases?.length) {
     yo.fs.copyTpl(

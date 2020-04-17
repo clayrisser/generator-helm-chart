@@ -20,6 +20,6 @@ persistence:
     secret: stash-config-stash-config
     type: s3
     restore:
-      snapshot:
-        data: ''<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.name !== 'redis') { %>
+      snapshot:<% if (hasData) { %>
+        data: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.name !== 'redis') { %>
         <%- _.camelCase(database.name) %>: ''<% }} %>

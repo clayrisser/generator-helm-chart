@@ -103,13 +103,13 @@
         required: true
         show_if: persistence.stash.enabled=true
         label: 'stash keep last'
-      - variable: persistence.stash.restore.snapshot.data
+      - variable: persistence.stash.restore.snapshot.data<% if (hasData) { %>
         default: ''
         description: ''
         type: string
         required: false
         show_if: persistence.stash.enabled=true
-        label: 'stash restore snapshot data'<% for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.name !== 'redis') { %>
+        label: 'stash restore snapshot data'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; if (database.name !== 'redis') { %>
       - variable: persistence.stash.restore.snapshot.<%- _.camelCase(database.name) %>
         default: ''
         description: ''
