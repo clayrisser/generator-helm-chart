@@ -67,13 +67,14 @@
       - DoNotTerminate
     required: true
     label: 'termination policy'
+    show_if: config.mysql.internal=true
     group: 'MySQL Config'
   - variable: config.mysql.pause
     default: false
     description: ''
     type: boolean
     required: true
-    show_if: config.mysql.terminationPolicy=Pause
+    show_if: config.mysql.terminationPolicy=Pause&&config.mysql.internal=true
     label: pause
     group: 'MySQL Config'
   - variable: config.mysql.authenticationPlugin
@@ -93,6 +94,7 @@
     type: boolean
     required: true
     label: phpmyadmin
+    show_if: config.mysql.internal=true
     group: 'MySQL Config'
   - variable: config.mysql.prometheus
     default: false
