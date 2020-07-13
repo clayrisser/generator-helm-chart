@@ -26,7 +26,7 @@ spec:
     - host: {{ .Values.ingress.phpredisadmin.hostname }}
       http:
         paths:
-          - path: {{ .Values.ingress.phpredisadmin.path }}
+          - path: /
             backend:
               serviceName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-phpredisadmin
               servicePort: http

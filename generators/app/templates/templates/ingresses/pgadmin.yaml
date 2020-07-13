@@ -26,7 +26,7 @@ spec:
     - host: {{ .Values.ingress.pgadmin.hostname }}
       http:
         paths:
-          - path: {{ .Values.ingress.pgadmin.path }}
+          - path: /
             backend:
               serviceName: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-pgadmin
               servicePort: http

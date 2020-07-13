@@ -19,10 +19,10 @@ spec:
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (and (eq .Values.service.phpmyadmin.type "LoadBalancer") (not (empty .Values.service.phpmyadmin.ports.http))) | ternary .Values.service.phpmyadmin.ports.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.phpmyadmin.type "NodePort") (not (empty .Values.service.phpmyadmin.nodePorts.http))) }}
-      nodePort: {{ .Values.service.phpmyadmin.nodePorts.http }}
+      {{- if (and (eq .Values.service.phpmyadmin.type "NodePort") (not (empty .Values.service.phpmyadmin.ports.http))) }}
+      nodePort: {{ .Values.service.phpmyadmin.ports.http }}
       {{- end }}
   selector:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}-phpmyadmin

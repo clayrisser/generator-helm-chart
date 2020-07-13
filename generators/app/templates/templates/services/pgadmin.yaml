@@ -19,10 +19,10 @@ spec:
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (and (eq .Values.service.pgadmin.type "LoadBalancer") (not (empty .Values.service.pgadmin.ports.http))) | ternary .Values.service.pgadmin.ports.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.pgadmin.type "NodePort") (not (empty .Values.service.pgadmin.nodePorts.http))) }}
-      nodePort: {{ .Values.service.pgadmin.nodePorts.http }}
+      {{- if (and (eq .Values.service.pgadmin.type "NodePort") (not (empty .Values.service.pgadmin.ports.http))) }}
+      nodePort: {{ .Values.service.pgadmin.ports.http }}
       {{- end }}
   selector:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}-pgadmin

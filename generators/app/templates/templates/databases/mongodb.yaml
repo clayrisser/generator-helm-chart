@@ -35,7 +35,7 @@ spec:
         {{- if .Values.persistence.velero.enabled }}
         metadata:
           annotations:
-            backup.velero.io/backup-volumes: data
+            backup.velero.io/backup-volumes: datadir
         {{- end }}
         spec:
           affinity:
@@ -194,10 +194,10 @@ spec:
       {{- end }}
       ports:
         - name: mongodb
-          port: 27017
+          port: {{ (and (eq .Values.service.mongodb.type "LoadBalancer") (not (empty .Values.service.mongodb.ports.http))) | ternary .Values.service.mongodb.ports.http "27017" }}
           targetPort: mongodb
-          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.nodePorts.mongodb))) }}
-          nodePort: {{ .Values.service.mongodb.nodePorts.mongodb }}
+          {{- if (and (eq .Values.service.mongodb.type "NodePort") (not (empty .Values.service.mongodb.ports.mongodb))) }}
+          nodePort: {{ .Values.service.mongodb.ports.mongodb }}
           {{- end }}
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}

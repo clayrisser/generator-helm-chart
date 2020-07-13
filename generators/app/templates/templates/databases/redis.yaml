@@ -54,10 +54,10 @@ spec:
       {{- end }}
       ports:
         - name: redis
-          port: 6380
+          port: {{ (and (eq .Values.service.redis.type "LoadBalancer") (not (empty .Values.service.redis.ports.http))) | ternary .Values.service.redis.ports.http "6380" }}
           targetPort: redis
-          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
-          nodePort: {{ .Values.service.redis.nodePorts.redis }}
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.ports.redis))) }}
+          nodePort: {{ .Values.service.redis.ports.redis }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
@@ -71,8 +71,8 @@ spec:
         - name: redis
           port: 6380
           targetPort: redis
-          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.nodePorts.redis))) }}
-          nodePort: {{ .Values.service.redis.nodePorts.redis }}
+          {{- if (and (eq .Values.service.redis.type "NodePort") (not (empty .Values.service.redis.ports.redis))) }}
+          nodePort: {{ .Values.service.redis.ports.redis }}
           {{- end }}
   updateStrategy:
     type: RollingUpdate

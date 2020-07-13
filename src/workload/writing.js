@@ -5,12 +5,12 @@ export default async function writing(yo) {
   yo.fs.copy(
     path.resolve(yo.context.destination, 'questions.yaml'),
     yo.destinationPath('questions.yaml'),
-    { process: content => processQuestions(content, yo.context) }
+    { process: (content) => processQuestions(content, yo.context) }
   );
   yo.fs.copy(
     path.resolve(yo.context.destination, 'values.yaml'),
     yo.destinationPath('values.yaml'),
-    { process: content => processValues(content, yo.context) }
+    { process: (content) => processValues(content, yo.context) }
   );
   yo.fs.copyTpl(
     yo.templatePath('../../app/templates/templates/deployment.yaml'),
@@ -55,7 +55,7 @@ function processQuestions(content, context) {
     content = modInline.append(
       content,
       [SERVICE_TYPE, SUBQUESTIONS],
-      `\n      - variable: service.nodePorts.${context.workload.name}.http\n        default: ''\n        description: ''\n        type: int\n        min: 30000\n        max: 32767\n        show_if: ingress.enabled=false\n        label: '${context.workload.name} http port'`
+      `\n      - variable: service.ports.${context.workload.name}.http\n        default: ''\n        description: ''\n        type: int\n        min: 30000\n        max: 32767\n        show_if: ingress.enabled=false\n        label: '${context.workload.name} http port'`
     );
   }
   return content;
@@ -78,7 +78,7 @@ function processValues(content, context) {
   if (context.workload.public) {
     const HOSTS = / {2}hosts:((\n {4}[^\n]+)+)?/;
     const INGRESS = /ingress:((\n {2}[^\n]+)+)/;
-    const NODE_PORTS = / {2}nodePorts:((\n {4}[^\n]+)+)?/;
+    const NODE_PORTS = / {2}ports:((\n {4}[^\n]+)+)?/;
     const SERVICE = /service:((\n {2}[^\n]+)+)/;
     content = modInline.append(
       content,

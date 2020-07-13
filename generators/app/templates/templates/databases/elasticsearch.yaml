@@ -123,7 +123,7 @@ spec:
     {{- if .Values.persistence.velero.enabled }}
     metadata:
       annotations:
-        backup.velero.io/backup-volumes: data
+        backup.velero.io/backup-volumes: datadir
     {{- end }}
     {{- if (not .Values.config.elasticsearch.topology.enabled) }}
     spec:
@@ -160,10 +160,10 @@ spec:
       {{- end }}
       ports:
         - name: http
-          port: 9200
+          port: {{ (and (eq .Values.service.elasticsearch.type "LoadBalancer") (not (empty .Values.service.elasticsearch.ports.http))) | ternary .Values.service.elasticsearch.ports.http "9200" }}
           targetPort: http
-          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.nodePorts.elasticsearch))) }}
-          nodePort: {{ .Values.service.elasticsearch.nodePorts.elasticsearch }}
+          {{- if (and (eq .Values.service.elasticsearch.type "NodePort") (not (empty .Values.service.elasticsearch.ports.elasticsearch))) }}
+          nodePort: {{ .Values.service.elasticsearch.ports.elasticsearch }}
           {{- end }}
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}

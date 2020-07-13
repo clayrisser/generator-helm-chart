@@ -18,10 +18,10 @@ spec:
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (and (eq .Values.service.<%- workload.name %>.type "LoadBalancer") (not (empty .Values.service.<%- workload.name %>.ports.http))) | ternary .Values.service.<%- workload.name %>.ports.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.<%- workload.name %>.type "NodePort") (not (empty .Values.service.<%- workload.name %>.nodePorts.http))) }}
-      nodePort: {{ .Values.service.<%- workload.name %>.nodePorts.http }}
+      {{- if (and (eq .Values.service.<%- workload.name %>.type "NodePort") (not (empty .Values.service.<%- workload.name %>.ports.http))) }}
+      nodePort: {{ .Values.service.<%- workload.name %>.ports.http }}
       {{- end }}
   selector:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>

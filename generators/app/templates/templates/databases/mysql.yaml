@@ -50,7 +50,7 @@ spec:
     {{- if .Values.persistence.velero.enabled }}
     metadata:
       annotations:
-        backup.velero.io/backup-volumes: data
+        backup.velero.io/backup-volumes: datadir
     {{- end }}
     spec:
       affinity:
@@ -76,10 +76,10 @@ spec:
       {{- end }}
       ports:
         - name: mysql
-          port: 3306
+          port: {{ (and (eq .Values.service.mysql.type "LoadBalancer") (not (empty .Values.service.mysql.ports.http))) | ternary .Values.service.mysql.ports.http "3306" }}
           targetPort: mysql
-          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.mysql))) }}
-          nodePort: {{ .Values.service.mysql.nodePorts.mysql }}
+          {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.ports.mysql))) }}
+          nodePort: {{ .Values.service.mysql.ports.mysql }}
           {{- end }}
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}

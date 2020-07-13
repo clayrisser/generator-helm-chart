@@ -54,7 +54,7 @@ spec:
     {{- if .Values.persistence.velero.enabled }}
     metadata:
       annotations:
-        backup.velero.io/backup-volumes: data
+        backup.velero.io/backup-volumes: datadir
     {{- end }}
     spec:
       affinity:
@@ -80,10 +80,10 @@ spec:
       {{- end }}
       ports:
         - name: postgres
-          port: 5432
+          port: {{ (and (eq .Values.service.postgres.type "LoadBalancer") (not (empty .Values.service.postgres.ports.http))) | ternary .Values.service.postgres.ports.http "5432" }}
           targetPort: postgres
-          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
-          nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.ports.postgres))) }}
+          nodePort: {{ .Values.service.postgres.ports.postgres }}
           {{- end }}
   replicaServiceTemplate:
     annotations:
@@ -97,8 +97,8 @@ spec:
         - name: postgres
           port: 5432
           targetPort: postgres
-          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.nodePorts.postgres))) }}
-          nodePort: {{ .Values.service.postgres.nodePorts.postgres }}
+          {{- if (and (eq .Values.service.postgres.type "NodePort") (not (empty .Values.service.postgres.ports.postgres))) }}
+          nodePort: {{ .Values.service.postgres.ports.postgres }}
           {{- end }}
   updateStrategy:
     type: {{ (eq .Values.config.updateStrategy "Recreate") | ternary "RollingUpdate" .Values.config.updateStrategy }}
