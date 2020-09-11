@@ -33,7 +33,7 @@ spec:
                   - key: lifecycle
                     operator: In
                     values:
-                      - <%- workload.volumes.length ? 'dedicated' : 'spot' %>
+                      - <%- workload.volumes.length ? '{{ .Values.persistence.enabled | ternary "stateful" "stateless" }}' : 'stateless' %>
       containers:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
           image: {{ .Values.images.<%- _.camelCase(workload.name) %>.repository }}:{{ .Values.images.<%- _.camelCase(workload.name) %>.tag }}
