@@ -38,6 +38,13 @@ spec:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
           image: {{ .Values.images.<%- _.camelCase(workload.name) %>.repository }}:{{ .Values.images.<%- _.camelCase(workload.name) %>.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: {{ .Values.config.<%- _.snakeCase(name) %>.resources.requests.cpu }}
+              memory: {{ .Values.config.<%- _.snakeCase(name) %>.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.config.<%- _.snakeCase(name) %>.resources.limits.cpu }}
+              memory: {{ .Values.config.<%- _.snakeCase(name) %>.resources.limits.memory }}
           ports:
             - name: container
               containerPort: <%- workload.port %><% if (workload.volumes.length) { %>
