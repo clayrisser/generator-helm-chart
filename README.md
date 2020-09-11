@@ -6,12 +6,10 @@
 
 Please ★ this repo if you found it useful ★ ★ ★
 
-
 ## Features
 
-* Supports helm
-* Supports rancher 2
-
+- Supports helm
+- Supports rancher 2
 
 ## Installation
 
@@ -19,12 +17,10 @@ Please ★ this repo if you found it useful ★ ★ ★
 npm install -g generator-helm-chart
 ```
 
-
 ## Dependencies
 
-* [NodeJS](https://nodejs.org)
-* [Yeoman](http://yeoman.io)
-
+- [NodeJS](https://nodejs.org)
+- [Yeoman](http://yeoman.io)
 
 ## Usage
 
@@ -98,21 +94,17 @@ yo helm-chart:workload
 yo helm-chart:config
 ```
 
-
 ## Support
 
 Submit an [issue](https://github.com/codejamninja/generator-helm-chart/issues/new)
-
 
 ## Screenshots
 
 [Contribute](https://github.com/codejamninja/generator-helm-chart/blob/master/CONTRIBUTING.md) a screenshot
 
-
 ## Contributing
 
 Review the [guidelines for contributing](https://github.com/codejamninja/generator-helm-chart/blob/master/CONTRIBUTING.md)
-
 
 ## License
 
@@ -120,16 +112,13 @@ Review the [guidelines for contributing](https://github.com/codejamninja/generat
 
 [Jam Risser](https://codejam.ninja) © 2018
 
-
 ## Changelog
 
 Review the [changelog](https://github.com/codejamninja/generator-helm-chart/blob/master/CHANGELOG.md)
 
-
 ## Credits
 
-* [Jam Risser](https://codejam.ninja) - Author
-
+- [Jam Risser](https://codejam.ninja) - Author
 
 ## Support on Liberapay
 

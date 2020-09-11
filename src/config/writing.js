@@ -11,7 +11,7 @@ export default async function writing(yo) {
     );
     if (fs.existsSync(secretPath)) {
       yo.fs.copy(secretPath, yo.destinationPath('templates/secret.yaml'), {
-        process: content => processSecret(content, yo.context)
+        process: (content) => processSecret(content, yo.context)
       });
     } else {
       yo.fs.copyTpl(
@@ -34,7 +34,7 @@ export default async function writing(yo) {
         configMapPath,
         yo.destinationPath('templates/configmap.yaml'),
         {
-          process: content => processConfigMap(content, yo.context)
+          process: (content) => processConfigMap(content, yo.context)
         }
       );
     } else {
@@ -52,12 +52,12 @@ export default async function writing(yo) {
   yo.fs.copy(
     path.resolve(yo.context.destination, 'values.yaml'),
     yo.destinationPath('values.yaml'),
-    { process: content => processValues(content, yo.context) }
+    { process: (content) => processValues(content, yo.context) }
   );
   yo.fs.copy(
     path.resolve(yo.context.destination, 'questions.yaml'),
     yo.destinationPath('questions.yaml'),
-    { process: content => processQuestions(content, yo.context) }
+    { process: (content) => processQuestions(content, yo.context) }
   );
 }
 

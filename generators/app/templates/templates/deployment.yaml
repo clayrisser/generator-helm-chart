@@ -66,32 +66,3 @@ spec:
               path: <%- workload.healthcheckPath %><% } %>
               port: container
 {{ toYaml .Values.probes.readiness | indent 12 }}<% } %><%- include('./volumes'); %><% if (workload.volumes.length) { %>
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot.data))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
-  labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-data
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot.data | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}<% } %>

@@ -5,7 +5,7 @@ export default async function writing(yo) {
   const configSecrets = _.filter(yo.context.config, { secret: true });
   const publicWorkloads = _.filter(yo.context.workloads, { public: true });
   const hasData = _.includes(
-    _.map(yo.context.workloads, workload => !!workload.volumes.length),
+    _.map(yo.context.workloads, (workload) => !!workload.volumes.length),
     true
   );
   yo.fs.copyTpl(
@@ -96,7 +96,7 @@ export default async function writing(yo) {
       }
     );
   }
-  yo.context.workloads.forEach(workload => {
+  yo.context.workloads.forEach((workload) => {
     const context = {
       ...yo.context,
       workload
@@ -133,7 +133,7 @@ export default async function writing(yo) {
       );
     }
   });
-  yo.context.databases.forEach(database => {
+  yo.context.databases.forEach((database) => {
     const context = {
       ...database,
       ...yo.context
