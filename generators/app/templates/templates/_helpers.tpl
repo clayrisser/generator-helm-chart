@@ -62,9 +62,8 @@ Calculate <%- spaceCase(workload.name) %> base url
 {{- else }}
 {{- if .Values.ingress.<%- _.camelCase(workload.name) %>.enabled }}
 {{- $hostname := ((empty (include "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" .)) | ternary .Values.ingress.<%- _.camelCase(workload.name) %>.hostname (include "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" .)) }}
-{{- $path := (eq .Values.ingress.<%- _.camelCase(workload.name) %>.path "/" | ternary "" .Values.ingress.<%- _.camelCase(workload.name) %>.path) }}
 {{- $protocol := (.Values.ingress.<%- _.camelCase(workload.name) %>.tls | ternary "https" "http") }}
-{{- printf "%s://%s%s" $protocol $hostname $path }}
+{{- printf "%s://%s" $protocol $hostname }}
 {{- else }}
 {{- printf "http://%s" (include "<%- _.kebabCase(name) %>.<%- _.kebabCase(workload.name) %>-hostname" .) }}
 {{- end }}<% } %>
