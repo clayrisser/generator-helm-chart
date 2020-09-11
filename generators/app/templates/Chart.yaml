@@ -1,8 +1,9 @@
-apiVersion: v2
+apiVersion: v1
 name: <%- name %>
 home: <%- homepage %>
 icon: <%- icon %>
 version: <%- version %>
+type: application
 appVersion: latest
 description: '<%- description %>'
 keywords:<% for (var i = 0; i < keywords.length; i++) { %>
