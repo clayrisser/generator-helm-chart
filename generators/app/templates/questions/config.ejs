@@ -66,7 +66,7 @@
         description: ''
         type: string
         required: true
-        label: '<%- _.snakeCase(workload.name).replace(/-/g, ' ') %> resources limits memory'<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
+        label: '<%- _.snakeCase(workload.name).replace(/-/g, ' ') %> resources limits memory'<% } for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
   - variable: config.<%- _.camelCase(configItem.key) %>
     default: <%- quote(configItem.defaultValue) %>
     description: ''

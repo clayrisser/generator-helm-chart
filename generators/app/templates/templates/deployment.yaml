@@ -40,11 +40,11 @@ spec:
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           resources:
             requests:
-              cpu: {{ .Values.config.<%- _.snakeCase(name) %>.resources.requests.cpu }}
-              memory: {{ .Values.config.<%- _.snakeCase(name) %>.resources.requests.memory }}
+              cpu: {{ .Values.config.<%- _.camelCase(workload.name) %>.resources.requests.cpu }}
+              memory: {{ .Values.config.<%- _.camelCase(workload.name) %>.resources.requests.memory }}
             limits:
-              cpu: {{ .Values.config.<%- _.snakeCase(name) %>.resources.limits.cpu }}
-              memory: {{ .Values.config.<%- _.snakeCase(name) %>.resources.limits.memory }}
+              cpu: {{ .Values.config.<%- _.camelCase(workload.name) %>.resources.limits.cpu }}
+              memory: {{ .Values.config.<%- _.camelCase(workload.name) %>.resources.limits.memory }}
           ports:
             - name: container
               containerPort: <%- workload.port %><% if (workload.volumes.length) { %>
@@ -65,4 +65,4 @@ spec:
             <%- workload.healthcheck %>:<% if (workload.healthcheckPath) { %>
               path: <%- workload.healthcheckPath %><% } %>
               port: container
-{{ toYaml .Values.probes.readiness | indent 12 }}<% } %><%- include('./volumes'); %><% if (workload.volumes.length) { %>
+{{ toYaml .Values.probes.readiness | indent 12 }}<% } %><%- include('./volumes'); %>
