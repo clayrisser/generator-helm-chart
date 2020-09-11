@@ -14,22 +14,23 @@
     label: 'cluster provider'
     group: Config
   - variable: config.imagePullPolicy
-    default: IfNotPresent
+    default: Always
     description: ''
     type: enum
     options:
-      - IfNotPresent
       - Always
+      - IfNotPresent
     required: true
     label: 'pull policy'
     group: Config
   - variable: config.updateStrategy
-    default: RollingUpdate
+    default: Recreate
     description: ''
     type: enum
     options:
-      - RollingUpdate
       - Recreate
+      - RollingUpdate
+      - OnDelete
     required: true
     label: 'update strategy'
     group: Config<% for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
