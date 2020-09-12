@@ -27,13 +27,24 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
+            - weight: <%- workload.volumes.length ? '{{ .Values.persistence.enabled | ternary "110" "90" }}' : '90' %>
               preference:
                 matchExpressions:
-                  - key: lifecycle
+                  - key: application/state
                     operator: In
                     values:
                       - <%- workload.volumes.length ? '{{ .Values.persistence.enabled | ternary "stateful" "stateless" }}' : 'stateless' %>
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
       containers:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
           image: {{ .Values.images.<%- _.camelCase(workload.name) %>.repository }}:{{ .Values.images.<%- _.camelCase(workload.name) %>.tag }}
