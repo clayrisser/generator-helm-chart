@@ -1,0 +1,17 @@
+{{- if .Values.persistence.velero.enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}<% if (workload.volumes.length) { %>
+spec:
+  schedule: {{ .Values.persistence.velero.schedule }}
+  template:
+    includedNamespaces:
+    - {{ .Release.Namespace }}
+      ttl: 0h30m00s
+{{- end }}

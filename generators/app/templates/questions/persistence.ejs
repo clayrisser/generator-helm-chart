@@ -44,3 +44,11 @@
         type: boolean
         required: true
         label: 'velero enabled'
+      - variable: persistence.velero.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        required: true
+        label: 'velero schedule'
+        show_if: persistence.velero.enabled=true
+        group: Persistence
