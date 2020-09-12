@@ -7,7 +7,7 @@ metadata:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}<% if (workload.volumes.length) { %>
+    heritage: {{ .Release.Service }}
 spec:
   schedule: {{ .Values.persistence.velero.schedule }}
   template:

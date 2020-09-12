@@ -64,6 +64,13 @@ export default async function writing(yo) {
     yo.destinationPath(`v${yo.context.version}/templates/pvc.yaml`),
     yo.context
   );
+  if (hasData || yo.context.databases?.length) {
+    yo.fs.copyTpl(
+      yo.templatePath('templates/backup.yaml'),
+      yo.destinationPath(`v${yo.context.version}/templates/backup.yaml`),
+      { ...yo.context, hasData }
+    );
+  }
   if (configMaps.length || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/configmap.yaml'),
