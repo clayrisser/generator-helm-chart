@@ -1,4 +1,4 @@
-{{- if .Values.persistence.velero.enabled }}
+{{- if (not (empty .Values.persistence.velero.schedule)) }}
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
@@ -9,9 +9,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  schedule: {{ .Values.persistence.velero.schedule }}
+  schedule: {{ .Values.persistence.velero.schedule | quote }}
   template:
     includedNamespaces:
-    - {{ .Release.Namespace }}
-      ttl: 0h30m00s
+      - {{ .Release.Namespace }}
+    ttl: 0h30m00s
 {{- end }}

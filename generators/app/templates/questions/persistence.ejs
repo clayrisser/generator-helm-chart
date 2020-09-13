@@ -38,17 +38,16 @@
         type: string
         required: false
         label: 'existing claim'
-      - variable: persistence.velero.enabled
-        default: false
+      - variable: persistence.velero.schedule
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
         description: ''
         type: boolean
         required: true
-        label: 'velero enabled'
-      - variable: persistence.velero.schedule
-        default: '@midnight'
-        description: ''
-        type: string
-        required: true
-        label: 'velero schedule'
-        show_if: persistence.velero.enabled=true
-        group: Persistence
+        label: 'velero restic'
