@@ -1,53 +1,6 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
 
 # Redis Config
-  - variable: config.redis.internal
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: internal
-    group: 'Redis Config'
-  - variable: config.redis.version
-    default: 5.0.3-v1
-    description: ''
-    type: string
-    required: true
-    label: version
-    show_if: config.redis.internal=true
-    group: 'Redis Config'
-  - variable: config.redis.prometheus
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: prometheus
-    show_if: config.redis.internal=true
-    group: 'Redis Config'
-  - variable: config.redis.replicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: replicas
-    show_if: config.redis.internal=true
-    group: 'Redis Config'
-  - variable: config.redis.shards
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: shards
-    show_if: config.redis.internal=true
-    group: 'Redis Config'
-  - variable: config.redis.customConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'custom config'
-    show_if: config.redis.internal=true
-    group: 'Redis Config'
   - variable: config.redis.host
     default: ''
     description: ''
@@ -69,7 +22,7 @@
     description: ''
     type: int
     min: 0
-    max: 50000
+    max: 65535
     required: true
     label: port
     show_if: config.redis.internal=false
@@ -89,32 +42,4 @@
     required: false
     label: username
     show_if: config.redis.internal=false
-    group: 'Redis Config'
-
-# PHPRedisAdmin
-  - variable: config.phpredisadmin.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: phpredisadmin
-    show_if: config.redis.internal=true
-    show_subquestion_if: true
-    group: PHPRedisAdmin
-    subquestions:
-      - variable: config.phpredisadmin.username
-        default: admin
-        description: ''
-        type: string
-        required: true
-        show_if: config.redis.internal=true
-        label: 'phpredisadmin username'
-        group: PHPRedisAdmin
-      - variable: config.phpredisadmin.password
-        default: pass
-        description: ''
-        type: password
-        required: true
-        show_if: config.redis.internal=true
-        label: 'phpredisadmin password'
-        group: PHPRedisAdmin<% } %>
+    group: 'Redis Config'<% } %>

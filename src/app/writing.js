@@ -5,7 +5,7 @@ export default async function writing(yo) {
   const configSecrets = _.filter(yo.context.config, { secret: true });
   const publicWorkloads = _.filter(yo.context.workloads, { public: true });
   const hasData = _.includes(
-    _.map(yo.context.workloads, workload => !!workload.volumes.length),
+    _.map(yo.context.workloads, (workload) => !!workload.volumes.length),
     true
   );
   yo.fs.copyTpl(
@@ -59,11 +59,6 @@ export default async function writing(yo) {
       publicWorkloads
     }
   );
-  yo.fs.copyTpl(
-    yo.templatePath('templates/pvc.yaml'),
-    yo.destinationPath(`v${yo.context.version}/templates/pvc.yaml`),
-    yo.context
-  );
   if (hasData || yo.context.databases?.length) {
     yo.fs.copyTpl(
       yo.templatePath('templates/backup.yaml'),
@@ -91,7 +86,7 @@ export default async function writing(yo) {
       }
     );
   }
-  yo.context.workloads.forEach(workload => {
+  yo.context.workloads.forEach((workload) => {
     const context = {
       ...yo.context,
       workload
@@ -100,6 +95,13 @@ export default async function writing(yo) {
       yo.templatePath('templates/deployment.yaml'),
       yo.destinationPath(
         `v${yo.context.version}/templates/deployments/${workload.name}.yaml`
+      ),
+      context
+    );
+    yo.fs.copyTpl(
+      yo.templatePath('templates/pvc.yaml'),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/pvcs/${workload.name}.yaml`
       ),
       context
     );
@@ -125,78 +127,6 @@ export default async function writing(yo) {
           `v${yo.context.version}/templates/services/${workload.name}.yaml`
         ),
         context
-      );
-    }
-  });
-  yo.context.databases.forEach(database => {
-    const context = {
-      ...database,
-      ...yo.context
-    };
-    yo.fs.copyTpl(
-      yo.templatePath(`templates/databases/${database.name}.yaml`),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/databases/${database.name}.yaml`
-      ),
-      context
-    );
-    yo.fs.copyTpl(
-      yo.templatePath(`templates/deployments/${database.explorer.name}.yaml`),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/deployments/${database.explorer.name}.yaml`
-      ),
-      context
-    );
-    yo.fs.copyTpl(
-      yo.templatePath(`templates/configmaps/${database.name}.yaml`),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/configmaps/${database.name}.yaml`
-      ),
-      context
-    );
-    yo.fs.copyTpl(
-      yo.templatePath(`templates/ingresses/${database.explorer.name}.yaml`),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/ingresses/${database.explorer.name}.yaml`
-      ),
-      context
-    );
-    yo.fs.copyTpl(
-      yo.templatePath(`templates/services/${database.explorer.name}.yaml`),
-      yo.destinationPath(
-        `v${yo.context.version}/templates/services/${database.explorer.name}.yaml`
-      ),
-      context
-    );
-    if (
-      database.name === 'mysql' ||
-      database.name === 'mongodb' ||
-      database.name === 'postgres' ||
-      database.name === 'elasticsearch'
-    ) {
-      yo.fs.copyTpl(
-        yo.templatePath(`templates/secrets/${database.name}.yaml`),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/secrets/${database.name}.yaml`
-        ),
-        yo.context
-      );
-    }
-    if (database.name === 'postgres') {
-      yo.fs.copyTpl(
-        yo.templatePath('templates/configmaps/pgadmin.yaml'),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/configmaps/pgadmin.yaml`
-        ),
-        yo.context
-      );
-    } else if (database.name === 'elasticsearch') {
-      yo.fs.copyTpl(
-        yo.templatePath('templates/configmaps/kibana.yaml'),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/configmaps/kibana.yaml`
-        ),
-        yo.context
       );
     }
   });

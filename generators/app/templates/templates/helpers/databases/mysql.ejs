@@ -5,14 +5,10 @@ Calculate mysql url
 */}}
 {{- define "<%- _.kebabCase(name) %>.mysql-url" }}
 {{- $mysql := .Values.config.mysql }}
-{{- if $mysql.internal }}
-{{- $credentials := (printf "%s:%s" $mysql.username $mysql.password) }}
-{{- printf "jdbc:mysql://%s@%s-mysql:3306/%s" $credentials (include "<%- _.kebabCase(name) %>.fullname" .) $mysql.database }}
-{{- else }}
 {{- if $mysql.url }}
 {{- printf $mysql.url }}
 {{- else }}
-{{- printf "jdbc:mysql://%s@%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
-{{- end }}
+{{- $credentials := ((or (empty $mysql.username) (empty $mysql.password)) | ternary "" (printf "%s:%s@" $mysql.username $mysql.password)) }}
+{{- printf "jdbc:mysql://%s%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
 {{- end }}<% } %>

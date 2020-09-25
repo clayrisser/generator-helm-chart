@@ -1,14 +1,7 @@
 <% if (_.find(databases, { name: 'mongodb'})) { %>
   {{- $mongodb := .Values.config.mongodb }}
-  {{- if $mongodb.internal }}
-  mongodb_host: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mongodb
-  {{- else }}
   mongodb_host: {{ $mongodb.host | quote }}
-  {{- end }}
   mongodb_database: {{ $mongodb.database | quote }}
   mongodb_port: {{ $mongodb.port | quote }}
   mongodb_username: {{ $mongodb.username | quote }}
-  {{- if .Values.config.mongoExpress.enabled }}
-  mongo_express_username: {{ .Values.config.mongoExpress.username | quote }}
-  mongodb_server: {{ template "<%- _.kebabCase(name) %>.mongodb-server" . }}
-  {{- end }}<% } %>
+  mongodb_url: {{ include "<%- _.kebabCase(name) %>.mongodb-url" . }}<% } %>

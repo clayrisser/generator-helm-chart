@@ -1,78 +1,8 @@
 <% if (_.find(databases, { name: 'mongodb'})) { %>
   mongodb:
-    customConfig: ''
     database: <%- name %>
     host: ''
-    internal: true
     password: P@ssw0rd
-    pause: true
     port: 27017
-    prometheus: false
-    terminationPolicy: Delete
     url: ''
-    username: ''
-    version: 4.1.13
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
-    versionMap:
-      3.4-v3: 3.4
-      3.4.14: 3.4.17
-      3.4-v4: 3.4.22
-      3.4.22: 3.4.22
-      3.6-v3: 3.6
-      3.6.8: 3.6.8
-      3.6-v4: 3.6.13
-      3.6.13: 3.6.13
-      4.0-v1: 4.0.5
-      4.0.5-v1: 4.0.5
-      4.0.3: 4.0.3
-      4.0.5-v2: 4.0.5
-      4.0-v2: 4.0.11
-      4.0.11: 4.0.11
-      4.1.7-v1: 4.1.7
-      4.1.4: 4.1.4
-      4.1.7-v2: 4.1.7-v2
-      4.1.13: 4.1.13
-      4.1: 4.1.13
-    replicaSet:
-      enabled: false
-      replicas: 3
-    shardTopology:
-      enabled: false
-      configServer:
-        replicas: 3
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 500m
-            memory: 128Mi
-      mongos:
-        replicas: 2
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 500m
-            memory: 128Mi
-      shard:
-        shards: 3
-        replicas: 2
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 500m
-            memory: 128Mi
-  mongoExpress:
-    enabled: false
-    password: pass
-    username: admin<% } %>
+    username: ''<% } %>

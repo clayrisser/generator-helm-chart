@@ -1,12 +1,6 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
   {{- $redis := .Values.config.redis }}
-  {{- if $redis.internal }}
-  redis_host: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-redis
-  {{- else }}
   redis_host: {{ $redis.host | quote }}
-  {{- end }}
   redis_port: {{ $redis.port | quote }}
   redis_username: {{ $redis.username | quote }}
-  {{- if .Values.config.phpredisadmin.enabled }}
-  phpredisadmin_username: {{ .Values.config.phpredisadmin.username | quote }}
-  {{- end }}<% } %>
+  redis_url: {{ include "<%- _.kebabCase(name) %>.redis-url" . }}<% } %>

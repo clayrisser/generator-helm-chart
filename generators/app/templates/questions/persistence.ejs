@@ -10,12 +10,6 @@
     show_subquestion_if: true
     group: Persistence
     subquestions:
-      - variable: persistence.size
-        default: 1Gi
-        description: ''
-        type: string
-        required: true
-        label: size
       - variable: persistence.storageClass
         default: ''
         description: ''
@@ -31,23 +25,37 @@
           - ReadWriteMany
           - ReadOnlyMany
         required: false
-        label: 'access mode'
-      - variable: persistence.existingClaim
+        label: 'access mode'<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+      - variable: persistence.existingClaim.<%- _.camelCase(workload.name) %>
         default: ''
         description: ''
         type: string
         required: false
-        label: 'existing claim'
-      - variable: persistence.velero.schedule
-        default: ''
+        label: '<%- _.camelCase(workload.name) %> existing claim'
+      - variable: persistence.size
+        default: 1Gi
         description: ''
         type: string
-        required: false
-        label: 'velero schedule'
-        group: Persistence
-      - variable: persistence.velero.restic
-        default: true
-        description: ''
-        type: boolean
         required: true
-        label: 'velero restic'
+        label: '<%- _.camelCase(workload.name) %> size'<% } %>
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: string
+        required: true
+        label: 'velero enabled'
+        group: Persistence
+        show_subquestion_if: true
+        subquestions:
+          - variable: persistence.velero.schedule
+            default: '@midnight'
+            description: ''
+            type: string
+            required: false
+            label: 'velero schedule'
+          - variable: persistence.velero.restic
+            default: true
+            description: ''
+            type: boolean
+            required: true
+            label: 'velero restic'

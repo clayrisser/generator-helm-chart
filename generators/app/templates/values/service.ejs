@@ -4,15 +4,7 @@ service:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i];
   <%- _.camelCase(workload.name) %>:
     type: NodePort
     externalTrafficPolicy: Cluster
-    ports:
-      http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- _.camelCase(database.explorer.name) %>:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    ports:
-      http: ''<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- _.camelCase(database.name) %>:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    ports:
-      <%- _.camelCase(database.name) %>: ''<% } %>
+    nodePorts:
+      http:
+    lbPorts:
+      http: 80<% } %>

@@ -7,11 +7,4 @@ ingress:<% for (var i = 0; i < publicWorkloads.length; i++) { workload = publicW
     hostname: ''
     tls: false
     issuer:
-      name: letsencrypt-staging<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  <%- _.camelCase(database.explorer.name) %>:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    tls: false
-    issuer:
       name: letsencrypt-staging<% } %>

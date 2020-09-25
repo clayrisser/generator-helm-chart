@@ -3,9 +3,12 @@
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
-  size: 1Gi
   storageClass: ''
+  existingClaim:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+    <%- _.camelCase(workload.name) %>: ''<% } %>
+  size:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+    <%- _.camelCase(workload.name) %>: 1Gi<% } %>
   velero:
-    enabled: true
-    schedule: ''
+    enabled: false
+    restic: true
+    schedule: '@midnight'

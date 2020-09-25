@@ -5,15 +5,10 @@ Calculate redis url
 */}}
 {{- define "<%- _.kebabCase(name) %>.redis-url" }}
 {{- $redis := .Values.config.redis }}
-{{- if $redis.internal }}
-{{- $credentials := (printf "%s:%s" $redis.username $redis.password) }}
-{{- printf "redis://%s-redis:6379" (include "<%- _.kebabCase(name) %>.fullname" .) }}
-{{- else }}
 {{- if $redis.url }}
 {{- printf $redis.url }}
 {{- else }}
-{{- $credentials := (empty $redis.username | ternary "" (printf "%s:%s" $redis.username $redis.password)) }}
-{{- printf "redis://%s@%s:%s" $credentials $redis.host $redis.port }}
-{{- end }}
+{{- $credentials := ((or (empty $redis.username) (empty $redis.password)) | ternary "" (printf "%s:%s@" $redis.username $redis.password)) }}
+{{- printf "redis://%s%s:%s" $credentials $redis.host $redis.port }}
 {{- end }}
 {{- end }}<% } %>

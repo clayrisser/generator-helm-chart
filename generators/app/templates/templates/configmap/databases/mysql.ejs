@@ -1,10 +1,7 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   {{- $mysql := .Values.config.mysql }}
-  {{- if $mysql.internal }}
-  mysql_host: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-mysql
-  {{- else }}
   mysql_host: {{ $mysql.host | quote }}
-  {{- end }}
   mysql_database: {{ $mysql.database | quote }}
   mysql_port: {{ $mysql.port | quote }}
-  mysql_username: {{ $mysql.username | quote }}<% } %>
+  mysql_username: {{ $mysql.username | quote }}
+  mysql_url: {{ include "<%- _.kebabCase(name) %>.mysql-url" . }}<% } %>

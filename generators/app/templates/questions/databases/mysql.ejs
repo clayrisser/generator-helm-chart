@@ -1,132 +1,12 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
 
 # MySQL Config
-  - variable: config.mysql.internal
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: internal
-    group: 'MySQL Config'
-  - variable: config.mysql.version
-    default: 8.0.14
-    description: ''
-    type: enum
-    options:
-      - 5.7-v1
-      - 5.7-v2
-      - 5.7.25
-      - 8.0-v1
-      - 8.0-v2
-      - 8.0.3
-      - 8.0.14
-    required: true
-    label: version
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.resources.requests.cpu
-    default: 100m
-    description: ''
-    type: string
-    required: true
-    label: 'resources requests cpu'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.resources.requests.memory
-    default: 128Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources requests memory'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.resources.limits.cpu
-    default: 500m
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits cpu'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.resources.limits.memory
-    default: 256Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits memory'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.terminationPolicy
-    default: Delete
-    description: ''
-    type: enum
-    options:
-      - Delete
-      - Pause
-      - WipeOut
-      - DoNotTerminate
-    required: true
-    label: 'termination policy'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.pause
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    show_if: config.mysql.terminationPolicy=Pause&&config.mysql.internal=true
-    label: pause
-    group: 'MySQL Config'
-  - variable: config.mysql.authenticationPlugin
-    default: mysql_native_password
-    description: ''
-    type: enum
-    options:
-      - mysql_native_password
-      - caching_sha2_password
-    required: true
-    label: 'authentication plugin'
-    show_if: config.mysql.version=8.0-v1||config.mysql.version=8.0-v2||config.mysql.version=8.0.3||config.mysql.version=8.0.14
-    group: 'MySQL Config'
-  - variable: config.phpmyadmin.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: phpmyadmin
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.prometheus
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: prometheus
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.replicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: replicas
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
-  - variable: config.mysql.customConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'custom config'
-    show_if: config.mysql.internal=true
-    group: 'MySQL Config'
   - variable: config.mysql.host
     default: ''
     description: ''
     type: string
     required: false
     label: host
-    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.database
     default: <%- _.snakeCase(name) %>
@@ -134,7 +14,6 @@
     type: string
     required: true
     label: database
-    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.password
     default: P@ssw0rd
@@ -142,17 +21,15 @@
     type: password
     required: true
     label: password
-    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.port
     default: 3306
     description: ''
     type: int
     min: 0
-    max: 50000
+    max: 65535
     required: true
     label: port
-    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.url
     default: ''
@@ -160,7 +37,6 @@
     type: string
     required: false
     label: url
-    show_if: config.mysql.internal=false
     group: 'MySQL Config'
   - variable: config.mysql.username
     default: root
@@ -168,5 +44,4 @@
     type: string
     required: true
     label: username
-    show_if: config.mysql.internal=false
     group: 'MySQL Config'<% } %>

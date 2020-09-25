@@ -1,4 +1,5 @@
 import YoBasePrompts from 'yo-base-prompts';
+import _ from 'lodash';
 import { Prompt } from '../shared';
 
 export default async function prompting(yo) {
@@ -38,7 +39,45 @@ export default async function prompting(yo) {
     }
   ]);
   const workloads = await prompt.getWorkloads();
-  const databases = [];
+  const databases = _.map(
+    (
+      await yo.optionOrPrompt([
+        {
+          type: 'checkbox',
+          name: 'databases',
+          message: 'Databases:',
+          default: [],
+          choices: [
+            { name: 'Elasticsearch', value: 'elasticsearch' },
+            { name: 'MongoDB', value: 'mongodb' },
+            { name: 'MySQL', value: 'mysql' },
+            { name: 'Postgres', value: 'postgres' },
+            { name: 'Redis', value: 'redis' }
+          ]
+        }
+      ])
+    ).databases,
+    (database) => {
+      return {
+        elasticsearch: {
+          name: 'elasticsearch'
+        },
+        mongodb: {
+          name: 'mongodb'
+        },
+        mysql: {
+          name: 'mysql'
+        },
+        postgres: {
+          name: 'postgres'
+        },
+        redis: {
+          name: 'redis'
+        }
+      }[database];
+    }
+  );
+
   const config = await prompt.getConfig();
   yo.answers = {
     authorEmail,

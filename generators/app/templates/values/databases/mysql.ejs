@@ -1,33 +1,8 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   mysql:
-    authenticationPlugin: mysql_native_password
-    customConfig: ''
     database: <%- name %>
     host: ''
-    internal: true
     password: P@ssw0rd
-    pause: true
     port: 3306
-    prometheus: false
-    replicas: 1
-    terminationPolicy: Delete
     url: ''
-    username: root
-    version: 8.0.14
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
-    versionMap:
-      5.7-v1: 5.7.25
-      5.7-v2: 5.7.25
-      5.7.25: 5.7.25
-      8.0-v1: 8.0.3
-      8.0-v2: 8.0.14
-      8.0.14: 8.0.14
-      8.0.3: 8.0.3
-  phpmyadmin:
-    enabled: false<% } %>
+    username: root<% } %>

@@ -51,102 +51,23 @@
     required: true
     label: '<%- spaceCase(workload.name) %> service type'
     group: 'Services and Load Balancing'
-  - variable: service.<%- _.camelCase(workload.name) %>.ports.http
-    default: ''
+  - variable: service.<%- _.camelCase(workload.name) %>.nodePorts.http
+    default:
     description: ''
     type: int
+    required: false
     min: 30000
     max: 32767
-    show_if: service.<%- _.camelCase(workload.name) %>.type!=ClusterIP&&ingress.<%- _.camelCase(workload.name) %>.enabled=false
-    label: '<%- spaceCase(workload.name) %> http port'
-    group: 'Services and Load Balancing'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  - variable: ingress.<%- _.camelCase(database.explorer.name) %>.enabled
-    default: true
-    description: ''
-    type: boolean
-    show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
-    label: '<%- spaceCase(database.explorer.name) %> ingress enabled'
-    show_subquestion_if: true
+    show_if: service.<%- _.camelCase(workload.name) %>.type=NodePort&&ingress.<%- _.camelCase(workload.name) %>.enabled=false
+    label: '<%- _.camelCase(workload.name) %> http node port'
     group: 'Services and Load Balancing'
-    subquestions:
-      - variable: ingress.<%- _.camelCase(database.explorer.name) %>.tls
-        default: false
-        description: ''
-        type: boolean
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
-        required: true
-        label: '<%- spaceCase(database.explorer.name) %> ingress tls'
-      - variable: ingress.<%- _.camelCase(database.explorer.name) %>.hostname
-        default: xip.io
-        description: ''
-        type: hostname
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
-        required: true
-        label: '<%- spaceCase(database.explorer.name) %> ingress hostname'
-      - variable: ingress.<%- _.camelCase(database.explorer.name) %>.path
-        default: /
-        description: ''
-        type: string
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
-        required: true
-        label: '<%- spaceCase(database.explorer.name) %> ingress path'
-      - variable: ingress.<%- _.camelCase(database.explorer.name) %>.issuer.name
-        default: letsencrypt-staging
-        description: ''
-        type: enum
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true&&ingress.<%- _.camelCase(database.explorer.name) %>.tls=true
-        options:
-          - none
-          - letsencrypt-staging
-          - letsencrypt-prod
-        required: true
-        label: '<%- spaceCase(database.explorer.name) %> ingress issuer name'
-      - variable: ingress.<%- _.camelCase(database.explorer.name) %>.certificate
-        default: ''
-        description: ''
-        type: string
-        show_if: config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true&&ingress.<%- _.camelCase(database.explorer.name) %>.tls=true&&ingress.<%- _.camelCase(database.explorer.name) %>.issuer.name=none
-        required: false
-        label: '<%- spaceCase(database.explorer.name) %> ingress certificate'
-  - variable: service.<%- _.camelCase(database.explorer.name) %>.type
-    default: NodePort
+  - variable: service.<%- _.camelCase(workload.name) %>.lbPorts.http
+    default: 80
     description: ''
-    type: enum
-    show_if: ingress.<%- _.camelCase(database.explorer.name) %>.enabled=false&&config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
+    type: int
+    min: 0
+    max: 65535
     required: true
-    label: '<%- spaceCase(database.explorer.name) %> service type'
-    group: 'Services and Load Balancing'
-  - variable: service.<%- _.camelCase(database.explorer.name) %>.ports.http
-    default: ''
-    description: ''
-    type: int
-    min: 30000
-    max: 32767
-    show_if: service.<%- _.camelCase(database.explorer.name) %>.type!=ClusterIP&&ingress.<%- _.camelCase(database.explorer.name) %>.enabled=false&&config.<%- _.camelCase(database.explorer.name) %>.enabled=true&&config.<%- _.camelCase(database.name) %>.internal=true
-    label: '<%- spaceCase(database.explorer.name) %> port'
-    group: 'Services and Load Balancing'<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-  - variable: service.<%- _.camelCase(database.name) %>.type
-    default: ClusterIP
-    description: ''
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    label: '<%- spaceCase(database.name) %> service type'
-    show_if: config.<%- _.camelCase(database.name) %>.internal=true
-    group: 'Services and Load Balancing'
-  - variable: service.<%- _.camelCase(database.name) %>.ports.<%- _.camelCase(database.name) %>
-    default: ''
-    description: ''
-    type: int
-    min: 30000
-    max: 32767
-    show_if: service.<%- _.camelCase(database.name) %>.type!=ClusterIP&&config.<%- _.camelCase(database.name) %>.internal=true
-    label: '<%- spaceCase(database.name) %> port'
+    show_if: service.<%- _.camelCase(workload.name) %>.type=LoadBalancer&&ingress.<%- _.camelCase(workload.name) %>.enabled=false
+    label: '<%- _.camelCase(workload.name) %> http lb port'
     group: 'Services and Load Balancing'<% }} %>

@@ -3,7 +3,7 @@
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "<%- name %>.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim.<%- _.kebabCase(workload.name) %> | default (printf "%s-<%- _.kebabCase(workload.name) %>" (include "<%- name %>.fullname" . )) }}
           {{- else }}
           emptyDir: {}
           {{- end }}<% } %>

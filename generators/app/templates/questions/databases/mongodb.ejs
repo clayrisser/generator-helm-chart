@@ -1,271 +1,12 @@
 <% if (_.find(databases, { name: 'mongodb'})) { %>
 
 # MongoDB Config
-  - variable: config.mongodb.internal
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: internal
-    group: 'MongoDB Config'
-  - variable: config.mongodb.version
-    default: 4.1.13
-    description: ''
-    type: enum
-    options:
-      - 3.4-v3
-      - 3.4.14
-      - 3.4.22
-      - 3.4-v4
-      - 3.6-v3
-      - 3.6.8
-      - 3.6.13
-      - 3.6-v4
-      - 4.0.5-v1
-      - 4.0-v1
-      - 4.0.3
-      - 4.0.5-v2
-      - 4.0.11
-      - 4.0-v2
-      - 4.1.7-v1
-      - 4.1.4
-      - 4.1.7-v2
-      - 4.1.13
-      - 4.1
-    required: true
-    label: version
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.terminationPolicy
-    default: Delete
-    description: ''
-    type: enum
-    options:
-      - Delete
-      - Pause
-      - WipeOut
-      - DoNotTerminate
-    required: true
-    show_if: config.mongodb.internal=true
-    label: 'termination policy'
-    group: 'MongoDB Config'
-  - variable: config.mongodb.pause
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    show_if: config.mongodb.internal=true&&config.mongodb.terminationPolicy=Pause
-    label: pause
-    group: 'MongoDB Config'
-  - variable: config.mongodb.prometheus
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: prometheus
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'shard topology enabled'
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.replicaSet.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    show_if: config.mongodb.shardTopology.enabled=false
-    label: 'replica set enabled'
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.replicaSet.replicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: 'replica set replicas'
-    show_if: config.mongodb.internal=true&&config.mongodb.replicaSet.enabled=true&&config.mongodb.shardTopology.enabled=false
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.configServer.replicas
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.mongodb.shardTopology.enabled=true
-    label: 'shard topology config server replicas'
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.configServer.resources.requests.cpu
-    default: 100m
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology config server resources requests cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.configServer.resources.requests.memory
-    default: 128Mi
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology config server resources requests memory'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.configServer.resources.limits.cpu
-    default: 500m
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology config server resources limits cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.configServer.resources.limits.memory
-    default: 256Mi
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology config server resources limits memory'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.mongos.replicas
-    default: 2
-    description: ''
-    type: int
-    required: true
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    label: 'shard topology mongos replicas'
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.mongos.resources.requests.cpu
-    default: 100m
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology mongos resources requests cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.mongos.resources.requests.memory
-    default: 128Mi
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology mongos resources requests cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.mongos.resources.limits.cpu
-    default: 500m
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology mongos resources limits cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.mongos.resources.limits.memory
-    default: 256Mi
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology mongos resources limits memory'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.shard.shards
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    label: 'shard topology shard shards'
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.shard.replicas
-    default: 3
-    description: ''
-    type: int
-    required: true
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    label: 'shard topology shard replicas'
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.shard.resources.requests.cpu
-    default: 100m
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology shard resources requests cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.shard.resources.requests.memory
-    default: 128Mi
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology shard resources requests cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.shard.resources.limits.cpu
-    default: 500m
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology shard resources limits cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.shardTopology.shard.resources.limits.memory
-    default: 256Mi
-    description: ''
-    type: string
-    required: true
-    label: 'shard topology shard resources limits memory'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=true
-    group: 'MongoDB Config'
-  - variable: config.mongodb.resources.requests.cpu
-    default: 100m
-    description: ''
-    type: string
-    required: true
-    label: 'resources requests cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
-    group: 'MongoDB Config'
-  - variable: config.mongodb.resources.requests.memory
-    default: 128Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources requests cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
-    group: 'MongoDB Config'
-  - variable: config.mongodb.resources.limits.cpu
-    default: 500m
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits cpu'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
-    group: 'MongoDB Config'
-  - variable: config.mongodb.resources.limits.memory
-    default: 256Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits memory'
-    show_if: config.mongodb.internal=true&&config.shardTopology.enabled=false
-    group: 'MongoDB Config'
-  - variable: config.mongodb.customConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'custom config'
-    show_if: config.mongodb.internal=true
-    group: 'MongoDB Config'
   - variable: config.mongodb.host
     default: ''
     description: ''
     type: string
     required: false
     label: host
-    show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
   - variable: config.mongodb.database
     default: <%- _.snakeCase(name) %>
@@ -273,7 +14,6 @@
     type: string
     required: true
     label: database
-    show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
   - variable: config.mongodb.password
     default: P@assw0rd
@@ -281,17 +21,15 @@
     type: password
     required: false
     label: password
-    show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
   - variable: config.mongodb.port
     default: 27017
     description: ''
     type: int
     min: 0
-    max: 50000
+    max: 65535
     required: true
     label: port
-    show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
   - variable: config.mongodb.url
     default: ''
@@ -299,7 +37,6 @@
     type: string
     required: false
     label: url
-    show_if: config.mongodb.internal=false
     group: 'MongoDB Config'
   - variable: config.mongodb.username
     default: ''
@@ -307,33 +44,4 @@
     type: string
     required: false
     label: username
-    show_if: config.mongodb.internal=false
-    group: 'MongoDB Config'
-
-# MongoExpress
-  - variable: config.mongoExpress.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: 'mongo express'
-    show_if: config.mongodb.internal=true
-    show_subquestion_if: true
-    group: MongoExpress
-    subquestions:
-      - variable: config.mongoExpress.username
-        default: admin
-        description: ''
-        type: string
-        required: true
-        show_if: config.mongodb.internal=true
-        label: 'mongo express username'
-        group: MongoExpress
-      - variable: config.mongoExpress.password
-        default: pass
-        description: ''
-        type: password
-        required: true
-        show_if: config.mongodb.internal=true
-        label: 'mongo express password'
-        group: MongoExpress<% } %>
+    group: 'MongoDB Config'<% } %>

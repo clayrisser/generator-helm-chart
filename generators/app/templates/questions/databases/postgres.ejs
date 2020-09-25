@@ -1,116 +1,6 @@
 <% if (_.find(databases, { name: 'postgres'})) { %>
 
 # Postgres Config
-  - variable: config.postgres.internal
-    default: true
-    description: ''
-    type: boolean
-    required: true
-    label: internal
-    group: 'Postgres Config'
-  - variable: config.postgres.version
-    default: 11.2
-    description: ''
-    type: enum
-    options:
-      - 9.6-v2
-      - 9.6.7-v2
-      - 10.2-v2
-      - 10.6
-      - 11.1
-      - 11.2
-    required: true
-    label: version
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.resources.requests.cpu
-    default: 100m
-    description: ''
-    type: string
-    required: true
-    label: 'resources requests cpu'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.resources.requests.memory
-    default: 128Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources requests memory'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.resources.limits.cpu
-    default: 500m
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits cpu'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.resources.limits.memory
-    default: 256Mi
-    description: ''
-    type: string
-    required: true
-    label: 'resources limits memory'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.terminationPolicy
-    default: Delete
-    description: ''
-    type: enum
-    options:
-      - Delete
-      - Pause
-      - WipeOut
-      - DoNotTerminate
-    required: true
-    label: 'termination policy'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.pause
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    show_if: config.postgres.internal=true&&config.postgres.terminationPolicy=Pause
-    label: pause
-    group: 'Postgres Config'
-  - variable: config.postgres.standbyMode
-    default: Hot
-    description: ''
-    type: enum
-    options:
-      - Hot
-      - Warm
-    required: true
-    label: 'standby mode'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.prometheus
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    label: prometheus
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.replicas
-    default: 1
-    description: ''
-    type: int
-    required: true
-    label: replicas
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
-  - variable: config.postgres.customConfig
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: 'custom config'
-    show_if: config.postgres.internal=true
-    group: 'Postgres Config'
   - variable: config.postgres.host
     default: ''
     description: ''
@@ -140,7 +30,7 @@
     description: ''
     type: int
     min: 0
-    max: 50000
+    max: 65535
     required: true
     label: port
     show_if: config.postgres.internal=false
@@ -160,32 +50,4 @@
     required: true
     label: username
     show_if: config.postgres.internal=false
-    group: 'Postgres Config'
-
-# PGAdmin
-  - variable: config.pgadmin.enabled
-    default: false
-    description: ''
-    type: boolean
-    required: true
-    show_if: config.postgres.internal=true
-    label: pgadmin
-    show_subquestion_if: true
-    group: PGAdmin
-    subquestions:
-      - variable: config.pgadmin.email
-        default: admin
-        description: ''
-        type: string
-        required: true
-        show_if: config.postgres.internal=true
-        label: 'pgadmin email'
-        group: PGAdmin
-      - variable: config.pgadmin.password
-        default: admin
-        description: ''
-        type: password
-        required: true
-        show_if: config.postgres.internal=true
-        label: 'pgadmin password'
-        group: PGAdmin<% } %>
+    group: 'Postgres Config'<% } %>
