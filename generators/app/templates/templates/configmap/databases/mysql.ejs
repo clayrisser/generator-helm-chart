@@ -3,5 +3,4 @@
   mysql_host: {{ $mysql.host | quote }}
   mysql_database: {{ $mysql.database | quote }}
   mysql_port: {{ $mysql.port | quote }}
-  mysql_username: {{ $mysql.username | quote }}
-  mysql_url: {{ include "<%- _.kebabCase(name) %>.mysql-url" . }}<% } %>
+  mysql_username: {{ $mysql.username | quote }}<% } %>

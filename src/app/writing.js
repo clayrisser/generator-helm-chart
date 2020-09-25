@@ -59,7 +59,7 @@ export default async function writing(yo) {
       publicWorkloads
     }
   );
-  if (hasData || yo.context.databases?.length) {
+  if (hasData) {
     yo.fs.copyTpl(
       yo.templatePath('templates/backup.yaml'),
       yo.destinationPath(`v${yo.context.version}/templates/backup.yaml`),

@@ -1,4 +1,4 @@
-
+<% if (hasData) { %>
 
 persistence:
   accessMode: ReadWriteOnce
@@ -11,4 +11,4 @@ persistence:
   velero:
     enabled: false
     restic: true
-    schedule: '@midnight'
+    schedule: '@midnight'<% } %>

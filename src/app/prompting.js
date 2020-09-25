@@ -57,7 +57,7 @@ export default async function prompting(yo) {
         }
       ])
     ).databases,
-    (database) => {
+    database => {
       return {
         elasticsearch: {
           name: 'elasticsearch'

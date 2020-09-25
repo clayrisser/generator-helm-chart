@@ -25,18 +25,7 @@ Calculate <%- spaceCase(workload.name) %> certificate
 {{- else }}
 {{- printf "%s-<%- _.kebabCase(workload.name) %>-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
 {{- end }}
-{{- end }}<% } for (var i = 0; i < databases.length; i++) { database = databases[i]; %>
-
-{{/*
-Calculate <%- spaceCase(database.explorer.name) %> certificate
-*/}}
-{{- define "<%- _.kebabCase(name) %>.<%- _.kebabCase(database.explorer.name) %>-certificate" }}
-{{- if (not (empty .Values.ingress.<%- _.camelCase(database.explorer.name) %>.certificate)) }}
-{{- printf .Values.ingress.<%- _.camelCase(database.explorer.name) %>.certificate }}
-{{- else }}
-{{- printf "%s-<%- _.kebabCase(database.explorer.name) %>-letsencrypt" (include "<%- _.kebabCase(name) %>.fullname" .) }}
 {{- end }}
-{{- end }}<% } for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
 
 {{/*
 Calculate <%- spaceCase(workload.name) %> hostname

@@ -3,5 +3,4 @@
   mongodb_host: {{ $mongodb.host | quote }}
   mongodb_database: {{ $mongodb.database | quote }}
   mongodb_port: {{ $mongodb.port | quote }}
-  mongodb_username: {{ $mongodb.username | quote }}
-  mongodb_url: {{ include "<%- _.kebabCase(name) %>.mongodb-url" . }}<% } %>
+  mongodb_username: {{ $mongodb.username | quote }}<% } %>

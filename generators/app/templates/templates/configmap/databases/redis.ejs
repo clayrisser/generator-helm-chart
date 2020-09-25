@@ -2,5 +2,4 @@
   {{- $redis := .Values.config.redis }}
   redis_host: {{ $redis.host | quote }}
   redis_port: {{ $redis.port | quote }}
-  redis_username: {{ $redis.username | quote }}
-  redis_url: {{ include "<%- _.kebabCase(name) %>.redis-url" . }}<% } %>
+  redis_username: {{ $redis.username | quote }}<% } %>

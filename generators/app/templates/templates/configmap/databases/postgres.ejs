@@ -3,5 +3,4 @@
   postgres_host: {{ $postgres.host | quote }}
   postgres_database: {{ $postgres.database | quote }}
   postgres_port: {{ $postgres.port | quote }}
-  postgres_username: {{ $postgres.username | quote }}
-  postgres_url: {{ include "<%- _.kebabCase(name) %>.postgres-url" . }}<% } %>
+  postgres_username: {{ $postgres.username | quote }}<% } %>
