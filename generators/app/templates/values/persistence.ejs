@@ -4,10 +4,10 @@ persistence:
   accessMode: ReadWriteOnce
   enabled: false
   storageClass: ''
-  existingClaim:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-    <%- _.camelCase(workload.name) %>: ''<% } %>
-  size:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
-    <%- _.camelCase(workload.name) %>: 1Gi<% } %>
+  existingClaim:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; if (workload.volumes.length) { %>
+    <%- _.camelCase(workload.name) %>: ''<% }} %>
+  size:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; if (workload.volumes.length) { %>
+    <%- _.camelCase(workload.name) %>: 1Gi<% }} %>
   velero:
     enabled: false
     restic: true

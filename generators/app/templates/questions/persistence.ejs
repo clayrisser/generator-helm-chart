@@ -25,19 +25,19 @@
           - ReadWriteMany
           - ReadOnlyMany
         required: false
-        label: 'access mode'<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
+        label: 'access mode'<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; if (workload.volumes.length) { %>
       - variable: persistence.existingClaim.<%- _.camelCase(workload.name) %>
         default: ''
         description: ''
         type: string
         required: false
-        label: '<%- _.camelCase(workload.name) %> existing claim'
+        label: '<%- spaceCase(workload.name) %> existing claim'
       - variable: persistence.size
         default: 1Gi
         description: ''
         type: string
         required: true
-        label: '<%- _.camelCase(workload.name) %> size'<% } %>
+        label: '<%- spaceCase(workload.name) %> size'<% }} %>
       - variable: persistence.velero.enabled
         default: false
         description: ''

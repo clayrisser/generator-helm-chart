@@ -59,7 +59,7 @@
     min: 30000
     max: 32767
     show_if: service.<%- _.camelCase(workload.name) %>.type=NodePort&&ingress.<%- _.camelCase(workload.name) %>.enabled=false
-    label: '<%- _.camelCase(workload.name) %> http node port'
+    label: '<%- spaceCase(workload.name) %> http node port'
     group: 'Services and Load Balancing'
   - variable: service.<%- _.camelCase(workload.name) %>.lbPorts.http
     default: 80
@@ -69,5 +69,5 @@
     max: 65535
     required: true
     show_if: service.<%- _.camelCase(workload.name) %>.type=LoadBalancer&&ingress.<%- _.camelCase(workload.name) %>.enabled=false
-    label: '<%- _.camelCase(workload.name) %> http lb port'
+    label: '<%- spaceCase(workload.name) %> http lb port'
     group: 'Services and Load Balancing'<% }} %>

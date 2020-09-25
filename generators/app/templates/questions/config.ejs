@@ -39,7 +39,7 @@
     description: ''
     type: boolean
     required: true
-    label: '<%- _.snakeCase(workload.name).replace(/-/g, ' ') %> resources defaults'
+    label: '<%- spaceCase(workload.name) %> resources defaults'
     show_subquestion_if: false
     group: Config
     subquestions:
@@ -48,25 +48,25 @@
         description: ''
         type: string
         required: true
-        label: '<%- _.snakeCase(workload.name).replace(/-/g, ' ') %> resources requests cpu'
+        label: '<%- spaceCase(workload.name) %> resources requests cpu'
       - variable: config.<%- _.camelCase(workload.name) %>.resources.requests.memory
         default: 128Mi
         description: ''
         type: string
         required: true
-        label: '<%- _.snakeCase(workload.name).replace(/-/g, ' ') %> resources requests memory'
+        label: '<%- spaceCase(workload.name) %> resources requests memory'
       - variable: config.<%- _.camelCase(workload.name) %>.resources.limits.cpu
         default: 500m
         description: ''
         type: string
         required: true
-        label: '<%- _.snakeCase(workload.name).replace(/-/g, ' ') %> resources limits cpu'
+        label: '<%- spaceCase(workload.name) %> resources limits cpu'
       - variable: config.<%- _.camelCase(workload.name) %>.resources.limits.memory
         default: 256Mi
         description: ''
         type: string
         required: true
-        label: '<%- _.snakeCase(workload.name).replace(/-/g, ' ') %> resources limits memory'<% } for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
+        label: '<%- spaceCase(workload.name) %> resources limits memory'<% } for (var i = 0; i < config.length; i++) { configItem = config[i]; %>
   - variable: config.<%- _.camelCase(configItem.key) %>
     default: <%- quote(configItem.defaultValue) %>
     description: ''

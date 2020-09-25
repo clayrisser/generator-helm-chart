@@ -1,4 +1,4 @@
-{{- if (and .Values.persistence.enabled (eq .Values.persistence.existingClaim "")) }}
+{{- if (and .Values.persistence.enabled (eq .Values.persistence.existingClaim.<%- _.camelCase(workload.name) %> "")) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -13,7 +13,7 @@ spec:
     - {{ .Values.persistence.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.persistence.size.<%- _.kebabCase(workload.name) %> }}
+      storage: {{ .Values.persistence.size.<%- _.camelCase(workload.name) %> }}
 {{- if .Values.persistence.storageClass }}
 {{- if (eq "-" .Values.persistence.storageClass) }}
   storageClassName: ''

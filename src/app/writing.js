@@ -5,7 +5,7 @@ export default async function writing(yo) {
   const configSecrets = _.filter(yo.context.config, { secret: true });
   const publicWorkloads = _.filter(yo.context.workloads, { public: true });
   const hasData = _.includes(
-    _.map(yo.context.workloads, (workload) => !!workload.volumes.length),
+    _.map(yo.context.workloads, workload => !!workload.volumes.length),
     true
   );
   yo.fs.copyTpl(
@@ -86,7 +86,7 @@ export default async function writing(yo) {
       }
     );
   }
-  yo.context.workloads.forEach((workload) => {
+  yo.context.workloads.forEach(workload => {
     const context = {
       ...yo.context,
       workload
@@ -99,32 +99,26 @@ export default async function writing(yo) {
       context
     );
     yo.fs.copyTpl(
-      yo.templatePath('templates/pvc.yaml'),
+      yo.templatePath('templates/service.yaml'),
       yo.destinationPath(
-        `v${yo.context.version}/templates/pvcs/${workload.name}.yaml`
+        `v${yo.context.version}/templates/services/${workload.name}.yaml`
       ),
       context
     );
-    if (workload.public) {
+    if (workload.volumes.length) {
       yo.fs.copyTpl(
-        yo.templatePath('templates/services/public.yaml'),
+        yo.templatePath('templates/pvc.yaml'),
         yo.destinationPath(
-          `v${yo.context.version}/templates/services/${workload.name}.yaml`
+          `v${yo.context.version}/templates/pvcs/${workload.name}.yaml`
         ),
         context
       );
+    }
+    if (workload.public) {
       yo.fs.copyTpl(
         yo.templatePath('templates/ingress.yaml'),
         yo.destinationPath(
           `v${yo.context.version}/templates/ingresses/${workload.name}.yaml`
-        ),
-        context
-      );
-    } else {
-      yo.fs.copyTpl(
-        yo.templatePath('templates/services/private.yaml'),
-        yo.destinationPath(
-          `v${yo.context.version}/templates/services/${workload.name}.yaml`
         ),
         context
       );

@@ -7,22 +7,27 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-spec:
+spec:<% if (!workload.public) { %>
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: container<% } else { %>
   {{- if .Values.ingress.<%- workload.name %>.enabled }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.<%- workload.name %>.type }}
-  {{- if (or (eq .Values.service.<%- workload.name %>.type "LoadBalancer") (eq .Values.service.<%- workload.name %>.type "NodePort")) }}
+  {{- if (eq .Values.service.<%- workload.name %>.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.<%- workload.name %>.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
-      port: {{ (and (eq .Values.service.<%- workload.name %>.type "LoadBalancer") (not (empty .Values.service.<%- workload.name %>.ports.http))) | ternary .Values.service.<%- workload.name %>.ports.http "80" }}
+      port: {{ (eq .Values.service.<%- _.camelCase(workload.name) %>.type "LoadBalancer") | ternary .Values.service.<%- _.camelCase(workload.name) %>.lbPorts.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.<%- workload.name %>.type "NodePort") (not (empty .Values.service.<%- workload.name %>.ports.http))) }}
-      nodePort: {{ .Values.service.<%- workload.name %>.ports.http }}
-      {{- end }}
+      {{- if (and (eq .Values.service.<%- _.camelCase(workload.name) %>.type "NodePort") (not (empty .Values.service.<%- _.camelCase(workload.name) %>.nodePorts.http))) }}
+      nodePort: {{ .Values.service.<%- _.camelCase(workload.name) %>.nodePorts.http }}
+      {{- end }}<% } %>
   selector:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
     release: {{ .Release.Name }}

@@ -6,7 +6,7 @@ metadata:
     app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}<% if (workload.volumes.length) { %>
+    heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
-        release: {{ .Release.Name }}
+        release: {{ .Release.Name }}<% if (workload.volumes.length) { %>
       {{- if .Values.persistence.velero.enabled }}
       annotations:
         backup.velero.io/backup-volumes: data
