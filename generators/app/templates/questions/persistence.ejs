@@ -32,7 +32,7 @@
         type: string
         required: false
         label: '<%- spaceCase(workload.name) %> existing claim'
-      - variable: persistence.size
+      - variable: persistence.size.<%- spaceCase(workload.name) %>
         default: 1Gi
         description: ''
         type: string
@@ -42,20 +42,23 @@
         default: false
         description: ''
         type: string
+        show_if: persistence.velero.enabled=true
         required: true
         label: 'velero enabled'
         group: Persistence
-        show_subquestion_if: true
-        subquestions:
-          - variable: persistence.velero.schedule
-            default: '@midnight'
-            description: ''
-            type: string
-            required: false
-            label: 'velero schedule'
-          - variable: persistence.velero.restic
-            default: true
-            description: ''
-            type: boolean
-            required: true
-            label: 'velero restic'<% } %>
+      - variable: persistence.velero.schedule
+        default: '@midnight'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: false
+        label: 'velero schedule'
+        group: Persistence
+      - variable: persistence.velero.restic
+        default: true
+        description: ''
+        type: boolean
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero restic'
+        group: Persistence<% } %>
