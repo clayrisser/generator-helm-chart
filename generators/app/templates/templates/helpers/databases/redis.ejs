@@ -9,6 +9,6 @@ Calculate redis url
 {{- printf $redis.url }}
 {{- else }}
 {{- $credentials := ((or (empty $redis.username) (empty $redis.password)) | ternary "" (printf "%s:%s@" $redis.username $redis.password)) }}
-{{- printf "redis://%s%s:%s" $credentials $redis.host $redis.port }}
+{{- printf "redis://%s%s:%d" $credentials $redis.host $redis.port }}
 {{- end }}
 {{- end }}<% } %>

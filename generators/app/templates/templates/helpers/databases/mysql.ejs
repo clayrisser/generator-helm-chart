@@ -9,6 +9,6 @@ Calculate mysql url
 {{- printf $mysql.url }}
 {{- else }}
 {{- $credentials := ((or (empty $mysql.username) (empty $mysql.password)) | ternary "" (printf "%s:%s@" $mysql.username $mysql.password)) }}
-{{- printf "jdbc:mysql://%s%s:%s/%s" $credentials $mysql.host $mysql.port $mysql.database }}
+{{- printf "jdbc:mysql://%s%s:%d/%s" $credentials $mysql.host $mysql.port $mysql.database }}
 {{- end }}
 {{- end }}<% } %>
