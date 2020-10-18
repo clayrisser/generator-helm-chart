@@ -17,7 +17,7 @@ spec:<% if (!workload.public) { %>
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.<%- _.camelCase(workload.name) %>.type }}
-  {{- if (eq .Values.service.<%- workload.name %>.type "NodePort") }}
+  {{- if (eq .Values.service.<%- _.camelCase(workload.name) %>.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.<%- _.camelCase(workload.name) %>.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
