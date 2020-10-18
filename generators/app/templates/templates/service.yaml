@@ -13,12 +13,12 @@ spec:<% if (!workload.public) { %>
     - name: http
       port: 80
       targetPort: container<% } else { %>
-  {{- if .Values.ingress.<%- workload.name %>.enabled }}
+  {{- if .Values.ingress.<%- _.camelCase(workload.name) %>.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.<%- workload.name %>.type }}
+  type: {{ .Values.service.<%- _.camelCase(workload.name) %>.type }}
   {{- if (eq .Values.service.<%- workload.name %>.type "NodePort") }}
-  externalTrafficPolicy: {{ .Values.service.<%- workload.name %>.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.service.<%- _.camelCase(workload.name) %>.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
