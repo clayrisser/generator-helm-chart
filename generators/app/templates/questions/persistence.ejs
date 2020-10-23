@@ -60,4 +60,12 @@
         show_if: persistence.velero.enabled=true
         required: true
         label: 'velero restic'
+        group: Persistence
+      - variable: persistence.velero.ttl
+        default: '2160h0m00s'
+        description: ''
+        type: string
+        show_if: persistence.velero.enabled=true
+        required: true
+        label: 'velero ttl'
         group: Persistence<% } %>
