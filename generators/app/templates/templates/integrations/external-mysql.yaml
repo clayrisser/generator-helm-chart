@@ -1,0 +1,77 @@
+{{- if (not (empty .Values.config.mysql.integration)) }}
+apiVersion: externaldb.databases.land/v1alpha1
+kind: ExternalMysql
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  cleanup: false
+  name: {{ .Values.config.mysql.database }}
+  connection:
+    name: {{ (split "." .Values.config.mysql.integration)._0 }}
+    namespace: {{ (split "." (printf "%s." .Values.config.mysql.integration))._1 | default "kube-system" }}
+  kustomization:
+    configuration:
+      varReference:
+        - version: v1
+          kind: Secret
+          path: stringData
+        - version: v1
+          kind: Secret
+          path: data
+    resources:
+      - version: v1
+        kind: ConfigMap
+        name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+        namespace: {{ .Release.Namespace }}
+    patches: []
+    vars:
+      - name: MYSQL_DATABASE
+        fieldref:
+          fieldPath: data.MYSQL_DATABASE
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: MYSQL_HOSTNAME
+        fieldref:
+          fieldPath: data.MYSQL_HOSTNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: MYSQL_PASSWORD
+        fieldref:
+          fieldPath: data.MYSQL_PASSWORD
+        objref:
+          apiVersion: v1
+          kind: Secret
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: MYSQL_PORT
+        fieldref:
+          fieldPath: data.MYSQL_PORT
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: MYSQL_USERNAME
+        fieldref:
+          fieldPath: data.MYSQL_USERNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+{{- end }}

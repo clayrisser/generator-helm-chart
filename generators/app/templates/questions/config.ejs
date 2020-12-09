@@ -1,17 +1,18 @@
 
 
 # Config
-  - variable: config.clusterProvider
-    default: infrastructure
+  - variable: config.clusterType
+    default: rke
     description: ''
     type: enum
     options:
-      - infrastructure
-      - eks
       - aks
+      - eks
       - gke
+      - k3s
+      - rke
     required: true
-    label: 'cluster provider'
+    label: 'cluster type'
     group: Config
   - variable: config.imagePullPolicy
     default: Always
@@ -40,11 +41,11 @@
     type: enum
     options:
       - defaults
-      - 'true'
-      - 'false'
+      - custom
+      - false
     required: true
     label: '<%- spaceCase(workload.name) %> resources defaults'
-    show_subquestion_if: 'true'
+    show_subquestion_if: custom
     group: Config
     subquestions:
       - variable: config.<%- _.camelCase(workload.name) %>.resources.requests.cpu

@@ -1,12 +1,20 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
 
 # MySQL Config
+  - variable: config.mysql.integration
+    default: ''
+    description: ''
+    type: string
+    required: false
+    label: integration
+    group: 'MySQL Config'
   - variable: config.mysql.host
     default: ''
     description: ''
     type: string
     required: false
     label: host
+    show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.database
     default: <%- _.snakeCase(name) %>
@@ -14,6 +22,7 @@
     type: string
     required: true
     label: database
+    show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.password
     default: P@ssw0rd
@@ -21,6 +30,7 @@
     type: password
     required: true
     label: password
+    show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.port
     default: 3306
@@ -30,6 +40,7 @@
     max: 65535
     required: true
     label: port
+    show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.url
     default: ''
@@ -37,6 +48,7 @@
     type: string
     required: false
     label: url
+    show_if: config.mysql.integration=
     group: 'MySQL Config'
   - variable: config.mysql.username
     default: root
@@ -44,4 +56,5 @@
     type: string
     required: true
     label: username
+    show_if: config.mysql.integration=
     group: 'MySQL Config'<% } %>

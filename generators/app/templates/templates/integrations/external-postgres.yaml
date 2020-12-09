@@ -1,0 +1,77 @@
+{{- if (not (empty .Values.config.postgres.integration)) }}
+apiVersion: externaldb.databases.land/v1alpha1
+kind: ExternalPostgres
+metadata:
+  name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
+  labels:
+    app: {{ template "<%- _.kebabCase(name) %>.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  cleanup: false
+  name: {{ .Values.config.postgres.database }}
+  connection:
+    name: {{ (split "." .Values.config.postgres.integration)._0 }}
+    namespace: {{ (split "." (printf "%s." .Values.config.postgres.integration))._1 | default "kube-system" }}
+  kustomization:
+    configuration:
+      varReference:
+        - version: v1
+          kind: Secret
+          path: stringData
+        - version: v1
+          kind: Secret
+          path: data
+    resources:
+      - version: v1
+        kind: ConfigMap
+        name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+        namespace: {{ .Release.Namespace }}
+      - version: v1
+        kind: Secret
+        name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+        namespace: {{ .Release.Namespace }}
+    patches: []
+    vars:
+      - name: POSTGRES_DATABASE
+        fieldref:
+          fieldPath: data.POSTGRES_DATABASE
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_HOSTNAME
+        fieldref:
+          fieldPath: data.POSTGRES_HOSTNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_PASSWORD
+        fieldref:
+          fieldPath: data.POSTGRES_PASSWORD
+        objref:
+          apiVersion: v1
+          kind: Secret
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_PORT
+        fieldref:
+          fieldPath: data.POSTGRES_PORT
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+      - name: POSTGRES_USERNAME
+        fieldref:
+          fieldPath: data.POSTGRES_USERNAME
+        objref:
+          apiVersion: v1
+          kind: ConfigMap
+          name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-externaldb
+          namespace: {{ .Release.Namespace }}
+{{- end }}

@@ -1,5 +1,6 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
   elasticsearch:
+    integration:
     database: <%- name %>
     host: ''
     password: changeme

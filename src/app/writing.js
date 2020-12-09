@@ -86,6 +86,19 @@ export default async function writing(yo) {
       }
     );
   }
+  yo.context.databases.forEach(database => {
+    if (database.name !== 'mysql' && database.name !== 'postgres') return;
+    yo.fs.copyTpl(
+      yo.templatePath(`templates/integrations/external-${database.name}.yaml`),
+      yo.destinationPath(
+        `v${yo.context.version}/templates/integrations/external-${database.name}.yaml`
+      ),
+      {
+        ...yo.context,
+        database
+      }
+    );
+  });
   yo.context.workloads.forEach(workload => {
     const context = {
       ...yo.context,

@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   annotations:
-    {{- if (eq .Values.config.clusterProvider "aks") }}
+    {{- if (eq .Values.config.clusterType "aks") }}
     kubernetes.io/ingress.class: addon-http-application-routing
     {{- else }}
     kubernetes.io/ingress.class: nginx
