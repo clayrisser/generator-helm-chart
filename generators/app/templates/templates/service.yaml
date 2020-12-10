@@ -7,13 +7,16 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- if (eq .Values.service.<%- _.camelCase(workload.name) %>.type "RancherProxy") }}
+    kubernetes.io/cluster-service: 'true'
+    {{- end }}
 spec:<% if (!workload.public) { %>
   type: ClusterIP
   ports:
     - name: http
       port: 80
       targetPort: container<% } else { %>
-  {{- if .Values.ingress.<%- _.camelCase(workload.name) %>.enabled }}
+  {{- if (or .Values.ingress.<%- _.camelCase(workload.name) %>.enabled (eq .Values.service.<%- _.camelCase(workload.name) %>.type "RancherProxy")) }}
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.<%- _.camelCase(workload.name) %>.type }}
