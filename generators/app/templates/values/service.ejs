@@ -2,7 +2,7 @@
 
 service:<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
   <%- _.camelCase(workload.name) %>:
-    type: NodePort
+    type: ClusterIP
     externalTrafficPolicy: Cluster
     nodePorts:
       http:

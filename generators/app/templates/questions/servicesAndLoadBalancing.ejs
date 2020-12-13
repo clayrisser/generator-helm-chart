@@ -40,7 +40,7 @@
         required: false
         label: '<%- spaceCase(workload.name) %> ingress certificate'
   - variable: service.<%- _.camelCase(workload.name) %>.type
-    default: RancherProxy
+    default: ClusterIP
     description: ''
     type: enum
     show_if: ingress.<%- _.camelCase(workload.name) %>.enabled=false
@@ -48,7 +48,6 @@
       - ClusterIP
       - LoadBalancer
       - NodePort
-      - RancherProxy
     required: true
     label: '<%- spaceCase(workload.name) %> service type'
     group: 'Services and Load Balancing'
