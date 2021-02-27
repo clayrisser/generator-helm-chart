@@ -1,6 +1,6 @@
 <% if (_.find(databases, { name: 'mysql'})) { %>
   {{- $mysql := .Values.config.mysql }}
-  mysql_host: {{ $mysql.host | quote }}
-  mysql_database: {{ $mysql.database | quote }}
-  mysql_port: {{ $mysql.port | quote }}
-  mysql_username: {{ $mysql.username | quote }}<% } %>
+  MYSQL_HOST: {{ $mysql.host | quote }}
+  MYSQL_DATABASE: {{ $mysql.database | quote }}
+  MYSQL_PORT: {{ $mysql.port | quote }}
+  MYSQL_USERNAME: {{ $mysql.username | quote }}<% } %>

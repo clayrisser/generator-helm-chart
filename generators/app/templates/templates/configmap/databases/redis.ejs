@@ -1,5 +1,5 @@
 <% if (_.find(databases, { name: 'redis'})) { %>
   {{- $redis := .Values.config.redis }}
-  redis_host: {{ $redis.host | quote }}
-  redis_port: {{ $redis.port | quote }}
-  redis_username: {{ $redis.username | quote }}<% } %>
+  REDIS_HOST: {{ $redis.host | quote }}
+  REDIS_PORT: {{ $redis.port | quote }}
+  REDIS_USERNAME: {{ $redis.username | quote }}<% } %>

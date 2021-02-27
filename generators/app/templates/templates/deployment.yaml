@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
+    app: {{ .Release.Name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -49,7 +49,7 @@ spec:
         - name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
           image: {{ .Values.images.<%- _.camelCase(workload.name) %>.repository }}:{{ .Values.images.<%- _.camelCase(workload.name) %>.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
-{{- if .Values.config.<%- _.camelCase(workload.name) %>.resources.enabled }}
+{{- if (and .Values.config.<%- _.camelCase(workload.name) %>.resources.enabled (not (eq .Values.config.<%- _.camelCase(workload.name) %>.resources.enabled "false"))) }}
           resources:
 {{ toYaml .Values.config.<%- _.camelCase(workload.name) %>.resources | indent 12 }}
 {{- end }}

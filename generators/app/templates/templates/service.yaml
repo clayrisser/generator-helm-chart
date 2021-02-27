@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}-<%- _.kebabCase(workload.name) %>
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}-<%- _.kebabCase(workload.name) %>
+    app: {{ .Release.Name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

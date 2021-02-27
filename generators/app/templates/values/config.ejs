@@ -1,14 +1,14 @@
 
 
 config:
-  clusterProvider: rke
+  clusterType: rke
   imagePullPolicy: Always
   updateStrategy: Recreate<% for (var i = 0; i < workloads.length; i++) { workload = workloads[i]; %>
   <%- _.camelCase(workload.name) %>:<% if (workload.public) { %>
     baseUrl: ''<% } %>
     hostname: ''
     resources:
-      enabled: false
+      enabled: 'false'
       requests:
         cpu: 100m
         memory: 128Mi

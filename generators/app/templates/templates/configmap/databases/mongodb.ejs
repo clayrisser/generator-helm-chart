@@ -1,6 +1,6 @@
 <% if (_.find(databases, { name: 'mongodb'})) { %>
   {{- $mongodb := .Values.config.mongodb }}
-  mongodb_host: {{ $mongodb.host | quote }}
-  mongodb_database: {{ $mongodb.database | quote }}
-  mongodb_port: {{ $mongodb.port | quote }}
-  mongodb_username: {{ $mongodb.username | quote }}<% } %>
+  MONGODB_HOST: {{ $mongodb.host | quote }}
+  MONGODB_DATABASE: {{ $mongodb.database | quote }}
+  MONGODB_PORT: {{ $mongodb.port | quote }}
+  MONGODB_USERNAME: {{ $mongodb.username | quote }}<% } %>

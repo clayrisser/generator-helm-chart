@@ -1,6 +1,6 @@
 <% if (_.find(databases, { name: 'elasticsearch'})) { %>
   {{- $elasticsearch := .Values.config.elasticsearch }}
-  elasticsearch_host: {{ $elasticsearch.host | quote }}
-  elasticsearch_database: {{ $elasticsearch.database | quote }}
-  elasticsearch_port: {{ $elasticsearch.port | quote }}
-  elasticsearch_username: {{ $elasticsearch.username | quote }}<% } %>
+  ELASTICSEARCH_HOST: {{ $elasticsearch.host | quote }}
+  ELASTICSEARCH_DATABASE: {{ $elasticsearch.database | quote }}
+  ELASTICSEARCH_PORT: {{ $elasticsearch.port | quote }}
+  ELASTICSEARCH_USERNAME: {{ $elasticsearch.username | quote }}<% } %>

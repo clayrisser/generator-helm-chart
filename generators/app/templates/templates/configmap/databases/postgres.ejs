@@ -1,6 +1,6 @@
 <% if (_.find(databases, { name: 'postgres'})) { %>
   {{- $postgres := .Values.config.postgres }}
-  postgres_host: {{ $postgres.host | quote }}
-  postgres_database: {{ $postgres.database | quote }}
-  postgres_port: {{ $postgres.port | quote }}
-  postgres_username: {{ $postgres.username | quote }}<% } %>
+  POSTGRES_HOST: {{ $postgres.host | quote }}
+  POSTGRES_DATABASE: {{ $postgres.database | quote }}
+  POSTGRES_PORT: {{ $postgres.port | quote }}
+  POSTGRES_USERNAME: {{ $postgres.username | quote }}<% } %>

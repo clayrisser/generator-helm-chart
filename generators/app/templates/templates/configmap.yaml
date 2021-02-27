@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "<%- _.kebabCase(name) %>.fullname" . }}
   labels:
-    app: {{ template "<%- _.kebabCase(name) %>.name" . }}
+    app: {{ .Release.Name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
