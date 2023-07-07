@@ -4,6 +4,8 @@
 
 > yeoman generator rancher 2 helm charts
 
+![](assets/generator-helm-chart.png)
+
 Please ★ this repo if you found it useful ★ ★ ★
 
 ## Features
